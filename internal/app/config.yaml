@@ -1,0 +1,32 @@
+# Application Configuration
+
+# Server Settings
+server:
+  port: 8080             # Port on which the server should listen
+  host: 0.0.0.0           # Host address to bind the server (0.0.0.0 for all available network interfaces)
+
+# Logger Settings
+logger:
+  log_level: info         # Logging level (e.g., info, error, debug)
+  log_file: /path/to/logfile.log  # Path to the log file
+
+# Plugin Configurations
+plugins:
+  mqtt:
+    broker_address: tcp://mqtt.example.com:1883  # MQTT broker address
+    username: myuser                            # MQTT username (if required)
+    password: mypassword                        # MQTT password (if required)
+  modbus:
+    server_address: tcp://modbus.example.com:502 # Modbus server address
+    slave_id: 1                                 # Modbus slave ID
+  iec61850:
+    server_address: iec61850.example.com        # IEC 61850 server address
+
+# Database Configuration
+database:
+  type: postgresql      # Database type (e.g., postgresql, mysql)
+  host: db.example.com  # Database host
+  port: 5432            # Database port
+  username: dbuser      # Database username
+  password: dbpassword  # Database password
+  dbname: mydatabase    # Database name
