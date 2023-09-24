@@ -51,7 +51,7 @@ func NewStartCmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&configFile, "config", "c", "config.yaml", "Path to the configuration file")
+	cmd.Flags().StringVarP(&configFile, "config", "c", "./internal/app/config.yaml", "Path to the configuration file")
 	cmd.Flags().IntVar(&serverPort, "server.port", 0, "Port on which the server should listen")
 	cmd.Flags().StringVar(&loggerLogLevel, "logger.log_level", "", "Logging level (e.g., info, error, debug)")
 	cmd.Flags().StringVar(&modbusServerAddress, "plugins.modbus.server_address", "", "Modbus server address")

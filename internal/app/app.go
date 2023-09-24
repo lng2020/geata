@@ -30,7 +30,7 @@ func NewApp() *App {
 // NewConfig creates a new instance of AppConfig.
 func (app *App) NewConfig(configFile string) error {
 	if configFile == "" {
-		configFile = "config.yaml"
+		configFile = "./internal/app/config.yaml"
 	}
 	config, err := LoadConfig(configFile)
 	if err != nil {
