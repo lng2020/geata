@@ -5,7 +5,7 @@ package main
 
 import (
 	"geata/cmd/start"
-	"geata/utils/logger"
+	"geata/internal/utils/logger"
 
 	"github.com/spf13/cobra"
 )
