@@ -1,0 +1,9 @@
+basePath: /api/v1
+host: localhost:8080
+info:
+  contact: {}
+  description: Geata API v1
+  title: Geata API v1
+  version: "1.0"
+paths: {}
+swagger: "2.0"

@@ -6,6 +6,7 @@ package app
 import (
 	"fmt"
 	"geata/internal/app/handler"
+	"geata/internal/app/web"
 )
 
 // Handlers represents a collection of handlers
@@ -67,5 +68,6 @@ func (app *App) NewHandlers() error {
 
 // Start starts application.
 func (app *App) Start() error {
-	return nil
+	router := web.SetupRouter()
+	return router.Run(fmt.Sprintf(":%d", app.Config.Server.Port))
 }
