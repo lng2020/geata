@@ -21,6 +21,7 @@ export const userGlobalStore = defineStore({
                 showOptions: false,
             },
         ] as Station[],
+        sidebarVisible: true,
     }),
     actions: {
         async fetchStations() {
