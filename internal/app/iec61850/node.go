@@ -92,7 +92,7 @@ type DataAttribute struct {
 	elementCount   int
 	fc             FunctionalConstraint
 	datype         DataAttributeType
-	triggerOptions uint8
+	triggerOptions byte
 	mmsValue       *mms.MmsValue
 	sAddr          uint32
 }
