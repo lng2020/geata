@@ -1,3 +1,6 @@
+// Copyright 2023 lng2020. All rights reserved.
+// SPDX-License-Identifier: MIT
+
 package model
 
 import "xorm.io/xorm"
