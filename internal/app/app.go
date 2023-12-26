@@ -5,8 +5,8 @@ package app
 
 import (
 	"fmt"
-	"geata/internal/app/handler"
 	"geata/internal/app/model"
+	"geata/internal/app/service"
 	"geata/internal/app/web"
 
 	"xorm.io/xorm"
@@ -15,7 +15,7 @@ import (
 // App represents the application.
 type App struct {
 	Config   *AppConfig
-	Stations []*handler.Station
+	Stations []*service.Station
 	db       *xorm.Engine
 }
 
@@ -76,28 +76,33 @@ func (app *App) InitDB() error {
 	return nil
 }
 
+// InitStations initializes stations.
+func (app *App) InitStations() error {
+	stationsFromDB, err := model.GetAllStations(app.db)
+	if err != nil {
+		return err
+	}
+
+	for _, stationFromDB := range stationsFromDB {
+		var station *service.Station
+		err := station.InitFromDB(stationFromDB)
+		if err != nil {
+			return err
+		}
+		app.Stations = append(app.Stations, station)
+	}
+	return nil
+}
+
 func (app *App) Init() error {
 	err := app.InitDB()
 	if err != nil {
 		return err
 	}
 
-	app.Stations = make([]*handler.Station, 0)
-
-	stationsFromDB, err := model.GetAllStations(app.db)
+	err = app.InitStations()
 	if err != nil {
 		return err
-	}
-
-	for _, station := range stationsFromDB {
-		stationHandlers := &handler.Handlers{
-			// TODO: add other handlers
-		}
-		station := &handler.Station{
-			Name:     station.Name,
-			Handlers: stationHandlers,
-		}
-		app.Stations = append(app.Stations, station)
 	}
 	return nil
 }

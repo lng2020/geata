@@ -13,7 +13,7 @@ type Station struct {
 	ID             int64     `xorm:"pk autoincr 'id'" json:"id"`
 	Name           string    `xorm:"'name'" json:"name"`
 	Host           string    `xorm:"'host'" json:"host"`
-	Port           int       `xorm:"'port'" json:"port"`
+	Port           int64     `xorm:"'port'" json:"port"`
 	IsOnline       bool      `xorm:"'is_online'" json:"is_online"`
 	LastOnlineTime time.Time `xorm:"'last_online_time'" json:"last_online_time"`
 	CreatedAt      time.Time `xorm:"'created_at' created" json:"created_at"`

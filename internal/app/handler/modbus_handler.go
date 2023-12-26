@@ -62,3 +62,7 @@ func (h *ModbusHandler) Close() {
 		h.client.Close()
 	}
 }
+
+func (h *ModbusHandler) IsOnline() bool {
+	return h.client != nil
+}

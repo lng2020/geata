@@ -1,10 +1,5 @@
 package handler
 
-type Station struct {
-	Name     string
-	Handlers *Handlers
-}
-
 // Handlers represents a collection of handlers
 type Handlers struct {
 	Modbus *ModbusHandler
