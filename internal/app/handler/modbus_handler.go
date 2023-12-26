@@ -12,8 +12,12 @@ type ModbusHandler struct {
 	client *modbus.ModbusClient
 }
 
-// NewModbusHandler creates a new instance of ModbusHandler.
-func NewModbusHandler(endpoint string) (*ModbusHandler, error) {
+func NewModbusHandler() Handler {
+	return &ModbusHandler{}
+}
+
+// Init initializes the Modbus handler with Station configuration.
+func (h *ModbusHandler) Init(endpoint string) error {
 	var err error
 
 	// Create a Modbus client for the specified endpoint
@@ -24,18 +28,16 @@ func NewModbusHandler(endpoint string) (*ModbusHandler, error) {
 	// Note: Use udp:// for Modbus TCP over UDP
 
 	if err != nil {
-		return nil, fmt.Errorf("error creating Modbus client: %v", err)
+		return fmt.Errorf("error creating Modbus client: %v", err)
 	}
 
 	// Attempt to connect
 	err = client.Open()
 	if err != nil {
-		return nil, fmt.Errorf("error opening Modbus connection: %v", err)
+		return fmt.Errorf("error opening connection: %v", err)
 	}
 
-	return &ModbusHandler{
-		client: client,
-	}, nil
+	return nil
 }
 
 // ReadHoldingRegister reads a single holding register at the specified address.
@@ -65,4 +67,8 @@ func (h *ModbusHandler) Close() {
 
 func (h *ModbusHandler) IsOnline() bool {
 	return h.client != nil
+}
+
+func (h *ModbusHandler) Type() HandlerType {
+	return ModbusHandlerType
 }

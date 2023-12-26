@@ -5,6 +5,7 @@ package app
 
 import (
 	"fmt"
+	"geata/internal/app/handler"
 	"geata/internal/app/model"
 	"geata/internal/app/service"
 	"geata/internal/app/web"
@@ -76,6 +77,13 @@ func (app *App) InitDB() error {
 	return nil
 }
 
+// RegisterHandlers registers handlers.
+func (app *App) RegisterHandlers() error {
+	// TODO: add more handlers
+	handler.RegisterHandler(handler.ModbusHandlerType, handler.NewModbusHandler)
+	return nil
+}
+
 // InitStations initializes stations.
 func (app *App) InitStations() error {
 	stationsFromDB, err := model.GetAllStations(app.db)
@@ -96,6 +104,11 @@ func (app *App) InitStations() error {
 
 func (app *App) Init() error {
 	err := app.InitDB()
+	if err != nil {
+		return err
+	}
+
+	err = app.RegisterHandlers()
 	if err != nil {
 		return err
 	}
