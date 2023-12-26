@@ -13,7 +13,6 @@ import (
 type AppConfig struct {
 	Server   ServerConfig   `yaml:"server"`
 	Logger   LoggerConfig   `yaml:"logger"`
-	Plugins  PluginConfig   `yaml:"plugins"`
 	Database DatabaseConfig `yaml:"database"`
 }
 
@@ -27,26 +26,6 @@ type ServerConfig struct {
 type LoggerConfig struct {
 	LogLevel string `yaml:"log_level"`
 	LogFile  string `yaml:"log_file"`
-}
-
-// PluginConfig contains plugin-related configuration.
-type PluginConfig struct {
-	MQTT     MQTTConfig     `yaml:"mqtt"`
-	Modbus   ModbusConfig   `yaml:"modbus"`
-	IEC61850 IEC61850Config `yaml:"iec61850"`
-}
-
-// MQTTConfig contains MQTT plugin configuration.
-type MQTTConfig struct {
-	BrokerAddress string `yaml:"broker_address"`
-	Username      string `yaml:"username"`
-	Password      string `yaml:"password"`
-}
-
-// ModbusConfig contains Modbus plugin configuration.
-type ModbusConfig struct {
-	ServerAddress string `yaml:"server_address"`
-	SlaveID       int    `yaml:"slave_id"`
 }
 
 // IEC61850Config contains IEC 61850 plugin configuration.
@@ -78,20 +57,6 @@ func LoadConfig(configFilePath string) (*AppConfig, error) {
 		Logger: LoggerConfig{
 			LogLevel: "info",
 			LogFile:  "/path/to/default/logfile.log",
-		},
-		Plugins: PluginConfig{
-			MQTT: MQTTConfig{
-				BrokerAddress: "tcp://mqtt.example.com:1883",
-				Username:      "",
-				Password:      "",
-			},
-			Modbus: ModbusConfig{
-				ServerAddress: "tcp://modbus.example.com:502",
-				SlaveID:       1,
-			},
-			IEC61850: IEC61850Config{
-				ServerAddress: "iec61850.example.com",
-			},
 		},
 		Database: DatabaseConfig{
 			Type:     "postgresql",

@@ -6,20 +6,17 @@ package app
 import (
 	"fmt"
 	"geata/internal/app/handler"
+	"geata/internal/app/model"
 	"geata/internal/app/web"
-)
 
-// Handlers represents a collection of handlers
-type Handlers struct {
-	Modbus *handler.ModbusHandler
-	// MQTT     *handler.MqttHandler
-	// IEC61850 *handler.Iec61850Handler
-}
+	"xorm.io/xorm"
+)
 
 // App represents the application.
 type App struct {
 	Config   *AppConfig
-	Handlers *Handlers
+	Stations []*handler.Station
+	db       *xorm.Engine
 }
 
 // NewApp creates a new instance of App.
@@ -40,28 +37,67 @@ func (app *App) NewConfig(configFile string) error {
 	return nil
 }
 
-// NewHandlers creates a new instance of Handlers with initialized handlers.
-func (app *App) NewHandlers() error {
-	endpoint := fmt.Sprintf(app.Config.Plugins.Modbus.ServerAddress, app.Config.Plugins.Modbus.SlaveID)
-	modbusHandler, err := handler.NewModbusHandler(endpoint)
+// InitDB initializes database.
+func (app *App) InitDB() error {
+	dbconf := app.Config.Database
+	driverName := ""
+
+	switch dbconf.Type {
+	case "mysql":
+		driverName = "mysql"
+	case "sqlite3":
+		driverName = "sqlite3"
+	default:
+		return fmt.Errorf("unsupported database type: %s", dbconf.Type)
+	}
+
+	dataSourceName := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local",
+		dbconf.Username,
+		dbconf.Password,
+		dbconf.Host,
+		dbconf.Port,
+		dbconf.DBName)
+
+	Engine, err := xorm.NewEngine(driverName, dataSourceName)
 	if err != nil {
 		return err
 	}
 
-	// mqttHandler := NewMqttHandler()
-	// if err != nil {
-	// 	return nil, err
-	// }
+	err = Engine.Ping()
+	if err != nil {
+		return err
+	}
 
-	// iec61850Handler := NewIec61850Handler()
-	// if err != nil {
-	// 	return nil, err
-	// }
+	Engine.ShowSQL(true)
+	Engine.SetMaxIdleConns(10)
+	Engine.SetMaxOpenConns(100)
 
-	app.Handlers = &Handlers{
-		Modbus: modbusHandler,
-		// MQTT:     mqttHandler,
-		// IEC61850: iec61850Handler,
+	app.db = Engine
+	return nil
+}
+
+func (app *App) Init() error {
+	err := app.InitDB()
+	if err != nil {
+		return err
+	}
+
+	app.Stations = make([]*handler.Station, 0)
+
+	stationsFromDB, err := model.GetAllStations(app.db)
+	if err != nil {
+		return err
+	}
+
+	for _, station := range stationsFromDB {
+		stationHandlers := &handler.Handlers{
+			// TODO: add other handlers
+		}
+		station := &handler.Station{
+			Name:     station.Name,
+			Handlers: stationHandlers,
+		}
+		app.Stations = append(app.Stations, station)
 	}
 	return nil
 }
