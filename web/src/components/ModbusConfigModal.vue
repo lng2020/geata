@@ -49,7 +49,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, defineEmits } from 'vue'
+import { ref } from 'vue'
 
 const address = ref(0)
 const dataType = ref('int16')
