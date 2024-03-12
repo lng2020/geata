@@ -1,6 +1,5 @@
 <template>
   <div class="p-4">
-    <h1 class="text-2xl font-semibold mb-4">Station Web Page</h1>
     <IEC61850Tree />
   </div>
 </template>
