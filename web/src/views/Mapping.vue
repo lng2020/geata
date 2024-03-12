@@ -4,16 +4,15 @@
     <MappingTable />
   </div>
 </template>
-  
+
 <script lang="ts">
 export default {
-  name: "Mapping",
+  name: 'Mapping'
 }
 </script>
 
 <script lang="ts" setup>
-import MappingTable from "@/components/MappingTable.vue";
+import MappingTable from '@/components/MappingTable.vue'
 </script>
-  
+
 <style scoped></style>
-  

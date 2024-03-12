@@ -23,24 +23,24 @@
 </template>
 
 <script lang="ts" setup>
-import { defineEmits } from 'vue';
+import { defineEmits } from 'vue'
 
 defineProps<{
-  show: boolean;
-  title: string;
-  message: string;
-}>();
+  show: boolean
+  title: string
+  message: string
+}>()
 
 const emit = defineEmits<{
-  (event: 'confirm'): void;
-  (event: 'cancel'): void;
-}>();
+  (event: 'confirm'): void
+  (event: 'cancel'): void
+}>()
 
 const confirm = () => {
-  emit('confirm');
-};
+  emit('confirm')
+}
 
 const cancel = () => {
-  emit('cancel');
-};
+  emit('cancel')
+}
 </script>
