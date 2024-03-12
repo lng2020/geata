@@ -45,7 +45,10 @@
               <router-link :to="{ path: '/station/' + station.id }">Overview</router-link>
             </li>
             <li class="text-white text ml-32 mb-4">
-              <router-link :to="{ path: '/mapping/' + station.id }">mapping</router-link>
+              <router-link :to="{ path: '/mapping/' + station.id }">Mapping</router-link>
+            </li>
+            <li class="text-white text ml-32 mb-4">
+              <router-link :to="{ path: '/setting/' + station.id }">Setting</router-link>
             </li>
           </ul>
         </div>

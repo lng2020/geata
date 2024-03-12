@@ -1,6 +1,7 @@
 import Dashboard from '@/views/Dashboard.vue'
 import Station from '@/views/Station.vue'
 import Mapping from '@/views/Mapping.vue'
+import Setting from '@/views/Setting.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -20,6 +21,11 @@ const router = createRouter({
       path: '/mapping/:id',
       name: 'mapping',
       component: Mapping
+    },
+    {
+      path: '/setting/:id',
+      name: 'setting',
+      component: Setting
     }
   ]
 })

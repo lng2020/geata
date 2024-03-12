@@ -52,6 +52,6 @@ function createStation() {
 }
 
 function editConfig(stationId: number) {
-  router.push(`/stations/${stationId}/settings`);
+  router.push(`/setting/${stationId}`);
 }
 </script>
