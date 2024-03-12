@@ -91,14 +91,14 @@ const logicalNodes = ref([
       {
         name: 'DO1',
         dataAttributes: [
-          { name: 'DA1', ref: 'LN1.DO1.DA1', value: 'Value 1', dataSource: 'MQTT' },
-          { name: 'DA2', ref: 'LN1.DO1.DA2', value: 'Value 2', dataSource: 'MQTT' },
+          { name: 'DA1', ref: 'LD0/LLN0$ST$stVal', value: 'Value 1', dataSource: 'MQTT' },
+          { name: 'DA2', ref: 'LD0/LLN0$ST$stVal', value: 'Value 2', dataSource: 'MQTT' },
         ],
       },
       {
         name: 'DO2',
         dataAttributes: [
-          { name: 'DA3', ref: 'LN1.DO2.DA3', value: 'Value 3', dataSource: 'Modbus' },
+          { name: 'DA3', ref: 'LD0/LLN0$ST$stVal', value: 'Value 3', dataSource: 'Modbus' },
         ],
       },
     ],
@@ -109,7 +109,7 @@ const logicalNodes = ref([
       {
         name: 'DO3',
         dataAttributes: [
-          { name: 'DA4', ref: 'LN2.DO3.DA4', value: 'Value 4', dataSource: 'IEC 61850' },
+          { name: 'DA4', ref: 'LD0/LLN0$ST$stVal', value: 'Value 4', dataSource: 'IEC 61850' },
         ],
       },
     ],

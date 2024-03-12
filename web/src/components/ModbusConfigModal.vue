@@ -2,7 +2,7 @@
   <div class="fixed inset-0 flex items-center justify-center z-50">
     <div class="absolute inset-0 bg-gray-900 opacity-50"></div>
     <div class="bg-white rounded-lg p-6 m-4 max-w-md z-10">
-      <h2 class="text-xl font-bold mb-4">Modbus TCP Configuration</h2>
+      <h2 class="text-xl font-bold mb-4">Modbus Configuration</h2>
       <form @submit.prevent="saveConfig">
         <div class="mb-4">
           <label for="address" class="block text-gray-700 font-bold mb-2">Address:</label>
