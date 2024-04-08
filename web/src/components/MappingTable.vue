@@ -62,8 +62,12 @@
       @cancel="closeModal"
     />
     <MQTTConfigModal v-if="showMQTTConfig" @save="saveMQTTConfig" @cancel="closeMQTTConfig" />
-    <ModbusConfigModal v-if="showModbusConfig" @save="saveModbusConfig" @cancel="closeModbusConfig" />
-  </div>  
+    <ModbusConfigModal
+      v-if="showModbusConfig"
+      @save="saveModbusConfig"
+      @cancel="closeModbusConfig"
+    />
+  </div>
 </template>
 
 <script lang="ts" setup>

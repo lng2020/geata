@@ -1,33 +1,33 @@
 import { defineStore } from 'pinia'
 
 interface Station {
-    id: number;
-    name: string;
-    showOptions: boolean;
+  id: number
+  name: string
+  showOptions: boolean
 }
 
 export const userGlobalStore = defineStore({
-    id: 'global',
-    state: () => ({
-        stations: [
-            {
-                id: 1,
-                name: 'Station 1',
-                showOptions: false,
-            },
-            {
-                id: 2,
-                name: 'Station 2',
-                showOptions: false,
-            },
-        ] as Station[],
-        sidebarVisible: true,
-    }),
-    actions: {
-        async fetchStations() {
-            const response = await fetch('/api/stations')
-            const data = await response.json()
-            this.stations = data
-        },
-    },
-});
+  id: 'global',
+  state: () => ({
+    stations: [
+      {
+        id: 1,
+        name: 'Station 1',
+        showOptions: false
+      },
+      {
+        id: 2,
+        name: 'Station 2',
+        showOptions: false
+      }
+    ] as Station[],
+    sidebarVisible: true
+  }),
+  actions: {
+    async fetchStations() {
+      const response = await fetch('/api/stations')
+      const data = await response.json()
+      this.stations = data
+    }
+  }
+})

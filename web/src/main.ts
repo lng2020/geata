@@ -11,7 +11,7 @@ import router from './router'
 library.add(fas)
 
 createApp(App)
-.use(createPinia())
-.use(router)
-.component('font-awesome-icon', FontAwesomeIcon)
-.mount('#app')
+  .use(createPinia())
+  .use(router)
+  .component('font-awesome-icon', FontAwesomeIcon)
+  .mount('#app')

@@ -48,9 +48,22 @@
               </tr>
             </thead>
             <tbody>
-              <template v-for="(dObj, dObjIndex) in selectedLogicalNode.dataObjects" :key="dObjIndex">
-                <tr v-for="(dAttr, dAttrIndex) in dObj.dataAttributes" :key="dAttrIndex" class="border-t">
-                  <td v-if="dAttrIndex === 0" :rowspan="dObj.dataAttributes.length" class="px-4 py-2 align-top">{{ dObj.name }}</td>
+              <template
+                v-for="(dObj, dObjIndex) in selectedLogicalNode.dataObjects"
+                :key="dObjIndex"
+              >
+                <tr
+                  v-for="(dAttr, dAttrIndex) in dObj.dataAttributes"
+                  :key="dAttrIndex"
+                  class="border-t"
+                >
+                  <td
+                    v-if="dAttrIndex === 0"
+                    :rowspan="dObj.dataAttributes.length"
+                    class="px-4 py-2 align-top"
+                  >
+                    {{ dObj.name }}
+                  </td>
                   <td class="px-4 py-2">{{ dAttr.name }}</td>
                   <td class="px-4 py-2">{{ dAttr.ref }}</td>
                   <td class="px-4 py-2">{{ dAttr.value }}</td>
@@ -67,7 +80,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue';
+import { ref, computed } from 'vue'
 
 const iedModel = ref([
   {
@@ -75,14 +88,11 @@ const iedModel = ref([
     logicalDevices: [
       {
         name: 'LD1',
-        logicalNodes: [
-          { name: 'LN1' },
-          { name: 'LN2' },
-        ],
-      },
-    ],
-  },
-]);
+        logicalNodes: [{ name: 'LN1' }, { name: 'LN2' }]
+      }
+    ]
+  }
+])
 
 const logicalNodes = ref([
   {
@@ -92,16 +102,16 @@ const logicalNodes = ref([
         name: 'DO1',
         dataAttributes: [
           { name: 'DA1', ref: 'LD0/LLN0$ST$stVal', value: 'Value 1', dataSource: 'MQTT' },
-          { name: 'DA2', ref: 'LD0/LLN0$ST$stVal', value: 'Value 2', dataSource: 'MQTT' },
-        ],
+          { name: 'DA2', ref: 'LD0/LLN0$ST$stVal', value: 'Value 2', dataSource: 'MQTT' }
+        ]
       },
       {
         name: 'DO2',
         dataAttributes: [
-          { name: 'DA3', ref: 'LD0/LLN0$ST$stVal', value: 'Value 3', dataSource: 'Modbus' },
-        ],
-      },
-    ],
+          { name: 'DA3', ref: 'LD0/LLN0$ST$stVal', value: 'Value 3', dataSource: 'Modbus' }
+        ]
+      }
+    ]
   },
   {
     name: 'LN2',
@@ -109,20 +119,20 @@ const logicalNodes = ref([
       {
         name: 'DO3',
         dataAttributes: [
-          { name: 'DA4', ref: 'LD0/LLN0$ST$stVal', value: 'Value 4', dataSource: 'IEC 61850' },
-        ],
-      },
-    ],
-  },
-]);
+          { name: 'DA4', ref: 'LD0/LLN0$ST$stVal', value: 'Value 4', dataSource: 'IEC 61850' }
+        ]
+      }
+    ]
+  }
+])
 
-const selectedLN = ref('');
+const selectedLN = ref('')
 
 const selectedLogicalNode = computed(() => {
-  return logicalNodes.value.find(ln => ln.name === selectedLN.value);
-});
+  return logicalNodes.value.find((ln) => ln.name === selectedLN.value)
+})
 
 function selectLogicalNode(lnName: string) {
-  selectedLN.value = lnName;
+  selectedLN.value = lnName
 }
 </script>

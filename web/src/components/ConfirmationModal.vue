@@ -23,7 +23,6 @@
 </template>
 
 <script lang="ts" setup>
-
 defineProps<{
   show: boolean
   title: string
