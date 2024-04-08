@@ -2,6 +2,7 @@ package client
 
 import (
 	"bufio"
+	"context"
 	"log"
 	"os/exec"
 )
@@ -9,6 +10,7 @@ import (
 type IEC61850Client struct {
 	IP   string
 	Port string
+	ctx  context.Context
 }
 
 func NewIEC61850Client(ip string, port string) *IEC61850Client {
@@ -20,7 +22,7 @@ func NewIEC61850Client(ip string, port string) *IEC61850Client {
 
 // Start method is used to start the IEC61850 client
 func (c *IEC61850Client) Start(s chan string) {
-	cmd := exec.Command("iec61850_client", c.IP, c.Port)
+	cmd := exec.CommandContext(c.ctx, "iec61850_client", c.IP, c.Port)
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		log.Fatal(err)
@@ -33,11 +35,15 @@ func (c *IEC61850Client) Start(s chan string) {
 
 	scanner := bufio.NewScanner(stdout)
 	for scanner.Scan() {
-		rawText := scanner.Text()
-		go parse(rawText, s)
+		s <- parse(scanner.Text())
 	}
 }
 
-func parse(rawText string, s chan string) {
+func (c *IEC61850Client) Close() {
+	c.ctx.Done()
+}
+
+func parse(_ string) string {
 	// TODO: Implement the parsing logic here
+	return ""
 }
