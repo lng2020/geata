@@ -1,0 +1,43 @@
+package client
+
+import (
+	"bufio"
+	"log"
+	"os/exec"
+)
+
+type IEC61850Client struct {
+	IP   string
+	Port string
+}
+
+func NewIEC61850Client(ip string, port string) *IEC61850Client {
+	return &IEC61850Client{
+		IP:   ip,
+		Port: port,
+	}
+}
+
+// Start method is used to start the IEC61850 client
+func (c *IEC61850Client) Start(s chan string) {
+	cmd := exec.Command("iec61850_client", c.IP, c.Port)
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err := cmd.Start(); err != nil {
+		log.Fatal(err)
+	}
+	defer cmd.Wait()
+	defer cmd.Process.Kill()
+
+	scanner := bufio.NewScanner(stdout)
+	for scanner.Scan() {
+		rawText := scanner.Text()
+		go parse(rawText, s)
+	}
+}
+
+func parse(rawText string, s chan string) {
+	// TODO: Implement the parsing logic here
+}
