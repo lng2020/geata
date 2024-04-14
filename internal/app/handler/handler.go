@@ -25,4 +25,5 @@ type Handler interface {
 	// TODO: add more methods
 	Type() HandlerType
 	IsOnline() bool
+	Handle(s chan string)
 }

@@ -16,6 +16,9 @@ func NewModbusHandler() Handler {
 	return &ModbusHandler{}
 }
 
+func (h *ModbusHandler) Handle(s chan string) {
+}
+
 // Init initializes the Modbus handler with Station configuration.
 func (h *ModbusHandler) Init(endpoint string) error {
 	var err error
