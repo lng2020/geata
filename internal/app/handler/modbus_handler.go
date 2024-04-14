@@ -2,7 +2,7 @@ package handler
 
 import (
 	"fmt"
-	"time"
+	"log"
 
 	"github.com/simonvetter/modbus"
 )
@@ -12,35 +12,20 @@ type ModbusHandler struct {
 	client *modbus.ModbusClient
 }
 
-func NewModbusHandler() Handler {
-	return &ModbusHandler{}
+type ModbusHandlerConfig struct {
+	URL string
+}
+
+func NewModbusHandler(hc HandlerConfig) Handler {
+	config := hc.(ModbusHandlerConfig)
+	client, err := modbus.NewClient(&modbus.ClientConfiguration{URL: config.URL})
+	if err != nil {
+		log.Fatal(err)
+	}
+	return &ModbusHandler{client: client}
 }
 
 func (h *ModbusHandler) Handle(s chan string) {
-}
-
-// Init initializes the Modbus handler with Station configuration.
-func (h *ModbusHandler) Init(endpoint string) error {
-	var err error
-
-	// Create a Modbus client for the specified endpoint
-	client, err := modbus.NewClient(&modbus.ClientConfiguration{
-		URL:     endpoint,
-		Timeout: 1 * time.Second,
-	})
-	// Note: Use udp:// for Modbus TCP over UDP
-
-	if err != nil {
-		return fmt.Errorf("error creating Modbus client: %v", err)
-	}
-
-	// Attempt to connect
-	err = client.Open()
-	if err != nil {
-		return fmt.Errorf("error opening connection: %v", err)
-	}
-
-	return nil
 }
 
 // ReadHoldingRegister reads a single holding register at the specified address.

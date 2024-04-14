@@ -8,7 +8,9 @@ const (
 	IEC61850HandlerType HandlerType = "IEC61850"
 )
 
-type HandlerFactory func() Handler
+type HandlerConfig interface{}
+
+type HandlerFactory func(HandlerConfig) Handler
 
 var supportedHandler = map[HandlerType]HandlerFactory{}
 
@@ -22,7 +24,6 @@ type Handlers struct {
 }
 
 type Handler interface {
-	// TODO: add more methods
 	Type() HandlerType
 	IsOnline() bool
 	Handle(s chan string)

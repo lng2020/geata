@@ -11,12 +11,21 @@ type MQTTHandler struct {
 	topic  string
 }
 
-func NewMQTTHandler(broker, clientID, username, password, topic string) *MQTTHandler {
+type MQTTHandlerConfig struct {
+	Broker   string
+	ClientID string
+	Username string
+	Password string
+	Topic    string
+}
+
+func NewMQTTHandler(hc HandlerConfig) Handler {
+	config := hc.(MQTTHandlerConfig)
 	opts := mqtt.NewClientOptions()
-	opts.AddBroker(broker)
-	opts.SetClientID(clientID)
-	opts.SetUsername(username)
-	opts.SetPassword(password)
+	opts.AddBroker(config.Broker)
+	opts.SetClientID(config.ClientID)
+	opts.SetUsername(config.Username)
+	opts.SetPassword(config.Password)
 
 	client := mqtt.NewClient(opts)
 	if token := client.Connect(); token.Wait() && token.Error() != nil {
@@ -25,7 +34,7 @@ func NewMQTTHandler(broker, clientID, username, password, topic string) *MQTTHan
 
 	return &MQTTHandler{
 		client: client,
-		topic:  topic,
+		topic:  config.Topic,
 	}
 }
 

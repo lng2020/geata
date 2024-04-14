@@ -79,8 +79,9 @@ func (app *App) InitDB() error {
 
 // RegisterHandlers registers handlers.
 func (app *App) RegisterHandlers() error {
-	// TODO: add more handlers
 	handler.RegisterHandler(handler.ModbusHandlerType, handler.NewModbusHandler)
+	handler.RegisterHandler(handler.MQTTHandlerType, handler.NewMQTTHandler)
+	handler.RegisterHandler(handler.IEC61850HandlerType, handler.NewIEC61850Handler)
 	return nil
 }
 

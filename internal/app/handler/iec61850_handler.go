@@ -8,7 +8,14 @@ type IEC61850Handler struct {
 	client *client.IEC61850Client
 }
 
-func NewIEC61850Handler(client *client.IEC61850Client) *IEC61850Handler {
+type IEC61850HandlerConfig struct {
+	IP   string
+	Port string
+}
+
+func NewIEC61850Handler(hc HandlerConfig) Handler {
+	config := hc.(IEC61850HandlerConfig)
+	client := client.NewIEC61850Client(config.IP, config.Port)
 	return &IEC61850Handler{client: client}
 }
 
