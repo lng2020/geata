@@ -12,6 +12,7 @@ import (
 
 	_ "github.com/mattn/go-sqlite3"
 	"xorm.io/xorm"
+	"xorm.io/xorm/names"
 )
 
 // App represents the application.
@@ -19,6 +20,14 @@ type App struct {
 	Config   *AppConfig
 	Stations []*service.Station
 	db       *xorm.Engine
+}
+
+var models = []any{
+	new(model.Station),
+	new(model.Node),
+	new(model.MappingRule),
+	new(model.MqttDetail),
+	new(model.ModbusDetail),
 }
 
 // NewApp creates a new instance of App.
@@ -82,6 +91,12 @@ func (app *App) InitDB() error {
 	Engine.ShowSQL(true)
 	Engine.SetMaxIdleConns(10)
 	Engine.SetMaxOpenConns(100)
+	Engine.SetMapper(names.GonicMapper{})
+
+	err = Engine.Sync(models...)
+	if err != nil {
+		return err
+	}
 
 	app.db = Engine
 	return nil

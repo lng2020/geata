@@ -9,7 +9,7 @@ import (
 	"xorm.io/xorm"
 )
 
-type node struct {
+type Node struct {
 	ID          int64     `xorm:"pk autoincr 'id'" json:"id"`
 	StationID   int64     `xorm:"'station_id' index" json:"station_id"`
 	IEC61850Ref string    `xorm:"'iec61850_ref'" json:"iec61850_ref"`
@@ -18,54 +18,54 @@ type node struct {
 	UpdatedAt   time.Time `xorm:"'updated_at' updated" json:"updated_at"`
 }
 
-func (n *node) TableName() string {
-	return "node"
+func (n *Node) TableName() string {
+	return "Node"
 }
 
-func Createnode(engine *xorm.Engine, node *node) error {
-	_, err := engine.Insert(node)
+func CreateNode(engine *xorm.Engine, Node *Node) error {
+	_, err := engine.Insert(Node)
 	return err
 }
 
-func GetnodeByID(engine *xorm.Engine, id int64) (*node, error) {
-	node := new(node)
-	has, err := engine.ID(id).Get(node)
+func GetNodeByID(engine *xorm.Engine, id int64) (*Node, error) {
+	Node := new(Node)
+	has, err := engine.ID(id).Get(Node)
 	if err != nil {
 		return nil, err
 	}
 	if !has {
 		return nil, nil
 	}
-	return node, nil
+	return Node, nil
 }
 
-func GetnodeByRef(engine *xorm.Engine, ref string) (*node, error) {
-	node := new(node)
-	has, err := engine.Where("iec61850_ref = ?", ref).Get(node)
+func GetNodeByRef(engine *xorm.Engine, ref string) (*Node, error) {
+	Node := new(Node)
+	has, err := engine.Where("iec61850_ref = ?", ref).Get(Node)
 	if err != nil {
 		return nil, err
 	}
 	if !has {
 		return nil, nil
 	}
-	return node, nil
+	return Node, nil
 }
 
-func GetAllnodes(engine *xorm.Engine, stationID int64) ([]*node, error) {
-	var nodes []*node
-	err := engine.Where("station_id = ?", stationID).Find(&nodes)
+func GetAllNodes(engine *xorm.Engine, stationID int64) ([]*Node, error) {
+	var Nodes []*Node
+	err := engine.Where("station_id = ?", stationID).Find(&Nodes)
 	if err != nil {
 		return nil, err
 	}
-	return nodes, nil
+	return Nodes, nil
 }
 
-func Updatenode(engine *xorm.Engine, node *node) error {
-	_, err := engine.ID(node.ID).Update(node)
+func UpdateNode(engine *xorm.Engine, Node *Node) error {
+	_, err := engine.ID(Node.ID).Update(Node)
 	return err
 }
 
-func Deletenode(engine *xorm.Engine, node *node) error {
-	_, err := engine.ID(node.ID).Delete(node)
+func DeleteNode(engine *xorm.Engine, Node *Node) error {
+	_, err := engine.ID(Node.ID).Delete(Node)
 	return err
 }
