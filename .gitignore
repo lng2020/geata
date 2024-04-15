@@ -1,4 +1,6 @@
 *.exe
 .vscode/
 __*
-./web/node_modules
+web/node_modules
+geata
+internal/app/config.yaml
