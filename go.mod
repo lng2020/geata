@@ -3,6 +3,7 @@ module geata
 go 1.22
 
 require (
+	github.com/mattn/go-sqlite3 v1.14.22
 	github.com/spf13/cobra v1.7.0
 	github.com/swaggo/files v1.0.1
 	github.com/swaggo/gin-swagger v1.6.0

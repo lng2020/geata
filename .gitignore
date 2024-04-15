@@ -4,3 +4,4 @@ __*
 web/node_modules
 geata
 internal/app/config.yaml
+*.db

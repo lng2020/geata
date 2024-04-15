@@ -10,6 +10,7 @@ import (
 	"geata/internal/app/service"
 	"geata/internal/app/web"
 
+	_ "github.com/mattn/go-sqlite3"
 	"xorm.io/xorm"
 )
 
@@ -42,22 +43,31 @@ func (app *App) NewConfig(configFile string) error {
 func (app *App) InitDB() error {
 	dbconf := app.Config.Database
 	driverName := ""
+	dataSourceName := ""
 
 	switch dbconf.Type {
 	case "mysql":
 		driverName = "mysql"
+		dataSourceName = fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local",
+			dbconf.Username,
+			dbconf.Password,
+			dbconf.Host,
+			dbconf.Port,
+			dbconf.DBName)
 	case "sqlite3":
 		driverName = "sqlite3"
+		dataSourceName = dbconf.DBName
+	case "postgres":
+		driverName = "postgres"
+		dataSourceName = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+			dbconf.Host,
+			dbconf.Port,
+			dbconf.Username,
+			dbconf.Password,
+			dbconf.DBName)
 	default:
 		return fmt.Errorf("unsupported database type: %s", dbconf.Type)
 	}
-
-	dataSourceName := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local",
-		dbconf.Username,
-		dbconf.Password,
-		dbconf.Host,
-		dbconf.Port,
-		dbconf.DBName)
 
 	Engine, err := xorm.NewEngine(driverName, dataSourceName)
 	if err != nil {
