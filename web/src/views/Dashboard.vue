@@ -61,7 +61,9 @@ const stations = ref([
   // Add more stations as needed
 ])
 
-function createStation() {}
+function createStation() {
+  router.push(`/station/create`)
+}
 
 function editConfig(stationId: number) {
   router.push(`/setting/${stationId}`)
