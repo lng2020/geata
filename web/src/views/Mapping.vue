@@ -4,14 +4,6 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  name: 'Mapping'
-}
-</script>
-
 <script lang="ts" setup>
 import MappingTable from '@/components/MappingTable.vue'
 </script>
-
-<style scoped></style>
