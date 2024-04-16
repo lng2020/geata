@@ -20,7 +20,7 @@ const router = createRouter({
     },
     {
       path: '/station/create',
-      component: StationCreate,
+      component: StationCreate
     },
     {
       path: '/mapping/:id',

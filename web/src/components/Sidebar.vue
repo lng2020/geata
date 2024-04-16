@@ -1,23 +1,51 @@
 <template>
   <div class="h-screen w-64 bg-gray-800">
-    <div class="flex items-center px-4 py-3"> <img src="../assets/gopher.png" alt="logo" class="w-8 h-8 mr-2" /> <span
-        class="text-white text-xl font-bold">Geata</span> </div>
-    <nav class="mt-6"> <router-link to="/" class="flex items-center px-4 py-2 text-white hover:bg-gray-700">
-        <font-awesome-icon icon="fa-solid fa-home" class="text-lg mr-2"></font-awesome-icon> <span>Dashboard</span>
+    <div class="flex items-center px-4 py-3">
+      <img src="../assets/gopher.png" alt="logo" class="w-8 h-8 mr-2" />
+      <span class="text-white text-xl font-bold">Geata</span>
+    </div>
+    <nav class="mt-6">
+      <router-link to="/" class="flex items-center px-4 py-2 text-white hover:bg-gray-700">
+        <font-awesome-icon icon="fa-solid fa-home" class="text-lg mr-2"></font-awesome-icon>
+        <span>Dashboard</span>
       </router-link>
-      <div v-for="(station, index) in stations" :key="index" class="mt-4"> <button @click="toggleOptions(index)"
-          class="flex items-center justify-between w-full px-4 py-2 text-white hover:bg-gray-700">
-          <div class="flex items-center"> <font-awesome-icon icon="fa-solid fa-charging-station"
-              class="text-lg mr-2"></font-awesome-icon> <span>{{ station.name }}</span> </div> <font-awesome-icon
+      <div v-for="(station, index) in stations" :key="index" class="mt-4">
+        <button
+          @click="toggleOptions(index)"
+          class="flex items-center justify-between w-full px-4 py-2 text-white hover:bg-gray-700"
+        >
+          <div class="flex items-center">
+            <font-awesome-icon
+              icon="fa-solid fa-charging-station"
+              class="text-lg mr-2"
+            ></font-awesome-icon>
+            <span>{{ station.name }}</span>
+          </div>
+          <font-awesome-icon
             :icon="station.showOptions ? 'fa-solid fa-chevron-up' : 'fa-solid fa-chevron-down'"
-            class="text-sm"></font-awesome-icon>
+            class="text-sm"
+          ></font-awesome-icon>
         </button>
-        <div v-show="station.showOptions" class="mt-2 space-y-2 pl-12"> <router-link
-            :to="{ path: '/station/' + station.id }" class="block text-sm text-gray-400 hover:text-white"> Overview
-          </router-link> <router-link :to="{ path: '/mapping/' + station.id }"
-            class="block text-sm text-gray-400 hover:text-white"> Mapping </router-link> <router-link
-            :to="{ path: '/setting/' + station.id }" class="block text-sm text-gray-400 hover:text-white"> Setting
-          </router-link> </div>
+        <div v-show="station.showOptions" class="mt-2 space-y-2 pl-12">
+          <router-link
+            :to="{ path: '/station/' + station.id }"
+            class="block text-sm text-gray-400 hover:text-white"
+          >
+            Overview
+          </router-link>
+          <router-link
+            :to="{ path: '/mapping/' + station.id }"
+            class="block text-sm text-gray-400 hover:text-white"
+          >
+            Mapping
+          </router-link>
+          <router-link
+            :to="{ path: '/setting/' + station.id }"
+            class="block text-sm text-gray-400 hover:text-white"
+          >
+            Setting
+          </router-link>
+        </div>
       </div>
     </nav>
   </div>
