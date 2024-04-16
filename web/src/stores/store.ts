@@ -86,7 +86,24 @@ export const userGlobalStore = defineStore({
           }
         ]
       }
-    ] as LogicalNode[]
+    ] as LogicalNode[],
+    auditLogs: [
+      {
+        id: 1,
+        message: 'Station 1 is offline',
+        createAt: '2023-06-08T10:00:00Z'
+      },
+      {
+        id: 2,
+        message: 'Station 2 is online',
+        createAt: '2023-06-08T10:00:00Z'
+      },
+      {
+        id: 3,
+        message: 'Station 1 is online',
+        createAt: '2023-06-08T10:00:00Z'
+      }
+    ]
   }),
   actions: {
     async fetchStations() {

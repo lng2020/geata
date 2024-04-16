@@ -44,3 +44,9 @@ export interface IEDModel {
   name: string
   logicalDevices: LogicalDevice[]
 }
+
+export interface AuditLog {
+  id: number
+  message: string
+  createAt: string
+}
