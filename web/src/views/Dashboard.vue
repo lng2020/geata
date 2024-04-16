@@ -16,6 +16,8 @@
           <th class="py-3 px-6 text-left">Name</th>
           <th class="py-3 px-6 text-left">Is Online</th>
           <th class="py-3 px-6 text-left">Last Online Time</th>
+          <th class="py-3 px-6 text-left">Host</th>
+          <th class="py-3 px-6 text-left">Port</th>
           <th class="py-3 px-6 text-center">Actions</th>
         </tr>
       </thead>
@@ -35,6 +37,8 @@
             </span>
           </td>
           <td class="py-4 px-6">{{ station.lastOnlineTime }}</td>
+          <td class="py-4 px-6">{{ station.host }}</td>
+          <td class="py-4 px-6">{{ station.port }}</td>
           <td class="py-4 px-6 text-center flex justify-center items-center space-x-2">
             <button
               @click="editConfig(station.id)"
