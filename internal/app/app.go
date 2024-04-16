@@ -118,11 +118,17 @@ func (app *App) InitStations() error {
 	}
 
 	for _, stationFromDB := range stationsFromDB {
-		var station *service.Station
+		station := &service.Station{}
 		err := station.InitFromDB(stationFromDB)
 		if err != nil {
 			return err
 		}
+
+		for _, handlerType := range handler.HandlerTypes {
+			config := station.Configs[handlerType]
+			station.Handlers[handlerType] = handler.SupportedHandler[handlerType](config)
+		}
+
 		app.Stations = append(app.Stations, station)
 	}
 	return nil

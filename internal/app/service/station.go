@@ -6,11 +6,12 @@ import (
 )
 
 type Station struct {
-	ID   int64
-	Name string
-	Host string
-	Port int64
-	*handler.Handlers
+	ID       int64
+	Name     string
+	Host     string
+	Port     int64
+	Handlers map[handler.HandlerType]handler.Handler
+	Configs  map[handler.HandlerType]handler.HandlerConfig
 }
 
 func (s *Station) InitFromDB(stationFromDB *model.Station) error {

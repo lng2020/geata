@@ -8,19 +8,20 @@ const (
 	IEC61850HandlerType HandlerType = "IEC61850"
 )
 
+var HandlerTypes = []HandlerType{
+	ModbusHandlerType,
+	MQTTHandlerType,
+	IEC61850HandlerType,
+}
+
 type HandlerConfig interface{}
 
 type HandlerFactory func(HandlerConfig) Handler
 
-var supportedHandler = map[HandlerType]HandlerFactory{}
+var SupportedHandler = map[HandlerType]HandlerFactory{}
 
 func RegisterHandler(ht HandlerType, hf HandlerFactory) {
-	supportedHandler[ht] = hf
-}
-
-// Handlers represents a collection of handlers
-type Handlers struct {
-	Handlers []*Handler
+	SupportedHandler[ht] = hf
 }
 
 type Handler interface {
