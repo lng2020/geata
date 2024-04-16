@@ -71,36 +71,15 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
+import type { Mapping } from '@/types/types'
+import { userGlobalStore } from '@/stores/store'
 import ConfirmationModal from './ConfirmationModal.vue'
 import MQTTConfigModal from './MQTTConfigModal.vue'
 import ModbusConfigModal from './ModbusConfigModal.vue'
 
-type MappingType = 'MQTT' | 'Modbus' | 'IEC61850'
-
-interface Mapping {
-  id: number
-  iec61850Reference: string
-  type: MappingType
-}
-
-const mappings: Mapping[] = [
-  {
-    id: 1,
-    iec61850Reference: 'LD0/LLN0$ST$stVal',
-    type: 'MQTT'
-  },
-  {
-    id: 2,
-    iec61850Reference: 'LD0/LLN0$ST$stVal',
-    type: 'Modbus'
-  },
-  {
-    id: 3,
-    iec61850Reference: 'LD0/LLN0$ST$stVal',
-    type: 'IEC61850'
-  }
-]
+const store = userGlobalStore()
+const mappings = reactive(store.mappings)
 
 const showModal = ref(false)
 const modalTitle = ref('Confirmation')

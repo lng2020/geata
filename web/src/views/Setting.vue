@@ -1,7 +1,7 @@
 <template>
   <div class="container mx-auto p-4">
     <h1 class="text-2xl font-bold mb-4">Settings</h1>
-    <div class="flex">
+    <div v-if="station" class="flex">
       <div class="w-1/2 pr-4">
         <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
           <h2 class="text-xl font-bold mb-4">Configuration</h2>
@@ -61,37 +61,37 @@
         </div>
       </div>
     </div>
+    <div v-else>
+      <p>Loading station...</p>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { userGlobalStore } from '@/stores/store'
+import { ref, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import type { Station } from '@/types/types'
 
-interface Station {
-  id: number
-  name: string
-  host: string
-  port: number
-  isOnline: boolean
-  lastOnlineTime: string
-  createdAt: string
-  updatedAt: string
-}
+const store = userGlobalStore()
+const route = useRoute()
+const router = useRouter()
+const ID = ref<number | null>(null)
+let station = ref<Station | undefined>()
 
-const station = ref<Station>({
-  id: 0,
-  name: '',
-  host: '',
-  port: 0,
-  isOnline: false,
-  lastOnlineTime: '',
-  createdAt: '',
-  updatedAt: ''
+onMounted(() => {
+  const id = route.params.id
+  if (typeof id === 'string') {
+    ID.value = parseInt(id, 10)
+    station.value = store.getStationByID(ID.value)
+  } else {
+    console.error('Invalid station ID')
+    router.push('/error')
+  }
 })
 
 const deleteStation = () => {
-  if (confirm('Are you sure you want to delete this station?')) {
-    // Logic to delete the station
+  if (station.value && confirm('Are you sure you want to delete this station?')) {
     console.log('Deleting station:', station.value)
   }
 }

@@ -50,16 +50,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { userGlobalStore } from '@/stores/store'
+import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-
-const stations = ref([
-  { id: 1, name: 'Station 1', isOnline: true, lastOnlineTime: '2023-06-01 10:00:00' },
-  { id: 2, name: 'Station 2', isOnline: false, lastOnlineTime: '2023-06-02 15:30:00' }
-  // Add more stations as needed
-])
+const store = userGlobalStore()
+const stations = reactive(store.stations)
 
 function createStation() {
   router.push(`/station/create`)

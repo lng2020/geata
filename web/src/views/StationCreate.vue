@@ -77,21 +77,16 @@ async function createStation() {
     if (icdFile.value) {
       formData.append('icdFile', icdFile.value)
     }
-    // Send a POST request to the server to create the station
     const response = await fetch('/api/stations', { method: 'POST', body: formData })
     if (response.ok) {
-      // Station created successfully
       const data = await response.json()
       console.log('Station created:', data)
-      // Reset the form fields
       stationName.value = ''
       host.value = ''
       port.value = 0
       icdFile.value = null
-      // Navigate back to the dashboard
       router.push('/')
     } else {
-      // Handle error case
       const errData = await response.json()
       console.error('Failed to create station:', errData)
     }

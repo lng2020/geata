@@ -6,7 +6,7 @@
       <div class="w-1/4 bg-gray-100 p-6 border-r">
         <h3 class="text-xl font-semibold mb-4">IED Model</h3>
         <ul class="space-y-4">
-          <li v-for="(ied, iedIndex) in iedModel" :key="iedIndex">
+          <li v-for="(ied, iedIndex) in model" :key="iedIndex">
             <div class="flex items-center space-x-2">
               <span class="text-gray-800 font-medium">{{ ied.name }}</span>
             </div>
@@ -80,56 +80,17 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue'
+import { ref, computed, reactive } from 'vue'
+import { userGlobalStore } from '@/stores/store'
 
-const iedModel = ref([
-  {
-    name: 'IED1',
-    logicalDevices: [
-      {
-        name: 'LD1',
-        logicalNodes: [{ name: 'LN1' }, { name: 'LN2' }]
-      }
-    ]
-  }
-])
-
-const logicalNodes = ref([
-  {
-    name: 'LN1',
-    dataObjects: [
-      {
-        name: 'DO1',
-        dataAttributes: [
-          { name: 'DA1', ref: 'LD0/LLN0$ST$stVal', value: 'Value 1', dataSource: 'MQTT' },
-          { name: 'DA2', ref: 'LD0/LLN0$ST$stVal', value: 'Value 2', dataSource: 'MQTT' }
-        ]
-      },
-      {
-        name: 'DO2',
-        dataAttributes: [
-          { name: 'DA3', ref: 'LD0/LLN0$ST$stVal', value: 'Value 3', dataSource: 'Modbus' }
-        ]
-      }
-    ]
-  },
-  {
-    name: 'LN2',
-    dataObjects: [
-      {
-        name: 'DO3',
-        dataAttributes: [
-          { name: 'DA4', ref: 'LD0/LLN0$ST$stVal', value: 'Value 4', dataSource: 'IEC 61850' }
-        ]
-      }
-    ]
-  }
-])
+const store = userGlobalStore()
+let model = reactive(store.model)
+let logicalNodes = reactive(store.logicalNodes)
 
 const selectedLN = ref('')
 
 const selectedLogicalNode = computed(() => {
-  return logicalNodes.value.find((ln) => ln.name === selectedLN.value)
+  return logicalNodes.find((ln) => ln.name === selectedLN.value)
 })
 
 function selectLogicalNode(lnName: string) {
