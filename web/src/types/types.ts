@@ -19,28 +19,28 @@ export interface Mapping {
 }
 
 export interface DataAttribute {
-  name: string;
-  ref: string;
-  value: string;
-  dataSource: string;
+  name: string
+  ref: string
+  value: string
+  dataSource: string
 }
 
 export interface DataObject {
-  name: string;
-  dataAttributes: DataAttribute[];
+  name: string
+  dataAttributes: DataAttribute[]
 }
 
 export interface LogicalNode {
-  name: string;
-  dataObjects: DataObject[];
+  name: string
+  dataObjects: DataObject[]
 }
 
 export interface LogicalDevice {
-  name: string;
-  logicalNodes: { name: string }[];
+  name: string
+  logicalNodes: { name: string }[]
 }
 
 export interface IEDModel {
-  name: string;
-  logicalDevices: LogicalDevice[];
+  name: string
+  logicalDevices: LogicalDevice[]
 }

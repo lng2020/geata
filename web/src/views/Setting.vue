@@ -1,14 +1,14 @@
 <template>
   <div class="container mx-auto p-4">
     <h1 class="text-2xl font-bold mb-4">Settings</h1>
-    <div v-if="station" class="flex">
+    <div v-if="editedStation" class="flex">
       <div class="w-1/2 pr-4">
         <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
           <h2 class="text-xl font-bold mb-4">Configuration</h2>
           <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="name"> Name </label>
             <input
-              v-model="station.name"
+              v-model="editedStation.name"
               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="name"
               type="text"
@@ -18,7 +18,7 @@
           <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="host"> Host </label>
             <input
-              v-model="station.host"
+              v-model="editedStation.host"
               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="host"
               type="text"
@@ -28,7 +28,7 @@
           <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="port"> Port </label>
             <input
-              v-model.number="station.port"
+              v-model.number="editedStation.port"
               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="port"
               type="number"
@@ -37,16 +37,23 @@
           </div>
           <div class="flex items-center justify-between">
             <button
-              @click="deleteStation"
-              class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              @click="saveChanges"
+              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="button"
             >
-              Delete Station
+              Save Changes
+            </button>
+            <button
+              @click="discardChanges"
+              class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              type="button"
+            >
+              Discard Changes
             </button>
           </div>
         </div>
       </div>
-      <div class="w-1/2 pl-4">
+      <div v-if="station" class="w-1/2 pl-4">
         <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
           <h2 class="text-xl font-bold mb-4">Status</h2>
           <div class="mb-4">
@@ -78,21 +85,30 @@ const route = useRoute()
 const router = useRouter()
 const ID = ref<number | null>(null)
 let station = ref<Station | undefined>()
+let editedStation = ref<Station | undefined>()
 
 onMounted(() => {
   const id = route.params.id
   if (typeof id === 'string') {
     ID.value = parseInt(id, 10)
     station.value = store.getStationByID(ID.value)
+    editedStation.value = station.value
   } else {
     console.error('Invalid station ID')
     router.push('/error')
   }
 })
 
-const deleteStation = () => {
-  if (station.value && confirm('Are you sure you want to delete this station?')) {
-    console.log('Deleting station:', station.value)
+const saveChanges = () => {
+  if (editedStation.value) {
+    station.value = editedStation.value
+    // TODO: update store method
+  }
+}
+
+const discardChanges = () => {
+  if (station.value) {
+    editedStation.value = station.value
   }
 }
 </script>

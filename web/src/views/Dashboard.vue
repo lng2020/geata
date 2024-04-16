@@ -35,12 +35,19 @@
             </span>
           </td>
           <td class="py-4 px-6">{{ station.lastOnlineTime }}</td>
-          <td class="py-4 px-6 text-center">
+          <td class="py-4 px-6 text-center flex justify-center items-center space-x-2">
             <button
               @click="editConfig(station.id)"
-              class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+              class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded"
             >
-              Edit Config
+              Edit
+            </button>
+            <button
+              @click="confirmDelete(station.id)"
+              class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline"
+              type="button"
+            >
+              Delete
             </button>
           </td>
         </tr>
@@ -62,7 +69,13 @@ function createStation() {
   router.push(`/station/create`)
 }
 
-function editConfig(stationId: number) {
-  router.push(`/setting/${stationId}`)
+function editConfig(stationID: number) {
+  router.push(`/setting/${stationID}`)
+}
+
+const confirmDelete = (stationID: number) => {
+  if (confirm('Are you sure you want to delete this station?')) {
+    console.log('Delete station with ID:', stationID)
+  }
 }
 </script>
