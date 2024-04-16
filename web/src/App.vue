@@ -7,15 +7,6 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import Sidebar from '@/components/Sidebar.vue'
-
-export default {
-  name: 'App',
-  components: {
-    Sidebar
-  }
-}
 </script>
-
-<style scoped></style>
