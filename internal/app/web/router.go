@@ -4,6 +4,10 @@
 package web
 
 import (
+	_ "geata/internal/docs"
+
+	"geata/internal/app/service"
+
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -17,15 +21,12 @@ import (
 func SetupRouter() *gin.Engine {
 	r := gin.Default()
 
-	// @Summary Get a list of clients
-	// @Description Get a list of clients
-	// @ID get-client-list
-	// @Produce  json
-	// @Success 200 {array} Client
-	// @Router /clients [get]
-	r.GET("/clients", getClientList)
+	v1 := r.Group("/api/v1")
 
-	// Serve Swagger UI
+	{
+		v1.GET("/stations", service.ListStations)
+	}
+
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	return r

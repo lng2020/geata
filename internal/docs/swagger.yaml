@@ -1,9 +1,35 @@
-basePath: /api/v1
-host: localhost:8080
+definitions:
+  service.Station:
+    properties:
+      configs:
+        additionalProperties: {}
+        type: object
+      handlers:
+        additionalProperties: {}
+        type: object
+      host:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      port:
+        type: integer
+    type: object
 info:
   contact: {}
-  description: Geata API v1
-  title: Geata API v1
-  version: "1.0"
-paths: {}
+paths:
+  /api/v1/stations:
+    get:
+      description: List all stations
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/service.Station'
+            type: array
+      summary: List all stations
 swagger: "2.0"

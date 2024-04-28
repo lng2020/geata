@@ -1,12 +1,55 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "Geata API v1",
-        "title": "Geata API v1",
-        "contact": {},
-        "version": "1.0"
+        "contact": {}
     },
-    "host": "localhost:8080",
-    "basePath": "/api/v1",
-    "paths": {}
+    "paths": {
+        "/api/v1/stations": {
+            "get": {
+                "description": "List all stations",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List all stations",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/service.Station"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "service.Station": {
+            "type": "object",
+            "properties": {
+                "configs": {
+                    "type": "object",
+                    "additionalProperties": {}
+                },
+                "handlers": {
+                    "type": "object",
+                    "additionalProperties": {}
+                },
+                "host": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "integer"
+                }
+            }
+        }
+    }
 }

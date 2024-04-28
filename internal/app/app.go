@@ -99,6 +99,7 @@ func (app *App) InitDB() error {
 	}
 
 	app.db = Engine
+	service.Engine = Engine
 	return nil
 }
 
