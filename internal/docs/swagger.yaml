@@ -32,4 +32,76 @@ paths:
               $ref: '#/definitions/service.Station'
             type: array
       summary: List all stations
+    post:
+      description: Create station
+      parameters:
+      - description: Station
+        in: body
+        name: station
+        required: true
+        schema:
+          $ref: '#/definitions/service.Station'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.Station'
+      summary: Create station
+  /api/v1/stations/{station_id}:
+    delete:
+      description: Delete station by ID
+      parameters:
+      - description: Station ID
+        in: path
+        name: station_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.Station'
+      summary: Delete station by ID
+    get:
+      description: Get station by ID
+      parameters:
+      - description: Station ID
+        in: path
+        name: station_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.Station'
+      summary: Get station by ID
+    put:
+      description: Update station by ID
+      parameters:
+      - description: Station ID
+        in: path
+        name: station_id
+        required: true
+        type: integer
+      - description: Station
+        in: body
+        name: station
+        required: true
+        schema:
+          $ref: '#/definitions/service.Station'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.Station'
+      summary: Update station by ID
 swagger: "2.0"

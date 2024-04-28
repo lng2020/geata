@@ -22,6 +22,115 @@
                         }
                     }
                 }
+            },
+            "post": {
+                "description": "Create station",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create station",
+                "parameters": [
+                    {
+                        "description": "Station",
+                        "name": "station",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.Station"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.Station"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/stations/{station_id}": {
+            "get": {
+                "description": "Get station by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get station by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Station ID",
+                        "name": "station_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.Station"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update station by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Update station by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Station ID",
+                        "name": "station_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Station",
+                        "name": "station",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.Station"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.Station"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete station by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete station by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Station ID",
+                        "name": "station_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.Station"
+                        }
+                    }
+                }
             }
         }
     },

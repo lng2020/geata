@@ -25,6 +25,12 @@ func SetupRouter() *gin.Engine {
 
 	{
 		v1.GET("/stations", service.ListStations)
+		{
+			v1.GET("/stations/:station_id", service.GetStation)
+			v1.POST("/stations", service.CreateStation)
+			v1.PUT("/stations/:station_id", service.UpdateStation)
+			v1.DELETE("/stations/:station_id", service.DeleteStation)
+		}
 	}
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
