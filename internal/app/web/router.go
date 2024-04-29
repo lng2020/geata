@@ -5,7 +5,9 @@ package web
 
 import (
 	_ "geata/internal/docs"
+	"log/slog"
 
+	"geata/internal/app/logger"
 	"geata/internal/app/service"
 
 	"github.com/gin-gonic/gin"
@@ -19,7 +21,11 @@ import (
 // @host localhost:8080
 // @BasePath /api/v1
 func SetupRouter() *gin.Engine {
-	r := gin.Default()
+	gin.SetMode("release")
+	r := gin.New()
+	// suppress gin's debug console log
+	r.Use(logger.NewGinLoggerMiddleware(slog.Default()))
+	r.Use(gin.Recovery())
 
 	v1 := r.Group("/api/v1")
 

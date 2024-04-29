@@ -6,10 +6,11 @@ package app
 import (
 	"fmt"
 	"geata/internal/app/handler"
+	"geata/internal/app/logger"
 	"geata/internal/app/model"
 	"geata/internal/app/service"
 	"geata/internal/app/web"
-	"log"
+	"log/slog"
 	"strconv"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -23,7 +24,6 @@ import (
 type App struct {
 	Config     *AppConfig
 	Stations   []*service.Station
-	db         *xorm.Engine
 	mqttServer *mqtt.Server
 }
 
@@ -98,13 +98,13 @@ func (app *App) InitDB() error {
 	Engine.SetMaxIdleConns(10)
 	Engine.SetMaxOpenConns(100)
 	Engine.SetMapper(names.GonicMapper{})
+	Engine.SetLogger(logger.NewXORMLogger())
 
 	err = Engine.Sync(models...)
 	if err != nil {
 		return err
 	}
 
-	app.db = Engine
 	service.Engine = Engine
 	return nil
 }
@@ -117,7 +117,7 @@ func (app *App) RegisterHandlers() error {
 }
 
 func (app *App) InitStations() error {
-	stationsFromDB, err := model.GetAllStations(app.db)
+	stationsFromDB, err := model.GetAllStations(service.Engine)
 	if err != nil {
 		return err
 	}
@@ -180,9 +180,9 @@ func (app *App) Start() error {
 	go func() {
 		err := app.mqttServer.Serve()
 		if err != nil {
-			log.Fatal("Failed to start MQTT server: ", err)
+			slog.Error("Failed to start the MQTT server: ", err)
 		}
-		log.Println("MQTT server started")
+		slog.Info("MQTT server started on", "port", strconv.Itoa(app.Config.MQTTBroker.Port))
 	}()
 	router := web.SetupRouter()
 	return router.Run(fmt.Sprintf(":%d", app.Config.Server.Port))

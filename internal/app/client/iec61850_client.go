@@ -3,7 +3,8 @@ package client
 import (
 	"bufio"
 	"context"
-	"log"
+	"geata/internal/app/logger"
+	"log/slog"
 	"os/exec"
 )
 
@@ -24,10 +25,10 @@ func (c *IEC61850Client) Start(s chan string) {
 	cmd := exec.CommandContext(c.ctx, "iec61850_client", c.IP, c.Port)
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to pipe stdout", logger.ErrAttr(err))
 	}
 	if err := cmd.Start(); err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to start the command", logger.ErrAttr(err))
 	}
 	defer cmd.Wait()
 	defer cmd.Process.Kill()

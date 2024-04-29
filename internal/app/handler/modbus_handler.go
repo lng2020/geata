@@ -2,7 +2,8 @@ package handler
 
 import (
 	"fmt"
-	"log"
+	"geata/internal/app/logger"
+	"log/slog"
 
 	"github.com/simonvetter/modbus"
 )
@@ -19,7 +20,7 @@ func NewModbusHandler(hc HandlerConfig) Handler {
 	config := hc.(ModbusHandlerConfig)
 	client, err := modbus.NewClient(&modbus.ClientConfiguration{URL: config.URL})
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to create modbus client", logger.ErrAttr(err))
 	}
 	return &ModbusHandler{client: client}
 }

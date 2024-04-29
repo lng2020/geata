@@ -2,12 +2,12 @@ package main
 
 import (
 	"geata/cmd"
-	"log"
+	"log/slog"
 )
 
 func main() {
 	err := cmd.Run()
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to run the command: ", err)
 	}
 }

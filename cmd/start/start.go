@@ -5,7 +5,8 @@ package start
 
 import (
 	"geata/internal/app"
-	"log"
+	"geata/internal/app/logger"
+	"log/slog"
 
 	"github.com/spf13/cobra"
 )
@@ -32,13 +33,15 @@ func NewStartCmd() *cobra.Command {
 				myApp.Config.Logger.LogLevel = loggerLogLevel
 			}
 
+			logger.InitLogger(myApp.Config.Logger.LogLevel)
+
 			if err := myApp.Init(); err != nil {
-				log.Fatal("Failed to initialize the application: ", err)
+				slog.Error("Failed to initialize the application: ", err)
 				return nil
 			}
 
 			if err := myApp.Start(); err != nil {
-				log.Fatal("Failed to start the application: ", err)
+				slog.Error("Failed to start the application: ", err)
 				return nil
 			}
 

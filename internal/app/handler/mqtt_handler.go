@@ -1,7 +1,8 @@
 package handler
 
 import (
-	"log"
+	"geata/internal/app/logger"
+	"log/slog"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 )
@@ -29,7 +30,7 @@ func NewMQTTHandler(hc HandlerConfig) Handler {
 
 	client := mqtt.NewClient(opts)
 	if token := client.Connect(); token.Wait() && token.Error() != nil {
-		log.Fatalf("Failed to connect to MQTT broker: %v", token.Error())
+		slog.Error("Failed to connect to MQTT broker", logger.ErrAttr(token.Error()))
 	}
 
 	return &MQTTHandler{
@@ -44,7 +45,7 @@ func (h *MQTTHandler) Handle(s chan string) {
 	})
 	token.Wait()
 	if token.Error() != nil {
-		log.Printf("Failed to subscribe to topic: %v", token.Error())
+		slog.Error("Failed to subscribe to topic", logger.ErrAttr(token.Error()))
 		return
 	}
 
