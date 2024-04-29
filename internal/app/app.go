@@ -28,6 +28,10 @@ var models = []any{
 	new(model.MappingRule),
 	new(model.MqttDetail),
 	new(model.ModbusDetail),
+	new(model.IEC61850Model),
+	new(model.LogicalDevice),
+	new(model.LogicalNode),
+	new(model.DataObject),
 }
 
 // NewApp creates a new instance of App.
