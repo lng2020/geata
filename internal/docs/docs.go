@@ -143,9 +143,301 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/iec61850/data_object/{id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "IEC61850"
+                ],
+                "summary": "Get DataObject by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "DataObject ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.DataObject"
+                        }
+                    }
+                }
+            }
+        },
+        "/iec61850/model/{id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "IEC61850"
+                ],
+                "summary": "Get IEC61850 model by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "IEC61850 model ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.IEC61850Model"
+                        }
+                    }
+                }
+            }
+        },
+        "/iec61850/node/ref/{ref}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "IEC61850"
+                ],
+                "summary": "Get Node by IEC61850 reference",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "IEC61850 reference",
+                        "name": "ref",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.DataAttribute"
+                        }
+                    }
+                }
+            }
+        },
+        "/iec61850/node/{id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "IEC61850"
+                ],
+                "summary": "Get Node by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Node ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.DataAttribute"
+                        }
+                    }
+                }
+            }
+        },
+        "/iec61850/node/{id}/data_source": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "IEC61850"
+                ],
+                "summary": "Update DataSource of a Node",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Node ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "DataSource",
+                        "name": "dataSource",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/iec61850/nodes/data_object/{id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "IEC61850"
+                ],
+                "summary": "Get Nodes by DataObject ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "DataObject ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/service.DataAttribute"
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "service.DataAttribute": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "data_object_id": {
+                    "type": "integer"
+                },
+                "data_source": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "iec61850_ref": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.DataObject": {
+            "type": "object",
+            "properties": {
+                "dataAttribute": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/service.DataAttribute"
+                    }
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "logicalNodeID": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.IEC61850Model": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "logicalDevice": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/service.LogicalDevice"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.LogicalDevice": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "logicalNode": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/service.LogicalNode"
+                    }
+                },
+                "modelID": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.LogicalNode": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "logicalDeviceID": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "service.Station": {
             "type": "object",
             "properties": {

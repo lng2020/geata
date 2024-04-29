@@ -1,26 +1,20 @@
 package model
 
 import (
-	"time"
-
 	"xorm.io/xorm"
 )
 
 type IEC61850Model struct {
-	ID          int64     `xorm:"pk autoincr 'id'" json:"id"`
-	Name        string    `xorm:"'name'" json:"name"`
-	Description string    `xorm:"'description'" json:"description"`
-	CreatedAt   time.Time `xorm:"'created_at' created" json:"created_at"`
-	UpdatedAt   time.Time `xorm:"'updated_at' updated" json:"updated_at"`
+	ID          int64  `xorm:"pk autoincr 'id'" json:"id"`
+	Name        string `xorm:"'name'" json:"name"`
+	Description string `xorm:"'description'" json:"description"`
 }
 
 type LogicalDevice struct {
-	ID          int64     `xorm:"pk autoincr 'id'" json:"id"`
-	ModelID     int64     `xorm:"'model_id' index" json:"model_id"`
-	Name        string    `xorm:"'name'" json:"name"`
-	Description string    `xorm:"'description'" json:"description"`
-	CreatedAt   time.Time `xorm:"'created_at' created" json:"created_at"`
-	UpdatedAt   time.Time `xorm:"'updated_at' updated" json:"updated_at"`
+	ID          int64  `xorm:"pk autoincr 'id'" json:"id"`
+	ModelID     int64  `xorm:"'model_id' index" json:"model_id"`
+	Name        string `xorm:"'name'" json:"name"`
+	Description string `xorm:"'description'" json:"description"`
 }
 
 func (ld *LogicalDevice) TableName() string {
@@ -28,12 +22,10 @@ func (ld *LogicalDevice) TableName() string {
 }
 
 type LogicalNode struct {
-	ID              int64     `xorm:"pk autoincr 'id'" json:"id"`
-	LogicalDeviceID int64     `xorm:"'logical_device_id' index" json:"logical_device_id"`
-	Name            string    `xorm:"'name'" json:"name"`
-	Description     string    `xorm:"'description'" json:"description"`
-	CreatedAt       time.Time `xorm:"'created_at' created" json:"created_at"`
-	UpdatedAt       time.Time `xorm:"'updated_at' updated" json:"updated_at"`
+	ID              int64  `xorm:"pk autoincr 'id'" json:"id"`
+	LogicalDeviceID int64  `xorm:"'logical_device_id' index" json:"logical_device_id"`
+	Name            string `xorm:"'name'" json:"name"`
+	Description     string `xorm:"'description'" json:"description"`
 }
 
 func (ln *LogicalNode) TableName() string {
@@ -41,12 +33,10 @@ func (ln *LogicalNode) TableName() string {
 }
 
 type DataObject struct {
-	ID            int64     `xorm:"pk autoincr 'id'" json:"id"`
-	LogicalNodeID int64     `xorm:"'logical_node_id' index" json:"logical_node_id"`
-	Name          string    `xorm:"'name'" json:"name"`
-	Description   string    `xorm:"'description'" json:"description"`
-	CreatedAt     time.Time `xorm:"'created_at' created" json:"created_at"`
-	UpdatedAt     time.Time `xorm:"'updated_at' updated" json:"updated_at"`
+	ID            int64  `xorm:"pk autoincr 'id'" json:"id"`
+	LogicalNodeID int64  `xorm:"'logical_node_id' index" json:"logical_node_id"`
+	Name          string `xorm:"'name'" json:"name"`
+	Description   string `xorm:"'description'" json:"description"`
 }
 
 func (do *DataObject) TableName() string {

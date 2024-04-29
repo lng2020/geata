@@ -1,4 +1,75 @@
 definitions:
+  service.DataAttribute:
+    properties:
+      created_at:
+        type: string
+      data_object_id:
+        type: integer
+      data_source:
+        type: string
+      id:
+        type: integer
+      iec61850_ref:
+        type: string
+      name:
+        type: string
+      updated_at:
+        type: string
+      value:
+        type: string
+    type: object
+  service.DataObject:
+    properties:
+      dataAttribute:
+        items:
+          $ref: '#/definitions/service.DataAttribute'
+        type: array
+      description:
+        type: string
+      id:
+        type: integer
+      logicalNodeID:
+        type: integer
+      name:
+        type: string
+    type: object
+  service.IEC61850Model:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      logicalDevice:
+        items:
+          $ref: '#/definitions/service.LogicalDevice'
+        type: array
+      name:
+        type: string
+    type: object
+  service.LogicalDevice:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      logicalNode:
+        items:
+          $ref: '#/definitions/service.LogicalNode'
+        type: array
+      modelID:
+        type: integer
+      name:
+        type: string
+    type: object
+  service.LogicalNode:
+    properties:
+      id:
+        type: integer
+      logicalDeviceID:
+        type: integer
+      name:
+        type: string
+    type: object
   service.Station:
     properties:
       configs:
@@ -104,4 +175,122 @@ paths:
           schema:
             $ref: '#/definitions/service.Station'
       summary: Update station by ID
+  /iec61850/data_object/{id}:
+    get:
+      parameters:
+      - description: DataObject ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.DataObject'
+      summary: Get DataObject by ID
+      tags:
+      - IEC61850
+  /iec61850/model/{id}:
+    get:
+      parameters:
+      - description: IEC61850 model ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.IEC61850Model'
+      summary: Get IEC61850 model by ID
+      tags:
+      - IEC61850
+  /iec61850/node/{id}:
+    get:
+      parameters:
+      - description: Node ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.DataAttribute'
+      summary: Get Node by ID
+      tags:
+      - IEC61850
+  /iec61850/node/{id}/data_source:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Node ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: DataSource
+        in: body
+        name: dataSource
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Update DataSource of a Node
+      tags:
+      - IEC61850
+  /iec61850/node/ref/{ref}:
+    get:
+      parameters:
+      - description: IEC61850 reference
+        in: path
+        name: ref
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.DataAttribute'
+      summary: Get Node by IEC61850 reference
+      tags:
+      - IEC61850
+  /iec61850/nodes/data_object/{id}:
+    get:
+      parameters:
+      - description: DataObject ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/service.DataAttribute'
+            type: array
+      summary: Get Nodes by DataObject ID
+      tags:
+      - IEC61850
 swagger: "2.0"
