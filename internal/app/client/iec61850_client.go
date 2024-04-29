@@ -20,7 +20,6 @@ func NewIEC61850Client(ip string, port string) *IEC61850Client {
 	}
 }
 
-// Start method is used to start the IEC61850 client
 func (c *IEC61850Client) Start(s chan string) {
 	cmd := exec.CommandContext(c.ctx, "iec61850_client", c.IP, c.Port)
 	stdout, err := cmd.StdoutPipe()

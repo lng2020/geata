@@ -20,7 +20,6 @@ import (
 	"xorm.io/xorm/names"
 )
 
-// App represents the application.
 type App struct {
 	Config     *AppConfig
 	Stations   []*service.Station
@@ -40,12 +39,10 @@ var models = []any{
 	new(model.DataObject),
 }
 
-// NewApp creates a new instance of App.
 func NewApp() *App {
 	return &App{}
 }
 
-// NewConfig creates a new instance of AppConfig.
 func (app *App) NewConfig(configFile string) error {
 	if configFile == "" {
 		configFile = "./internal/app/config.yaml"
@@ -58,7 +55,6 @@ func (app *App) NewConfig(configFile string) error {
 	return nil
 }
 
-// InitDB initializes database.
 func (app *App) InitDB() error {
 	dbconf := app.Config.Database
 	driverName := ""
@@ -113,7 +109,6 @@ func (app *App) InitDB() error {
 	return nil
 }
 
-// RegisterHandlers registers handlers.
 func (app *App) RegisterHandlers() error {
 	handler.RegisterHandler(handler.ModbusHandlerType, handler.NewModbusHandler)
 	handler.RegisterHandler(handler.MQTTHandlerType, handler.NewMQTTHandler)
@@ -121,7 +116,6 @@ func (app *App) RegisterHandlers() error {
 	return nil
 }
 
-// InitStations initializes stations.
 func (app *App) InitStations() error {
 	stationsFromDB, err := model.GetAllStations(app.db)
 	if err != nil {
@@ -145,7 +139,6 @@ func (app *App) InitStations() error {
 	return nil
 }
 
-// InitMQTTBroker initializes the MQTT broker.
 func (app *App) InitMQTTBroker() error {
 	app.mqttServer = mqtt.New(nil)
 
@@ -183,7 +176,6 @@ func (app *App) Init() error {
 	return nil
 }
 
-// Start starts application.
 func (app *App) Start() error {
 	go func() {
 		err := app.mqttServer.Serve()

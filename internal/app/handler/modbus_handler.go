@@ -7,7 +7,6 @@ import (
 	"github.com/simonvetter/modbus"
 )
 
-// ModbusHandler represents your Modbus handler.
 type ModbusHandler struct {
 	client *modbus.ModbusClient
 }
@@ -28,7 +27,6 @@ func NewModbusHandler(hc HandlerConfig) Handler {
 func (h *ModbusHandler) Handle(s chan string) {
 }
 
-// ReadHoldingRegister reads a single holding register at the specified address.
 func (h *ModbusHandler) ReadHoldingRegister(address uint16) (uint16, error) {
 	reg, err := h.client.ReadRegister(address, modbus.HOLDING_REGISTER)
 	if err != nil {
@@ -37,7 +35,6 @@ func (h *ModbusHandler) ReadHoldingRegister(address uint16) (uint16, error) {
 	return reg, nil
 }
 
-// WriteHoldingRegister writes a value to a holding register at the specified address.
 func (h *ModbusHandler) WriteHoldingRegister(address, value uint16) error {
 	err := h.client.WriteRegister(address, value)
 	if err != nil {
@@ -46,7 +43,6 @@ func (h *ModbusHandler) WriteHoldingRegister(address, value uint16) error {
 	return nil
 }
 
-// Close closes the Modbus connection.
 func (h *ModbusHandler) Close() {
 	if h.client != nil {
 		h.client.Close()
