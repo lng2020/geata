@@ -121,9 +121,9 @@ func GetNodeByRef(c *gin.Context) {
 // @summary Get Nodes by DataObject ID
 // @tags IEC61850
 // @produce json
-// @param id path int true "DataObject ID"
+// @param object_id path int true "DataObject ID"
 // @success 200 {array} DataAttribute
-// @router /iec61850/nodes/data_object/{id} [get]
+// @router /iec61850/data_object/{object_id}/node [get]
 func GetNodesByDataObjectID(c *gin.Context) {
 	ID := c.Param("id")
 	dataObjectID, err := strconv.Atoi(ID)

@@ -70,6 +70,35 @@ definitions:
       name:
         type: string
     type: object
+  service.MappingRule:
+    properties:
+      create_time:
+        type: string
+      id:
+        type: integer
+      iec61850_ref:
+        type: string
+      station_id:
+        type: integer
+      type:
+        type: string
+      update_time:
+        type: string
+    type: object
+  service.ModbusDetail:
+    properties:
+      id:
+        type: integer
+      rule_id:
+        type: integer
+    type: object
+  service.MqttDetail:
+    properties:
+      id:
+        type: integer
+      rule_id:
+        type: integer
+    type: object
   service.Station:
     properties:
       configs:
@@ -193,6 +222,26 @@ paths:
       summary: Get DataObject by ID
       tags:
       - IEC61850
+  /iec61850/data_object/{object_id}/node:
+    get:
+      parameters:
+      - description: DataObject ID
+        in: path
+        name: object_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/service.DataAttribute'
+            type: array
+      summary: Get Nodes by DataObject ID
+      tags:
+      - IEC61850
   /iec61850/model/{id}:
     get:
       parameters:
@@ -273,24 +322,104 @@ paths:
       summary: Get Node by IEC61850 reference
       tags:
       - IEC61850
-  /iec61850/nodes/data_object/{id}:
-    get:
+  /mapping_rules/{id}:
+    delete:
       parameters:
-      - description: DataObject ID
+      - description: MappingRule ID
         in: path
         name: id
         required: true
         type: integer
-      produces:
-      - application/json
+      responses:
+        "204":
+          description: No Content
+      summary: Delete a MappingRule
+      tags:
+      - MappingRule
+    get:
+      parameters:
+      - description: MappingRule ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.MappingRule'
+      summary: Get a MappingRule by ID
+      tags:
+      - MappingRule
+    put:
+      parameters:
+      - description: MappingRule ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: MappingRule
+        in: body
+        name: rule
+        required: true
+        schema:
+          $ref: '#/definitions/service.MappingRule'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.MappingRule'
+      summary: Update a MappingRule
+      tags:
+      - MappingRule
+  /modbus_detail/{ruleID}:
+    get:
+      parameters:
+      - description: Rule ID
+        in: path
+        name: ruleID
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.ModbusDetail'
+      summary: Get ModbusDetail by RuleID
+      tags:
+      - ModbusDetail
+  /mqtt_detail/{ruleID}:
+    get:
+      parameters:
+      - description: Rule ID
+        in: path
+        name: ruleID
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.MqttDetail'
+      summary: Get MqttDetail by RuleID
+      tags:
+      - MqttDetail
+  /stations/{stationID}/mapping_rules:
+    get:
+      parameters:
+      - description: Station ID
+        in: path
+        name: stationID
+        required: true
+        type: integer
       responses:
         "200":
           description: OK
           schema:
             items:
-              $ref: '#/definitions/service.DataAttribute'
+              $ref: '#/definitions/service.MappingRule'
             type: array
-      summary: Get Nodes by DataObject ID
+      summary: List all MappingRule for a station
       tags:
-      - IEC61850
+      - MappingRule
 swagger: "2.0"

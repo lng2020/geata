@@ -31,6 +31,23 @@ func SetupRouter() *gin.Engine {
 			v1.PUT("/stations/:station_id", service.UpdateStation)
 			v1.DELETE("/stations/:station_id", service.DeleteStation)
 		}
+
+		v1.GET("/stations/:station_id/mapping_rules", service.ListMappingRulesForStation)
+
+		{
+			v1.GET("/mapping_rules/:rule_id", service.GetMappingRuleByID)
+			v1.PUT("/mapping_rules/:rule_id", service.UpdateMappingRule)
+		}
+
+		v1.GET("/mqtt_detail/:rule_id", service.GetMqttDetailByRuleID)
+		v1.GET("/modbus_detail/:rule_id", service.GetModbusDetailByRuleID)
+
+		v1.GET("/iec61850/model/:model_id", service.GetIEC61850ModelByID)
+		v1.GET("/iec61850/data_object/:object_id", service.GetDataObjectByID)
+		v1.GET("/iec61850/data_object/:object_id/node", service.GetNodesByDataObjectID)
+		v1.GET("/iec61850/node/:id", service.GetNodeByID)
+		v1.GET("/iec61850/node/ref/:ref", service.GetNodeByRef)
+		v1.PUT("/iec61850/node/:id/data_source", service.UpdateNodeDataSource)
 	}
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

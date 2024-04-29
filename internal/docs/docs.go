@@ -172,6 +172,37 @@ const docTemplate = `{
                 }
             }
         },
+        "/iec61850/data_object/{object_id}/node": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "IEC61850"
+                ],
+                "summary": "Get Nodes by DataObject ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "DataObject ID",
+                        "name": "object_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/service.DataAttribute"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/iec61850/model/{id}": {
             "get": {
                 "produces": [
@@ -296,20 +327,144 @@ const docTemplate = `{
                 }
             }
         },
-        "/iec61850/nodes/data_object/{id}": {
+        "/mapping_rules/{id}": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
                 "tags": [
-                    "IEC61850"
+                    "MappingRule"
                 ],
-                "summary": "Get Nodes by DataObject ID",
+                "summary": "Get a MappingRule by ID",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "DataObject ID",
+                        "description": "MappingRule ID",
                         "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.MappingRule"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "MappingRule"
+                ],
+                "summary": "Update a MappingRule",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "MappingRule ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "MappingRule",
+                        "name": "rule",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.MappingRule"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.MappingRule"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "MappingRule"
+                ],
+                "summary": "Delete a MappingRule",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "MappingRule ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                }
+            }
+        },
+        "/modbus_detail/{ruleID}": {
+            "get": {
+                "tags": [
+                    "ModbusDetail"
+                ],
+                "summary": "Get ModbusDetail by RuleID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Rule ID",
+                        "name": "ruleID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.ModbusDetail"
+                        }
+                    }
+                }
+            }
+        },
+        "/mqtt_detail/{ruleID}": {
+            "get": {
+                "tags": [
+                    "MqttDetail"
+                ],
+                "summary": "Get MqttDetail by RuleID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Rule ID",
+                        "name": "ruleID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.MqttDetail"
+                        }
+                    }
+                }
+            }
+        },
+        "/stations/{stationID}/mapping_rules": {
+            "get": {
+                "tags": [
+                    "MappingRule"
+                ],
+                "summary": "List all MappingRule for a station",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Station ID",
+                        "name": "stationID",
                         "in": "path",
                         "required": true
                     }
@@ -320,7 +475,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/service.DataAttribute"
+                                "$ref": "#/definitions/service.MappingRule"
                             }
                         }
                     }
@@ -435,6 +590,51 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
+                }
+            }
+        },
+        "service.MappingRule": {
+            "type": "object",
+            "properties": {
+                "create_time": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "iec61850_ref": {
+                    "type": "string"
+                },
+                "station_id": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "update_time": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.ModbusDetail": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "rule_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "service.MqttDetail": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "rule_id": {
+                    "type": "integer"
                 }
             }
         },
