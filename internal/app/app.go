@@ -9,17 +9,23 @@ import (
 	"geata/internal/app/model"
 	"geata/internal/app/service"
 	"geata/internal/app/web"
+	"log"
+	"strconv"
 
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/wind-c/comqtt/v2/mqtt"
+	"github.com/wind-c/comqtt/v2/mqtt/hooks/auth"
+	"github.com/wind-c/comqtt/v2/mqtt/listeners"
 	"xorm.io/xorm"
 	"xorm.io/xorm/names"
 )
 
 // App represents the application.
 type App struct {
-	Config   *AppConfig
-	Stations []*service.Station
-	db       *xorm.Engine
+	Config     *AppConfig
+	Stations   []*service.Station
+	db         *xorm.Engine
+	mqttServer *mqtt.Server
 }
 
 var models = []any{
@@ -139,8 +145,28 @@ func (app *App) InitStations() error {
 	return nil
 }
 
+// InitMQTTBroker initializes the MQTT broker.
+func (app *App) InitMQTTBroker() error {
+	app.mqttServer = mqtt.New(nil)
+
+	_ = app.mqttServer.AddHook(new(auth.AllowHook), nil)
+
+	tcp := listeners.NewTCP("t1", fmt.Sprintf(":%s", strconv.Itoa(app.Config.MQTTBroker.Port)), nil)
+	err := app.mqttServer.AddListener(tcp)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (app *App) Init() error {
 	err := app.InitDB()
+	if err != nil {
+		return err
+	}
+
+	err = app.InitMQTTBroker()
 	if err != nil {
 		return err
 	}
@@ -159,6 +185,13 @@ func (app *App) Init() error {
 
 // Start starts application.
 func (app *App) Start() error {
+	go func() {
+		err := app.mqttServer.Serve()
+		if err != nil {
+			log.Fatal("Failed to start MQTT server: ", err)
+		}
+		log.Println("MQTT server started")
+	}()
 	router := web.SetupRouter()
 	return router.Run(fmt.Sprintf(":%d", app.Config.Server.Port))
 }

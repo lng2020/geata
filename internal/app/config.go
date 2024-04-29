@@ -9,31 +9,27 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-// AppConfig contains the configuration settings for your application.
 type AppConfig struct {
-	Server   ServerConfig   `yaml:"server"`
-	Logger   LoggerConfig   `yaml:"logger"`
-	Database DatabaseConfig `yaml:"database"`
+	Server     ServerConfig     `yaml:"server"`
+	Logger     LoggerConfig     `yaml:"logger"`
+	Database   DatabaseConfig   `yaml:"database"`
+	MQTTBroker MQTTBrokerConfig `yaml:"mqtt_broker"`
 }
 
-// ServerConfig contains server-related configuration.
 type ServerConfig struct {
 	Port int    `yaml:"port"`
 	Host string `yaml:"host"`
 }
 
-// LoggerConfig contains logger-related configuration.
 type LoggerConfig struct {
 	LogLevel string `yaml:"log_level"`
 	LogFile  string `yaml:"log_file"`
 }
 
-// IEC61850Config contains IEC 61850 plugin configuration.
 type IEC61850Config struct {
 	ServerAddress string `yaml:"server_address"`
 }
 
-// DatabaseConfig contains database-related configuration.
 type DatabaseConfig struct {
 	Type     string `yaml:"type"`
 	Host     string `yaml:"host"`
@@ -41,6 +37,10 @@ type DatabaseConfig struct {
 	Username string `yaml:"username"`
 	Password string `yaml:"password"`
 	DBName   string `yaml:"dbname"`
+}
+
+type MQTTBrokerConfig struct {
+	Port int `yaml:"port"`
 }
 
 func LoadConfig(configFilePath string) (*AppConfig, error) {
@@ -65,6 +65,9 @@ func LoadConfig(configFilePath string) (*AppConfig, error) {
 			Username: "dbuser",
 			Password: "dbpassword",
 			DBName:   "mydatabase",
+		},
+		MQTTBroker: MQTTBrokerConfig{
+			Port: 1883,
 		},
 	}
 
