@@ -17,6 +17,10 @@ type LogicalDevice struct {
 	Description string `xorm:"'description'" json:"description"`
 }
 
+func (m *IEC61850Model) TableName() string {
+	return "iec61850_model"
+}
+
 func (ld *LogicalDevice) TableName() string {
 	return "logical_device"
 }

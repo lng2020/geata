@@ -43,6 +43,31 @@ export const userGlobalStore = defineStore({
         id: 3,
         iec61850Reference: 'LD0/LLN0$ST$stVal',
         type: 'IEC61850'
+      },
+      {
+        id: 4,
+        iec61850Reference: 'LD0/LLN0$ST$stVal',
+        type: 'IEC61850'
+      },
+      {
+        id: 5,
+        iec61850Reference: 'LD0/LLN0$ST$stVal',
+        type: 'Modbus'
+      },
+      {
+        id: 6,
+        iec61850Reference: 'LD0/LLN0$ST$stVal',
+        type: 'IEC61850'
+      },
+      {
+        id: 7,
+        iec61850Reference: 'LD0/LLN0$ST$stVal',
+        type: 'Modbus'
+      },
+      {
+        id: 8,
+        iec61850Reference: 'LD0/LLN0$ST$stVal',
+        type: 'IEC61850'
       }
     ] as Mapping[],
     model: [
@@ -64,13 +89,24 @@ export const userGlobalStore = defineStore({
             name: 'DO1',
             dataAttributes: [
               { name: 'DA1', ref: 'LD0/LLN0$ST$stVal', value: 'Value 1', dataSource: 'MQTT' },
-              { name: 'DA2', ref: 'LD0/LLN0$ST$stVal', value: 'Value 2', dataSource: 'MQTT' }
+              { name: 'DA2', ref: 'LD0/LLN0$ST$stVal', value: 'Value 2', dataSource: 'MQTT' },
+              { name: 'DA3', ref: 'LD0/LLN0$ST$stVal', value: 'Value 3', dataSource: 'IEC61850' },
+              { name: 'DA4', ref: 'LD0/LLN0$ST$stVal', value: 'Value 4', dataSource: 'Modbus' },
+              { name: 'DA5', ref: 'LD0/LLN0$ST$stVal', value: 'Value 5', dataSource: 'IEC61850' },
+              { name: 'DA6', ref: 'LD0/LLN0$ST$stVal', value: 'Value 6', dataSource: 'Modbus' },
+              { name: 'DA7', ref: 'LD0/LLN0$ST$stVal', value: 'Value 7', dataSource: 'IEC61850' },
+              { name: 'DA8', ref: 'LD0/LLN0$ST$stVal', value: 'Value 8', dataSource: 'Modbus' }
             ]
           },
           {
             name: 'DO2',
             dataAttributes: [
-              { name: 'DA3', ref: 'LD0/LLN0$ST$stVal', value: 'Value 3', dataSource: 'Modbus' }
+              { name: 'DA3', ref: 'LD0/LLN0$ST$stVal', value: 'Value 3', dataSource: 'Modbus' },
+              { name: 'DA4', ref: 'LD0/LLN0$ST$stVal', value: 'Value 4', dataSource: 'IEC61850' },
+              { name: 'DA5', ref: 'LD0/LLN0$ST$stVal', value: 'Value 5', dataSource: 'Modbus' },
+              { name: 'DA6', ref: 'LD0/LLN0$ST$stVal', value: 'Value 6', dataSource: 'IEC61850' },
+              { name: 'DA7', ref: 'LD0/LLN0$ST$stVal', value: 'Value 7', dataSource: 'Modbus' },
+              { name: 'DA8', ref: 'LD0/LLN0$ST$stVal', value: 'Value 8', dataSource: 'IEC61850' }
             ]
           }
         ]

@@ -37,6 +37,7 @@ var models = []any{
 	new(model.LogicalDevice),
 	new(model.LogicalNode),
 	new(model.DataObject),
+	new(model.AuditLog),
 }
 
 func NewApp() *App {
