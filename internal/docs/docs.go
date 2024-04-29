@@ -144,6 +144,56 @@ const docTemplate = `{
                 }
             }
         },
+        "/audit_log": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AuditLog"
+                ],
+                "summary": "Get all audit logs",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/service.AuditLog"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/audit_log/{id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AuditLog"
+                ],
+                "summary": "Get audit log by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Audit log ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.AuditLog"
+                        }
+                    }
+                }
+            }
+        },
         "/iec61850/data_object/{id}": {
             "get": {
                 "produces": [
@@ -484,6 +534,20 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "service.AuditLog": {
+            "type": "object",
+            "properties": {
+                "create_time": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
         "service.DataAttribute": {
             "type": "object",
             "properties": {

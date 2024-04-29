@@ -1,4 +1,13 @@
 definitions:
+  service.AuditLog:
+    properties:
+      create_time:
+        type: string
+      id:
+        type: integer
+      message:
+        type: string
+    type: object
   service.DataAttribute:
     properties:
       created_at:
@@ -204,6 +213,38 @@ paths:
           schema:
             $ref: '#/definitions/service.Station'
       summary: Update station by ID
+  /audit_log:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/service.AuditLog'
+            type: array
+      summary: Get all audit logs
+      tags:
+      - AuditLog
+  /audit_log/{id}:
+    get:
+      parameters:
+      - description: Audit log ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.AuditLog'
+      summary: Get audit log by ID
+      tags:
+      - AuditLog
   /iec61850/data_object/{id}:
     get:
       parameters:
