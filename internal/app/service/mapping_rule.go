@@ -14,7 +14,7 @@ type MappingRule model.MappingRule
 // @tags MappingRule
 // @param stationID path int true "Station ID"
 // @success 200 {array} MappingRule
-// @router /stations/{stationID}/mapping_rules [get]
+// @router /api/v1/stations/{stationID}/mapping_rules [get]
 func ListMappingRulesForStation(c *gin.Context) {
 	ID := c.Param("stationID")
 	stationID, err := strconv.Atoi(ID)
@@ -32,7 +32,7 @@ func ListMappingRulesForStation(c *gin.Context) {
 // @tags MappingRule
 // @param id path int true "MappingRule ID"
 // @success 200 {object} MappingRule
-// @router /mapping_rules/{id} [get]
+// @router /api/v1/mapping_rules/{id} [get]
 func GetMappingRuleByID(c *gin.Context) {
 	ID := c.Param("id")
 	id, err := strconv.Atoi(ID)
@@ -51,7 +51,7 @@ func GetMappingRuleByID(c *gin.Context) {
 // @param id path int true "MappingRule ID"
 // @param rule body MappingRule true "MappingRule"
 // @success 200 {object} MappingRule
-// @router /mapping_rules/{id} [put]
+// @router /api/v1/mapping_rules/{id} [put]
 func UpdateMappingRule(c *gin.Context) {
 	ID := c.Param("id")
 	id, err := strconv.Atoi(ID)
@@ -74,7 +74,7 @@ func UpdateMappingRule(c *gin.Context) {
 // @tags MappingRule
 // @param id path int true "MappingRule ID"
 // @success 204
-// @router /mapping_rules/{id} [delete]
+// @router /api/v1/mapping_rules/{id} [delete]
 func DeleteMappingRule(c *gin.Context) {
 	ID := c.Param("id")
 	id, err := strconv.Atoi(ID)

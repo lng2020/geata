@@ -14,7 +14,7 @@ type ModbusDetail model.ModbusDetail
 // @tags ModbusDetail
 // @param ruleID path int true "Rule ID"
 // @success 200 {object} ModbusDetail
-// @router /modbus_detail/{ruleID} [get]
+// @router /api/v1/modbus_detail/{ruleID} [get]
 func GetModbusDetailByRuleID(c *gin.Context) {
 	ID := c.Param("ruleID")
 	id, err := strconv.Atoi(ID)

@@ -15,7 +15,7 @@ type AuditLog model.AuditLog
 // @produce json
 // @param id path int true "Audit log ID"
 // @success 200 {object} AuditLog
-// @router /audit_log/{id} [get]
+// @router /api/v1/audit_log/{id} [get]
 func GetAuditLogByID(c *gin.Context) {
 	ID := c.Param("id")
 	logID, err := strconv.Atoi(ID)

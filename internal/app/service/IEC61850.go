@@ -44,7 +44,7 @@ type DataAttribute model.Node
 // @produce json
 // @param id path int true "IEC61850 model ID"
 // @success 200 {object} IEC61850Model
-// @router /iec61850/model/{id} [get]
+// @router /api/v1/iec61850/model/{id} [get]
 func GetIEC61850ModelByID(c *gin.Context) {
 	ID := c.Param("id")
 	modelID, err := strconv.Atoi(ID)
@@ -65,7 +65,7 @@ func GetIEC61850ModelByID(c *gin.Context) {
 // @produce json
 // @param id path int true "DataObject ID"
 // @success 200 {object} DataObject
-// @router /iec61850/data_object/{id} [get]
+// @router /api/v1/iec61850/data_object/{id} [get]
 func GetDataObjectByID(c *gin.Context) {
 	ID := c.Param("id")
 	dataObjectID, err := strconv.Atoi(ID)
@@ -86,7 +86,7 @@ func GetDataObjectByID(c *gin.Context) {
 // @produce json
 // @param id path int true "Node ID"
 // @success 200 {object} DataAttribute
-// @router /iec61850/node/{id} [get]
+// @router /api/v1/iec61850/node/{id} [get]
 func GetNodeByID(c *gin.Context) {
 	ID := c.Param("id")
 	nodeID, err := strconv.Atoi(ID)
@@ -107,7 +107,7 @@ func GetNodeByID(c *gin.Context) {
 // @produce json
 // @param ref path string true "IEC61850 reference"
 // @success 200 {object} DataAttribute
-// @router /iec61850/node/ref/{ref} [get]
+// @router /api/v1/iec61850/node/ref/{ref} [get]
 func GetNodeByRef(c *gin.Context) {
 	ref := c.Param("ref")
 	node, err := model.GetNodeByRef(Engine, ref)
@@ -123,7 +123,7 @@ func GetNodeByRef(c *gin.Context) {
 // @produce json
 // @param object_id path int true "DataObject ID"
 // @success 200 {array} DataAttribute
-// @router /iec61850/data_object/{object_id}/node [get]
+// @router /api/v1/iec61850/data_object/{object_id}/node [get]
 func GetNodesByDataObjectID(c *gin.Context) {
 	ID := c.Param("id")
 	dataObjectID, err := strconv.Atoi(ID)
@@ -146,7 +146,7 @@ func GetNodesByDataObjectID(c *gin.Context) {
 // @param id path int true "Node ID"
 // @param dataSource body string true "DataSource"
 // @success 200 {string} string "OK"
-// @router /iec61850/node/{id}/data_source [put]
+// @router /api/v1/iec61850/node/{id}/data_source [put]
 func UpdateNodeDataSource(c *gin.Context) {
 	ID := c.Param("id")
 	nodeID, err := strconv.Atoi(ID)

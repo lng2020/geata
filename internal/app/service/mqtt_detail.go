@@ -14,7 +14,7 @@ type MqttDetail model.MqttDetail
 // @tags MqttDetail
 // @param ruleID path int true "Rule ID"
 // @success 200 {object} MqttDetail
-// @router /mqtt_detail/{ruleID} [get]
+// @router /api/v1/mqtt_detail/{ruleID} [get]
 func GetMqttDetailByRuleID(c *gin.Context) {
 	ID := c.Param("ruleID")
 	ruleID, err := strconv.Atoi(ID)
