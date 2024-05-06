@@ -128,6 +128,224 @@ definitions:
 info:
   contact: {}
 paths:
+  /api/v1/audit_log/{id}:
+    get:
+      parameters:
+      - description: Audit log ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.AuditLog'
+      summary: Get audit log by ID
+      tags:
+      - AuditLog
+  /api/v1/iec61850/data_object/{id}:
+    get:
+      parameters:
+      - description: DataObject ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.DataObject'
+      summary: Get DataObject by ID
+      tags:
+      - IEC61850
+  /api/v1/iec61850/data_object/{object_id}/node:
+    get:
+      parameters:
+      - description: DataObject ID
+        in: path
+        name: object_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/service.DataAttribute'
+            type: array
+      summary: Get Nodes by DataObject ID
+      tags:
+      - IEC61850
+  /api/v1/iec61850/model/{id}:
+    get:
+      parameters:
+      - description: IEC61850 model ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.IEC61850Model'
+      summary: Get IEC61850 model by ID
+      tags:
+      - IEC61850
+  /api/v1/iec61850/node/{id}:
+    get:
+      parameters:
+      - description: Node ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.DataAttribute'
+      summary: Get Node by ID
+      tags:
+      - IEC61850
+  /api/v1/iec61850/node/{id}/data_source:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Node ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: DataSource
+        in: body
+        name: dataSource
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Update DataSource of a Node
+      tags:
+      - IEC61850
+  /api/v1/iec61850/node/ref/{ref}:
+    get:
+      parameters:
+      - description: IEC61850 reference
+        in: path
+        name: ref
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.DataAttribute'
+      summary: Get Node by IEC61850 reference
+      tags:
+      - IEC61850
+  /api/v1/mapping_rules/{id}:
+    delete:
+      parameters:
+      - description: MappingRule ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+      summary: Delete a MappingRule
+      tags:
+      - MappingRule
+    get:
+      parameters:
+      - description: MappingRule ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.MappingRule'
+      summary: Get a MappingRule by ID
+      tags:
+      - MappingRule
+    put:
+      parameters:
+      - description: MappingRule ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: MappingRule
+        in: body
+        name: rule
+        required: true
+        schema:
+          $ref: '#/definitions/service.MappingRule'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.MappingRule'
+      summary: Update a MappingRule
+      tags:
+      - MappingRule
+  /api/v1/modbus_detail/{ruleID}:
+    get:
+      parameters:
+      - description: Rule ID
+        in: path
+        name: ruleID
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.ModbusDetail'
+      summary: Get ModbusDetail by RuleID
+      tags:
+      - ModbusDetail
+  /api/v1/mqtt_detail/{ruleID}:
+    get:
+      parameters:
+      - description: Rule ID
+        in: path
+        name: ruleID
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.MqttDetail'
+      summary: Get MqttDetail by RuleID
+      tags:
+      - MqttDetail
   /api/v1/stations:
     get:
       description: List all stations
@@ -213,239 +431,7 @@ paths:
           schema:
             $ref: '#/definitions/service.Station'
       summary: Update station by ID
-  /audit_log:
-    get:
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/service.AuditLog'
-            type: array
-      summary: Get all audit logs
-      tags:
-      - AuditLog
-  /audit_log/{id}:
-    get:
-      parameters:
-      - description: Audit log ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/service.AuditLog'
-      summary: Get audit log by ID
-      tags:
-      - AuditLog
-  /iec61850/data_object/{id}:
-    get:
-      parameters:
-      - description: DataObject ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/service.DataObject'
-      summary: Get DataObject by ID
-      tags:
-      - IEC61850
-  /iec61850/data_object/{object_id}/node:
-    get:
-      parameters:
-      - description: DataObject ID
-        in: path
-        name: object_id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/service.DataAttribute'
-            type: array
-      summary: Get Nodes by DataObject ID
-      tags:
-      - IEC61850
-  /iec61850/model/{id}:
-    get:
-      parameters:
-      - description: IEC61850 model ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/service.IEC61850Model'
-      summary: Get IEC61850 model by ID
-      tags:
-      - IEC61850
-  /iec61850/node/{id}:
-    get:
-      parameters:
-      - description: Node ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/service.DataAttribute'
-      summary: Get Node by ID
-      tags:
-      - IEC61850
-  /iec61850/node/{id}/data_source:
-    put:
-      consumes:
-      - application/json
-      parameters:
-      - description: Node ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: DataSource
-        in: body
-        name: dataSource
-        required: true
-        schema:
-          type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: string
-      summary: Update DataSource of a Node
-      tags:
-      - IEC61850
-  /iec61850/node/ref/{ref}:
-    get:
-      parameters:
-      - description: IEC61850 reference
-        in: path
-        name: ref
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/service.DataAttribute'
-      summary: Get Node by IEC61850 reference
-      tags:
-      - IEC61850
-  /mapping_rules/{id}:
-    delete:
-      parameters:
-      - description: MappingRule ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      responses:
-        "204":
-          description: No Content
-      summary: Delete a MappingRule
-      tags:
-      - MappingRule
-    get:
-      parameters:
-      - description: MappingRule ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/service.MappingRule'
-      summary: Get a MappingRule by ID
-      tags:
-      - MappingRule
-    put:
-      parameters:
-      - description: MappingRule ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: MappingRule
-        in: body
-        name: rule
-        required: true
-        schema:
-          $ref: '#/definitions/service.MappingRule'
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/service.MappingRule'
-      summary: Update a MappingRule
-      tags:
-      - MappingRule
-  /modbus_detail/{ruleID}:
-    get:
-      parameters:
-      - description: Rule ID
-        in: path
-        name: ruleID
-        required: true
-        type: integer
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/service.ModbusDetail'
-      summary: Get ModbusDetail by RuleID
-      tags:
-      - ModbusDetail
-  /mqtt_detail/{ruleID}:
-    get:
-      parameters:
-      - description: Rule ID
-        in: path
-        name: ruleID
-        required: true
-        type: integer
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/service.MqttDetail'
-      summary: Get MqttDetail by RuleID
-      tags:
-      - MqttDetail
-  /stations/{stationID}/mapping_rules:
+  /api/v1/stations/{stationID}/mapping_rules:
     get:
       parameters:
       - description: Station ID
@@ -463,4 +449,18 @@ paths:
       summary: List all MappingRule for a station
       tags:
       - MappingRule
+  /audit_log:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/service.AuditLog'
+            type: array
+      summary: Get all audit logs
+      tags:
+      - AuditLog
 swagger: "2.0"

@@ -4,6 +4,344 @@
         "contact": {}
     },
     "paths": {
+        "/api/v1/audit_log/{id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AuditLog"
+                ],
+                "summary": "Get audit log by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Audit log ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.AuditLog"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/iec61850/data_object/{id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "IEC61850"
+                ],
+                "summary": "Get DataObject by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "DataObject ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.DataObject"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/iec61850/data_object/{object_id}/node": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "IEC61850"
+                ],
+                "summary": "Get Nodes by DataObject ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "DataObject ID",
+                        "name": "object_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/service.DataAttribute"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/iec61850/model/{id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "IEC61850"
+                ],
+                "summary": "Get IEC61850 model by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "IEC61850 model ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.IEC61850Model"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/iec61850/node/ref/{ref}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "IEC61850"
+                ],
+                "summary": "Get Node by IEC61850 reference",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "IEC61850 reference",
+                        "name": "ref",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.DataAttribute"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/iec61850/node/{id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "IEC61850"
+                ],
+                "summary": "Get Node by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Node ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.DataAttribute"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/iec61850/node/{id}/data_source": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "IEC61850"
+                ],
+                "summary": "Update DataSource of a Node",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Node ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "DataSource",
+                        "name": "dataSource",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/mapping_rules/{id}": {
+            "get": {
+                "tags": [
+                    "MappingRule"
+                ],
+                "summary": "Get a MappingRule by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "MappingRule ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.MappingRule"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "MappingRule"
+                ],
+                "summary": "Update a MappingRule",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "MappingRule ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "MappingRule",
+                        "name": "rule",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.MappingRule"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.MappingRule"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "MappingRule"
+                ],
+                "summary": "Delete a MappingRule",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "MappingRule ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                }
+            }
+        },
+        "/api/v1/modbus_detail/{ruleID}": {
+            "get": {
+                "tags": [
+                    "ModbusDetail"
+                ],
+                "summary": "Get ModbusDetail by RuleID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Rule ID",
+                        "name": "ruleID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.ModbusDetail"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/mqtt_detail/{ruleID}": {
+            "get": {
+                "tags": [
+                    "MqttDetail"
+                ],
+                "summary": "Get MqttDetail by RuleID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Rule ID",
+                        "name": "ruleID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.MqttDetail"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/stations": {
             "get": {
                 "description": "List all stations",
@@ -45,6 +383,34 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/service.Station"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/stations/{stationID}/mapping_rules": {
+            "get": {
+                "tags": [
+                    "MappingRule"
+                ],
+                "summary": "List all MappingRule for a station",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Station ID",
+                        "name": "stationID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/service.MappingRule"
+                            }
                         }
                     }
                 }
@@ -149,372 +515,6 @@
                             "type": "array",
                             "items": {
                                 "$ref": "#/definitions/service.AuditLog"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/audit_log/{id}": {
-            "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "AuditLog"
-                ],
-                "summary": "Get audit log by ID",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Audit log ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/service.AuditLog"
-                        }
-                    }
-                }
-            }
-        },
-        "/iec61850/data_object/{id}": {
-            "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "IEC61850"
-                ],
-                "summary": "Get DataObject by ID",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "DataObject ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/service.DataObject"
-                        }
-                    }
-                }
-            }
-        },
-        "/iec61850/data_object/{object_id}/node": {
-            "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "IEC61850"
-                ],
-                "summary": "Get Nodes by DataObject ID",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "DataObject ID",
-                        "name": "object_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/service.DataAttribute"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/iec61850/model/{id}": {
-            "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "IEC61850"
-                ],
-                "summary": "Get IEC61850 model by ID",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "IEC61850 model ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/service.IEC61850Model"
-                        }
-                    }
-                }
-            }
-        },
-        "/iec61850/node/ref/{ref}": {
-            "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "IEC61850"
-                ],
-                "summary": "Get Node by IEC61850 reference",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "IEC61850 reference",
-                        "name": "ref",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/service.DataAttribute"
-                        }
-                    }
-                }
-            }
-        },
-        "/iec61850/node/{id}": {
-            "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "IEC61850"
-                ],
-                "summary": "Get Node by ID",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Node ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/service.DataAttribute"
-                        }
-                    }
-                }
-            }
-        },
-        "/iec61850/node/{id}/data_source": {
-            "put": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "IEC61850"
-                ],
-                "summary": "Update DataSource of a Node",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Node ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "DataSource",
-                        "name": "dataSource",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/mapping_rules/{id}": {
-            "get": {
-                "tags": [
-                    "MappingRule"
-                ],
-                "summary": "Get a MappingRule by ID",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "MappingRule ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/service.MappingRule"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "MappingRule"
-                ],
-                "summary": "Update a MappingRule",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "MappingRule ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "MappingRule",
-                        "name": "rule",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/service.MappingRule"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/service.MappingRule"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "MappingRule"
-                ],
-                "summary": "Delete a MappingRule",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "MappingRule ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "No Content"
-                    }
-                }
-            }
-        },
-        "/modbus_detail/{ruleID}": {
-            "get": {
-                "tags": [
-                    "ModbusDetail"
-                ],
-                "summary": "Get ModbusDetail by RuleID",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Rule ID",
-                        "name": "ruleID",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/service.ModbusDetail"
-                        }
-                    }
-                }
-            }
-        },
-        "/mqtt_detail/{ruleID}": {
-            "get": {
-                "tags": [
-                    "MqttDetail"
-                ],
-                "summary": "Get MqttDetail by RuleID",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Rule ID",
-                        "name": "ruleID",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/service.MqttDetail"
-                        }
-                    }
-                }
-            }
-        },
-        "/stations/{stationID}/mapping_rules": {
-            "get": {
-                "tags": [
-                    "MappingRule"
-                ],
-                "summary": "List all MappingRule for a station",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Station ID",
-                        "name": "stationID",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/service.MappingRule"
                             }
                         }
                     }
