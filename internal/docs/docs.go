@@ -15,6 +15,28 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/v1/audit_log": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AuditLog"
+                ],
+                "summary": "Get all audit logs",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/service.AuditLog"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/audit_log/{id}": {
             "get": {
                 "produces": [
@@ -505,28 +527,6 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/service.Station"
-                        }
-                    }
-                }
-            }
-        },
-        "/audit_log": {
-            "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "AuditLog"
-                ],
-                "summary": "Get all audit logs",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/service.AuditLog"
-                            }
                         }
                     }
                 }

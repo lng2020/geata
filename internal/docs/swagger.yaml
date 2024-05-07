@@ -128,6 +128,20 @@ definitions:
 info:
   contact: {}
 paths:
+  /api/v1/audit_log:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/service.AuditLog'
+            type: array
+      summary: Get all audit logs
+      tags:
+      - AuditLog
   /api/v1/audit_log/{id}:
     get:
       parameters:
@@ -449,18 +463,4 @@ paths:
       summary: List all MappingRule for a station
       tags:
       - MappingRule
-  /audit_log:
-    get:
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/service.AuditLog'
-            type: array
-      summary: Get all audit logs
-      tags:
-      - AuditLog
 swagger: "2.0"
