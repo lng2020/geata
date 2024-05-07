@@ -35,7 +35,7 @@ func GetAuditLogByID(c *gin.Context) {
 // @tags AuditLog
 // @produce json
 // @success 200 {array} AuditLog
-// @router /audit_log [get]
+// @router /api/v1/audit_log [get]
 func GetAllAuditLogs(c *gin.Context) {
 	logs, err := model.GetAllAuditLogs(Engine)
 	if err != nil {
