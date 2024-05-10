@@ -14,36 +14,34 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: Login
+      component: Login,
+      meta: {
+        hideSidebar: true
+      }
     },
     {
       path: '/',
       name: 'dashboard',
       component: Dashboard,
-      meta: { requiresAuth: true }
     },
     {
       path: '/station/:id',
       name: 'station',
       component: Station,
-      meta: { requiresAuth: true }
     },
     {
       path: '/station/create',
       component: StationCreate,
-      meta: { requiresAuth: true }
     },
     {
       path: '/mapping/:id',
       name: 'mapping',
       component: Mapping,
-      meta: { requiresAuth: true }
     },
     {
       path: '/setting/:id',
       name: 'setting',
       component: Setting,
-      meta: { requiresAuth: true }
     },
     {
       path: '/unauthorized',
@@ -53,16 +51,23 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
-  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
 
-  if (requiresAuth && !authStore.user) {
-    next({ name: 'login' })
-  } else if (to.name === 'login' && authStore.user) {
-    next({ name: 'dashboard' })
+  if (to.name === 'Login') {
+    if (authStore.user) {
+      next({ name: '/' })
+    } else {
+      next()
+    }
   } else {
-    next()
+    const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+
+    if (requiresAuth && !authStore.user) {
+      next({ name: 'Login' })
+    } else {
+      next()
+    }
   }
 })
 

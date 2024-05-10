@@ -1,8 +1,6 @@
 <template>
   <div class="flex h-screen">
-    <template v-if="isAuthorized">
-      <Sidebar />
-    </template>
+    <Sidebar v-if="!$route.meta.hideSidebar"/>
     <main class="flex-1 p-4">
       <router-view></router-view>
     </main>
@@ -11,6 +9,4 @@
 
 <script lang="ts" setup>
 import Sidebar from '@/components/Sidebar.vue'
-import { useAuthStore } from '@/stores/store'
-const isAuthorized = useAuthStore().user
 </script>
