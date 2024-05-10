@@ -5,52 +5,50 @@ export const useAuthStore = defineStore({
   id: 'auth',
   state: () => ({
     token: localStorage.getItem('token') || '',
-    user: null as User | null,
+    user: null as User | null
   }),
   actions: {
     async login(username: string, password: string) {
-      const credentials = { username, password };
+      const credentials = { username, password }
       const response = await fetch('/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(credentials)
-      });
+      })
       if (!response.ok) {
-        console.error('Login failed');
-        return;
+        return
       }
-      const data: LoginResponse = await response.json();
-      this.token = data.token;
-      localStorage.setItem('token', this.token);
-      this.user = data.user;
+      const data: LoginResponse = await response.json()
+      this.token = data.token
+      localStorage.setItem('token', this.token)
+      this.user = data.user
     },
     logout() {
-      this.token = '';
-      localStorage.removeItem('token');
-      this.user = null;
+      this.token = ''
+      localStorage.removeItem('token')
+      this.user = null
     },
     async register(username: string, password: string) {
-      const credentials = { username, password };
+      const credentials = { username, password }
       const response = await fetch('/api/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(credentials)
-      });
+      })
       if (!response.ok) {
-        console.error('Registration failed');
-        return;
+        return
       }
-      const data: LoginResponse = await response.json();
-      this.token = data.token;
-      localStorage.setItem('token', this.token);
-      this.user = data.user;
+      const data: LoginResponse = await response.json()
+      this.token = data.token
+      localStorage.setItem('token', this.token)
+      this.user = data.user
     }
   }
-});
+})
 
 export const userGlobalStore = defineStore({
   id: 'global',

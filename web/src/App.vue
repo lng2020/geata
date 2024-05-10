@@ -1,6 +1,6 @@
 <template>
   <div class="flex h-screen">
-    <template v-if = "isAuthorized">
+    <template v-if="isAuthorized">
       <Sidebar />
     </template>
     <main class="flex-1 p-4">

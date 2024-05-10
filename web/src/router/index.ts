@@ -54,16 +54,16 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const authStore = useAuthStore();
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  const authStore = useAuthStore()
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
 
   if (requiresAuth && !authStore.user) {
-    next({ name: 'login' });
+    next({ name: 'login' })
   } else if (to.name === 'login' && authStore.user) {
-    next({ name: 'dashboard' });
+    next({ name: 'dashboard' })
   } else {
-    next();
+    next()
   }
-});
+})
 
 export default router
