@@ -38,6 +38,7 @@ var models = []any{
 	new(model.LogicalNode),
 	new(model.DataObject),
 	new(model.AuditLog),
+	new(model.User),
 }
 
 func NewApp() *App {

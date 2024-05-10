@@ -11,6 +11,7 @@ export interface Station {
 }
 
 export type MappingType = 'MQTT' | 'Modbus' | 'IEC61850'
+export type RoleType = 'admin' | 'user'
 
 export interface Mapping {
   id: number
@@ -49,4 +50,15 @@ export interface AuditLog {
   id: number
   message: string
   createAt: string
+}
+
+export interface User {
+  id: number
+  username: string
+  role: RoleType
+}
+
+export interface LoginResponse {
+  token: string
+  user: User
 }
