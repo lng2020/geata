@@ -44,6 +44,11 @@ const router = createRouter({
       component: Setting,
     },
     {
+      path: '/management',
+      name: 'management',
+      component: () => import('@/views/management.vue'),
+    },
+    {
       path: '/unauthorized',
       name: 'unauthorized',
       component: Unauthorized
