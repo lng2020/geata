@@ -5,6 +5,8 @@ import Setting from '@/views/Setting.vue'
 import StationCreate from '@/views/StationCreate.vue'
 import Login from '@/views/Login.vue'
 import Unauthorized from '@/views/Unauthorized.vue'
+import Management from '@/views/Management.vue'
+import User from '@/views/User.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/store'
 
@@ -46,7 +48,12 @@ const router = createRouter({
     {
       path: '/management',
       name: 'management',
-      component: () => import('@/views/management.vue'),
+      component: Management,
+    },
+    {
+      path: '/user',
+      name: 'user',
+      component: User,
     },
     {
       path: '/unauthorized',
