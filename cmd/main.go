@@ -4,6 +4,7 @@
 package cmd
 
 import (
+	"geata/cmd/mock"
 	"geata/cmd/start"
 
 	"github.com/spf13/cobra"
@@ -17,6 +18,7 @@ func Run() error {
 	}
 
 	rootCmd.AddCommand(start.NewStartCmd())
+	rootCmd.AddCommand(mock.NewMockCmd())
 
 	return rootCmd.Execute()
 }
