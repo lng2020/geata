@@ -33,6 +33,7 @@ const zhCN = {
 type MessageSchema = typeof enUS
 
 const i18n = createI18n<[MessageSchema], 'en-US', 'zh-CN'>({
+  legacy: false,
   locale: 'en-US',
   messages: {
     'en-US': enUS,
