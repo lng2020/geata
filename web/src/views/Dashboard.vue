@@ -1,6 +1,6 @@
 <template>
   <div class="container mx-auto py-8">
-    <h1 class="text-3xl font-bold mb-6">{{$t('views.dashboard.title')}}</h1>
+    <h1 class="text-3xl font-bold mb-6">{{$t('dashboard')}}</h1>
     <div class="mb-6">
       <div class="flex items-center mb-4">
         <input type="text" v-model="searchQuery" placeholder="search stations by name..."
@@ -59,6 +59,7 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
 import { userGlobalStore } from '@/stores/store'
 import { computed, reactive, ref } from 'vue'

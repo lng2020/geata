@@ -24,36 +24,36 @@ const router = createRouter({
     {
       path: '/',
       name: 'dashboard',
-      component: Dashboard,
+      component: Dashboard
     },
     {
       path: '/station/:id',
       name: 'station',
-      component: Station,
+      component: Station
     },
     {
       path: '/station/create',
-      component: StationCreate,
+      component: StationCreate
     },
     {
       path: '/mapping/:id',
       name: 'mapping',
-      component: Mapping,
+      component: Mapping
     },
     {
       path: '/setting/:id',
       name: 'setting',
-      component: Setting,
+      component: Setting
     },
     {
       path: '/management',
       name: 'management',
-      component: Management,
+      component: Management
     },
     {
       path: '/user',
       name: 'user',
-      component: User,
+      component: User
     },
     {
       path: '/unauthorized',
@@ -73,7 +73,7 @@ router.beforeEach(async (to, from, next) => {
       next()
     }
   } else {
-    const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+    const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
 
     if (requiresAuth && !authStore.user) {
       next({ name: 'Login' })
