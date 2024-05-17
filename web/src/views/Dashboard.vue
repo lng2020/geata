@@ -17,9 +17,9 @@
         <table class="w-full">
           <thead>
             <tr class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
-              <th class="py-3 px-6 text-left">NAME</th>
-              <th class="py-3 px-6 text-left">IS ONLINE</th>
-              <th class="py-3 px-6 text-left">LAST ONLINE TIME</th>
+              <th class="py-3 px-6 text-left">{{ $t("name") }}</th>
+              <th class="py-3 px-6 text-left">{{ $t("isOnline") }}</th>
+              <th class="py-3 px-6 text-left">{{ $t("lastOnlineTime") }}</th>
               <th class="py-3 px-6 text-left">ADDRESS</th>
             </tr>
           </thead>
@@ -61,7 +61,7 @@
 </template>
 
 <script setup lang="ts">
-import { userGlobalStore } from '@/stores/store'
+import { userGlobalStore } from '@/store'
 import { computed, reactive, ref } from 'vue'
 import { Pie, Line } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale, LinearScale, PointElement, LineElement } from 'chart.js'

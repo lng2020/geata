@@ -75,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { userGlobalStore } from '@/stores/store'
+import { userGlobalStore } from '@/store'
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import type { Station } from '@/types/types'

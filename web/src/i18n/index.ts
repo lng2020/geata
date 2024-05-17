@@ -1,7 +1,7 @@
 import { createI18n } from 'vue-i18n'
 
 const enUS = {
-  dashboar: 'Dashboard',
+  dashboard: 'Dashboard',
   overview: 'Overview',
   settings: 'Settings',
   onlineStatus: 'Online Status',
@@ -16,13 +16,18 @@ const enUS = {
 }
 
 const zhCN = {
-  views: {
-    dashboard: {
-      title: '仪表盘',
-      overview: '概览',
-      settings: '设置'
-    }
-  }
+  dashboard: '仪表盘',
+  overview: '总览',
+  settings: '设置',
+  onlineStatus: '在线状态',
+  searchPlaceholder: '按名称搜索站点...',
+  searchButton: '搜索',
+  name: '名称',
+  isOnline: '在线状态',
+  lastOnlineTime: '最后在线时间',
+  address: '地址',
+  online: '在线',
+  offline: '离线'
 }
 
 type MessageSchema = typeof enUS

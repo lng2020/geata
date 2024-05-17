@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import type { Station, Mapping, IEDModel, LogicalNode, User, LoginResponse } from '@/types/types'
+import i18n from '@/i18n/index'
 
 export const useAuthStore = defineStore({
   id: 'auth',
@@ -46,6 +47,23 @@ export const useAuthStore = defineStore({
       this.token = data.token
       localStorage.setItem('token', this.token)
       this.user = data.user
+    },
+    async setLang(lang: string) {
+      if (this.user) {
+        this.user.lang = lang
+      }
+
+      const response = await fetch('/api/user', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${this.token}`
+        },
+        body: JSON.stringify({ lang })
+      })
+      if (response.ok) {
+        i18n.global.locale.value = lang
+      }
     }
   }
 })

@@ -8,7 +8,7 @@ import Unauthorized from '@/views/Unauthorized.vue'
 import Management from '@/views/Management.vue'
 import User from '@/views/User.vue'
 import { createRouter, createWebHistory } from 'vue-router'
-import { useAuthStore } from '@/stores/store'
+import { useAuthStore } from '@/store'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

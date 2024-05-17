@@ -51,7 +51,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { userGlobalStore } from '@/stores/store'
+import { userGlobalStore } from '@/store'
 import { reactive } from 'vue'
 const store = userGlobalStore()
 const stations = reactive(store.stations)

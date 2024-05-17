@@ -7,9 +7,9 @@
         <!-- Language -->
         <div class="mb-8">
           <h2 class="text-xl font-bold mb-2">Language</h2>
-          <select v-model="language" class="border border-gray-300 px-2 py-1 rounded-md">
-            <option value="en">English</option>
-            <option value="zh">中文</option>
+          <select @change="editLang" v-model="language" class="border border-gray-300 px-2 py-1 rounded-md">
+            <option value="en-US">English</option>
+            <option value="zh-CN">中文</option>
           </select>
         </div>
 
@@ -223,6 +223,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useAuthStore } from '@/store';
 
 interface Log {
   id: number
@@ -236,6 +237,7 @@ interface Rule {
   notification: string
 }
 
+const authStore = useAuthStore()
 const language = ref<string>('en')
 const theme = ref<string>('light')
 const realTimeDataRetention = ref<number>(7)
@@ -297,5 +299,9 @@ function refreshLogs(): void {
 
 function exportLogs(): void {
   console.log('Exporting logs')
+}
+
+function editLang(): void {
+  authStore.setLang(language.value)
 }
 </script>

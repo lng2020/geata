@@ -81,7 +81,7 @@
 
 <script lang="ts" setup>
 import { ref, computed, reactive } from 'vue'
-import { userGlobalStore } from '@/stores/store'
+import { userGlobalStore } from '@/store'
 
 const store = userGlobalStore()
 let model = reactive(store.model)
