@@ -17,43 +17,61 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: Login,
-      meta: {
-        hideSidebar: true
-      }
     },
     {
       path: '/',
       name: 'dashboard',
-      component: Dashboard
+      component: Dashboard,
+      meta: {
+        requireAuth: true
+      }
     },
     {
       path: '/station/:id',
       name: 'station',
-      component: Station
+      component: Station,
+      meta: {
+        requireAuth: true
+      }
     },
     {
       path: '/station/create',
-      component: StationCreate
+      component: StationCreate,
+      meta: {
+        requireAuth: true
+      }
     },
     {
       path: '/mapping/:id',
       name: 'mapping',
-      component: Mapping
+      component: Mapping,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/setting/:id',
       name: 'setting',
-      component: Setting
+      component: Setting,
+      meta: {
+        requireAuth: true
+      }
     },
     {
       path: '/management',
       name: 'management',
-      component: Management
+      component: Management,
+      meta: {
+        requireAuth: true
+      }
     },
     {
       path: '/user',
       name: 'user',
-      component: User
+      component: User,
+      meta: {
+        requireAuth: true
+      }
     },
     {
       path: '/unauthorized',
@@ -65,18 +83,17 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
-
-  if (to.name === 'Login') {
-    if (authStore.user) {
-      next({ name: '/' })
+  console.log(to.name)
+  if (to.name === 'login') {
+    if (authStore.token) {
+      next({ name: 'dashboard' })
     } else {
       next()
     }
   } else {
-    const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
-
-    if (requiresAuth && !authStore.user) {
-      next({ name: 'Login' })
+    const requiresAuth = to.matched.some((record) => record.meta.requireAuth)
+    if (requiresAuth && !authStore.token) {
+      next({ name: 'login' })
     } else {
       next()
     }
