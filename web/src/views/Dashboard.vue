@@ -1,8 +1,8 @@
 <template>
   <div class="container mx-auto py-8">
-    <h1 class="text-3xl font-bold mb-6">{{ $t('dashboard') }}</h1>
-    <div class="mb-6">
-      <div class="flex items-center mb-4">
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-3xl font-bold">{{ $t('dashboard') }}</h1>
+      <div class="flex items-center">
         <input
           type="text"
           v-model="searchQuery"
