@@ -47,7 +47,7 @@ import { useAuthStore } from '@/store'
 const router = useRouter()
 const authStore = useAuthStore()
 const user = authStore.user
-const avatar = user?.avatar? user.avatar : '/src/assets/gopher.png'
+const avatar = user?.avatar ? user.avatar : '/src/assets/gopher.png'
 const name = user?.username
 const isAdmin = user?.role === 'admin'
 const isDropdownOpen = ref(false)
