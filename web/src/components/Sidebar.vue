@@ -1,6 +1,6 @@
 <template>
   <div class="h-screen w-64 bg-gray-800">
-    <div class="flex items-center px-4 py-3">
+    <div class="flex items-center px-4 py-3 bg-gray-900">
       <img src="../assets/gopher.png" alt="logo" class="w-8 h-8 mr-2" />
       <span class="text-white text-xl font-bold">Geata</span>
     </div>
@@ -26,7 +26,7 @@
             class="text-sm"
           ></font-awesome-icon>
         </button>
-        <div v-show="station.showOptions" class="mt-2 space-y-2 pl-12">
+        <div v-show="station.showOptions" class="mt-2 space-y-2 pl-12 bg-gray-700">
           <router-link
             :to="{ path: '/station/' + station.id }"
             class="block text-sm text-gray-400 hover:text-white"

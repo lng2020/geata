@@ -7,7 +7,12 @@ export const useAuthStore = defineStore({
   id: 'auth',
   state: () => ({
     token: useLocalStorage('token', ''),
-    user: useLocalStorage('user', null) as User | null
+    user: useLocalStorage<User | null>('user', null, {
+      serializer: {
+        read: (v: any) => v ? JSON.parse(v) : null,
+        write: (v: any) => JSON.stringify(v),
+      },
+    },)
   }),
   actions: {
     async login(username: string, password: string) {
