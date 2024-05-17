@@ -22,7 +22,4 @@ if (authStore.user?.lang) {
   i18n.global.locale.value = authStore.user.lang
 }
 
-app.use(router)
-  .use(i18n)
-  .component('font-awesome-icon', FontAwesomeIcon)
-  .mount('#app')
+app.use(router).use(i18n).component('font-awesome-icon', FontAwesomeIcon).mount('#app')

@@ -7,7 +7,11 @@
         <!-- Language -->
         <div class="mb-8">
           <h2 class="text-xl font-bold mb-2">Language</h2>
-          <select @change="editLang" v-model="language" class="border border-gray-300 px-2 py-1 rounded-md">
+          <select
+            @change="editLang"
+            v-model="language"
+            class="border border-gray-300 px-2 py-1 rounded-md"
+          >
             <option value="en-US">English</option>
             <option value="zh-CN">中文</option>
           </select>
@@ -223,7 +227,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useAuthStore } from '@/store';
+import { useAuthStore } from '@/store'
 
 interface Log {
   id: number

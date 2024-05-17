@@ -16,7 +16,7 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: Login,
+      component: Login
     },
     {
       path: '/',
@@ -46,7 +46,7 @@ const router = createRouter({
       name: 'mapping',
       component: Mapping,
       meta: {
-        requiresAuth: true
+        requireAuth: true
       }
     },
     {
@@ -83,7 +83,6 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
-  console.log(to.name)
   if (to.name === 'login') {
     if (authStore.token) {
       next({ name: 'dashboard' })

@@ -1,12 +1,13 @@
 import { defineStore } from 'pinia'
+import { useLocalStorage } from '@vueuse/core'
 import type { Station, Mapping, IEDModel, LogicalNode, User, LoginResponse } from '@/types/types'
 import i18n from '@/i18n/index'
 
 export const useAuthStore = defineStore({
   id: 'auth',
   state: () => ({
-    token: localStorage.getItem('token') || '',
-    user: null as User | null
+    token: useLocalStorage('token', ''),
+    user: useLocalStorage('user', null) as User | null
   }),
   actions: {
     async login(username: string, password: string) {
@@ -23,13 +24,15 @@ export const useAuthStore = defineStore({
       }
       const data: LoginResponse = await response.json()
       this.token = data.token
-      localStorage.setItem('token', this.token)
       this.user = data.user
+      localStorage.setItem('token', this.token)
+      localStorage.setItem('user', JSON.stringify(this.user))
     },
     logout() {
       this.token = ''
-      localStorage.removeItem('token')
       this.user = null
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
     },
     async register(username: string, password: string) {
       const credentials = { username, password }
@@ -45,8 +48,9 @@ export const useAuthStore = defineStore({
       }
       const data: LoginResponse = await response.json()
       this.token = data.token
-      localStorage.setItem('token', this.token)
       this.user = data.user
+      localStorage.setItem('token', this.token)
+      localStorage.setItem('user', JSON.stringify(this.user))
     },
     async setLang(lang: string) {
       if (this.user) {

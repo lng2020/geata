@@ -57,6 +57,7 @@ export interface User {
   username: string
   role: RoleType
   lang: string
+  avatar: string
 }
 
 export interface LoginResponse {

@@ -52,55 +52,55 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useAuthStore } from '@/store';
-import { useRouter } from 'vue-router';
+import { ref } from 'vue'
+import { useAuthStore } from '@/store'
+import { useRouter } from 'vue-router'
 
-const authStore = useAuthStore();
-const router = useRouter();
+const authStore = useAuthStore()
+const router = useRouter()
 
-const isRegistering = ref(false);
-const username = ref('');
-const password = ref('');
-const usernameError = ref('');
-const passwordError = ref('');
-const successMessage = ref('');
-const errorMessage = ref('');
+const isRegistering = ref(false)
+const username = ref('')
+const password = ref('')
+const usernameError = ref('')
+const passwordError = ref('')
+const successMessage = ref('')
+const errorMessage = ref('')
 
 const toggleForm = () => {
-  isRegistering.value = !isRegistering.value;
-  clearForm();
-};
+  isRegistering.value = !isRegistering.value
+  clearForm()
+}
 
 const clearForm = () => {
-  username.value = '';
-  password.value = '';
-  usernameError.value = '';
-  passwordError.value = '';
-  successMessage.value = '';
-  errorMessage.value = '';
-};
+  username.value = ''
+  password.value = ''
+  usernameError.value = ''
+  passwordError.value = ''
+  successMessage.value = ''
+  errorMessage.value = ''
+}
 
 const validateForm = () => {
-  usernameError.value = username.value.trim() === '' ? 'Username is required' : '';
-  passwordError.value = password.value.trim() === '' ? 'Password is required' : '';
-  return usernameError.value === '' && passwordError.value === '';
-};
+  usernameError.value = username.value.trim() === '' ? 'Username is required' : ''
+  passwordError.value = password.value.trim() === '' ? 'Password is required' : ''
+  return usernameError.value === '' && passwordError.value === ''
+}
 
 const handleSubmit = async () => {
-  if (!validateForm()) return;
+  if (!validateForm()) return
 
   try {
     if (isRegistering.value) {
-      await authStore.register(username.value, password.value);
-      successMessage.value = 'Registration successful. Please login.';
-      toggleForm();
+      await authStore.register(username.value, password.value)
+      successMessage.value = 'Registration successful. Please login.'
+      toggleForm()
     } else {
-      await authStore.login(username.value, password.value);
-      router.push('/');
+      await authStore.login(username.value, password.value)
+      router.push('/')
     }
   } catch (error) {
-    errorMessage.value = 'An error occurred. Please try again.';
+    errorMessage.value = 'An error occurred. Please try again.'
   }
-};
+}
 </script>
