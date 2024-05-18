@@ -1,52 +1,84 @@
+
 <template>
   <div class="container mx-auto p-6">
     <h1 class="text-3xl font-bold mb-6">System Settings</h1>
 
     <div class="grid grid-cols-2 gap-8">
-      <section>
-        <!-- Language -->
-        <div class="mb-8">
-          <h2 class="text-xl font-bold mb-2">Language</h2>
-          <select
-            @change="editLang"
-            v-model="language"
-            class="border border-gray-300 px-2 py-1 rounded-md"
-          >
-            <option value="en-US">English</option>
-            <option value="zh-CN">中文</option>
-          </select>
+      <section class="bg-white shadow rounded-lg p-6">
+        <h2 class="text-2xl font-bold mb-6">General Settings</h2>
+        <div class="mb-6">
+          <label class="block text-gray-700 font-bold mb-2">Language</label>
+          <div class="relative">
+            <select
+              @change="editLang"
+              v-model="language"
+              class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+            >
+              <option value="en-US">English</option>
+              <option value="zh-CN">中文</option>
+            </select>
+            <div
+              class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"
+            >
+              <svg
+                class="fill-current h-4 w-4"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
+                />
+              </svg>
+            </div>
+          </div>
         </div>
 
-        <!-- Interface Theme -->
-        <div class="mb-8">
-          <h2 class="text-xl font-bold mb-2">Theme</h2>
-          <select v-model="theme" class="border border-gray-300 px-2 py-1 rounded-md">
-            <option value="light">Light</option>
-            <option value="dark">Dark</option>
-            <option value="auto">Auto</option>
-          </select>
+        <div class="mb-6">
+          <label class="block text-gray-700 font-bold mb-2">Theme</label>
+          <div class="relative">
+            <select
+              v-model="theme"
+              class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+            >
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+              <option value="auto">Auto</option>
+            </select>
+            <div
+              class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"
+            >
+              <svg
+                class="fill-current h-4 w-4"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
+                />
+              </svg>
+            </div>
+          </div>
         </div>
 
-        <!-- Data Retention Policy -->
-        <div class="mb-8">
-          <h2 class="text-xl font-bold mb-4">Data Retention Policy</h2>
-          <div class="mb-2">
-            <label class="mr-2">Real-time Data:</label>
+        <div class="mb-6">
+          <h3 class="text-lg font-bold mb-2">Data Retention Policy</h3>
+          <div class="flex items-center mb-2">
+            <label class="block text-gray-700 font-bold mr-4">Real-time Data:</label>
             <input
               type="number"
               v-model="realTimeDataRetention"
-              class="border border-gray-300 px-2 py-1 rounded-md"
+              class="border border-gray-400 hover:border-gray-500 px-2 py-1 rounded shadow focus:outline-none focus:shadow-outline"
               min="1"
               max="365"
             />
             <span class="ml-2">days</span>
           </div>
-          <div>
-            <label class="mr-2">Historical Data:</label>
+          <div class="flex items-center">
+            <label class="block text-gray-700 font-bold mr-4">Historical Data:</label>
             <input
               type="number"
               v-model="historicalDataRetention"
-              class="border border-gray-300 px-2 py-1 rounded-md"
+              class="border border-gray-400 hover:border-gray-500 px-2 py-1 rounded shadow focus:outline-none focus:shadow-outline"
               min="1"
               max="365"
             />
@@ -54,51 +86,65 @@
           </div>
         </div>
 
-        <!-- MQTT Connection Parameters -->
         <div>
-          <h2 class="text-xl font-bold mb-4">MQTT Connection Parameters</h2>
-          <div class="mb-4">
-            <label class="block mb-1">Server Address:</label>
-            <input
-              type="text"
-              v-model="mqttServerAddress"
-              class="w-full border border-gray-300 px-2 py-1 rounded-md"
-            />
-          </div>
-          <div class="mb-4">
-            <label class="block mb-1">Port:</label>
-            <input
-              type="number"
-              v-model="mqttServerPort"
-              class="w-full border border-gray-300 px-2 py-1 rounded-md"
-            />
-          </div>
-          <div class="mb-4">
-            <label class="block mb-1">Username:</label>
-            <input
-              type="text"
-              v-model="mqttUsername"
-              class="w-full border border-gray-300 px-2 py-1 rounded-md"
-            />
-          </div>
-          <div class="mb-4">
-            <label class="block mb-1">Password:</label>
-            <input
-              type="password"
-              v-model="mqttPassword"
-              class="w-full border border-gray-300 px-2 py-1 rounded-md"
-            />
-          </div>
-          <button @click="testMqttConnection" class="px-4 py-2 bg-blue-500 text-white rounded-md">
+          <div class="flex justify-between">
+            <h3 class="text-lg font-bold">MQTT Connection Parameters</h3>
+          <button
+            @click="testMqttConnection"
+            class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline"
+          >
             Test Connection
           </button>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-gray-700 font-bold mb-2">Server Address:</label>
+              <input
+                type="text"
+                v-model="mqttServerAddress"
+                class="w-full border border-gray-400 hover:border-gray-500 px-2 py-1 rounded shadow focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700 font-bold mb-2">Port:</label>
+              <input
+                type="number"
+                v-model="mqttServerPort"
+                class="w-full border border-gray-400 hover:border-gray-500 px-2 py-1 rounded shadow focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700 font-bold mb-2">Username:</label>
+              <input
+                type="text"
+                v-model="mqttUsername"
+                class="w-full border border-gray-400 hover:border-gray-500 px-2 py-1 rounded shadow focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700 font-bold mb-2">Password:</label>
+              <input
+                type="password"
+                v-model="mqttPassword"
+                class="w-full border border-gray-400 hover:border-gray-500 px-2 py-1 rounded shadow focus:outline-none focus:shadow-outline"
+              />
+            </div>
+          </div>
+
         </div>
       </section>
 
-      <section>
-        <!-- Alarm Rules -->
-        <div class="mb-8">
-          <h2 class="text-xl font-bold mb-4">Alarm Rules</h2>
+      <section class="bg-white shadow rounded-lg p-6">
+        <div class="mb-6">
+          <div class="flex justify-between">
+          <h2 class="text-2xl font-bold mb-4">Alarm Rules</h2>
+            <button
+            @click="showAddRuleDialog = true"
+            class="mb-4 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:shadow-outline"
+          >
+            Add Rule
+          </button>
+          </div>
           <ul class="space-y-2">
             <li
               v-for="(rule, index) in alarmRules"
@@ -113,74 +159,99 @@
               <div>
                 <button
                   @click="editRule(index)"
-                  class="px-2 py-1 bg-blue-500 text-white rounded-md"
+                  class="px-4 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline"
                 >
                   Edit
                 </button>
                 <button
                   @click="deleteRule(index)"
-                  class="ml-2 px-2 py-1 bg-red-500 text-white rounded-md"
+                  class="ml-2 px-4 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:shadow-outline"
                 >
                   Delete
                 </button>
               </div>
             </li>
           </ul>
-          <button
-            @click="showAddRuleDialog = true"
-            class="mt-4 px-4 py-2 bg-green-500 text-white rounded-md"
-          >
-            Add Rule
-          </button>
+
         </div>
 
-        <!-- System Logs -->
         <div>
-          <h2 class="text-xl font-bold mb-4">System Logs</h2>
-          <div class="mb-4 flex items-center">
-            <label class="mr-2 w-20">Log Level:</label>
-            <select v-model="logLevel" class="border border-gray-300 px-2 py-1 rounded-md">
-              <option value="debug">Debug</option>
-              <option value="info">Info</option>
-              <option value="warning">Warning</option>
-              <option value="error">Error</option>
-            </select>
+          <div class="flex justify-between mb-4"> 
+          <h2 class="text-2xl font-bold">System Logs</h2>
+            <div class="flex">
+            <button
+              @click="refreshLogs"
+              class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline"
+            >
+              Refresh
+            </button>
+            <button
+              @click="exportLogs"
+              class="ml-2 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:shadow-outline"
+            >
+              Export
+            </button>
           </div>
-          <div class="mb-4 flex items-center">
-            <label class="mr-2 w-20">Time Range:</label>
+          </div>
+          <div class="flex items-center mb-4">
+            <label class="block text-gray-700 font-bold mr-4">Log Level:</label>
+            <div class="relative">
+              <select
+                v-model="logLevel"
+                class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+              >
+                <option value="debug">Debug</option>
+                <option value="info">Info</option>
+                <option value="warning">Warning</option>
+                <option value="error">Error</option>
+              </select>
+              <div
+                class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"
+              >
+                <svg
+                  class="fill-current h-4 w-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center mb-4">
+            <label class="block text-gray-700 font-bold mr-4">Time Range:</label>
             <input
               type="date"
               v-model="logStartDate"
-              class="border border-gray-300 px-2 py-1 rounded-md"
+              class="border border-gray-400 hover:border-gray-500 px-2 py-1 rounded shadow focus:outline-none focus:shadow-outline"
             />
             <span class="mx-2">to</span>
             <input
               type="date"
               v-model="logEndDate"
-              class="border border-gray-300 px-2 py-1 rounded-md"
+              class="border border-gray-400 hover:border-gray-500 px-2 py-1 rounded shadow focus:outline-none focus:shadow-outline"
             />
           </div>
-          <div class="flex">
-            <button @click="refreshLogs" class="px-4 py-2 bg-blue-500 text-white rounded-md">
-              Refresh
-            </button>
-            <button @click="exportLogs" class="ml-2 px-4 py-2 bg-green-500 text-white rounded-md">
-              Export
-            </button>
-          </div>
-          <table class="mt-4 w-full border-collapse">
+
+          <table class="table-auto w-full">
             <thead>
-              <tr class="bg-gray-200">
-                <th class="px-4 py-2 border border-gray-300">Timestamp</th>
-                <th class="px-4 py-2 border border-gray-300">Level</th>
-                <th class="px-4 py-2 border border-gray-300">Message</th>
+              <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                <th class="py-3 px-6 text-left">Timestamp</th>
+                <th class="py-3 px-6 text-left">Level</th>
+                <th class="py-3 px-6 text-left">Message</th>
               </tr>
             </thead>
-            <tbody>
-              <tr v-for="log in filteredLogs" :key="log.id" class="hover:bg-gray-100">
-                <td class="border border-gray-300 px-4 py-2">{{ log.timestamp }}</td>
-                <td class="border border-gray-300 px-4 py-2">{{ log.level }}</td>
-                <td class="border border-gray-300 px-4 py-2">{{ log.message }}</td>
+            <tbody class="text-gray-600 text-sm">
+              <tr
+                v-for="log in filteredLogs"
+                :key="log.id"
+                class="border-b border-gray-200 hover:bg-gray-100"
+              >
+                <td class="py-3 px-6">{{ log.timestamp }}</td>
+                <td class="py-3 px-6">{{ log.level }}</td>
+                <td class="py-3 px-6">{{ log.message }}</td>
               </tr>
             </tbody>
           </table>
@@ -188,34 +259,38 @@
       </section>
     </div>
 
-    <!-- Add Rule Dialog -->
     <div
       v-if="showAddRuleDialog"
       class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50"
     >
-      <div class="bg-white p-6 rounded-md">
+      <div class="bg-white p-6 rounded-lg shadow-xl">
         <h3 class="text-xl font-bold mb-4">Add Alarm Rule</h3>
         <div class="mb-4">
-          <label class="block mb-1">Condition:</label>
+          <label class="block text-gray-700 font-bold mb-2">Condition:</label>
           <input
             type="text"
             v-model="newRule.condition"
-            class="w-full border border-gray-300 px-2 py-1 rounded-md"
+            class="w-full border border-gray-400 hover:border-gray-500 px-2 py-1 rounded shadow focus:outline-none focus:shadow-outline"
           />
         </div>
         <div class="mb-4">
-          <label class="block mb-1">Notification:</label>
+          <label class="block text-gray-700 font-bold mb-2">Notification:</label>
           <input
             type="text"
             v-model="newRule.notification"
-            class="w-full border border-gray-300 px-2 py-1 rounded-md"
+            class="w-full border border-gray-400 hover:border-gray-500 px-2 py-1 rounded shadow focus:outline-none focus:shadow-outline"
           />
         </div>
         <div class="flex justify-end">
-          <button @click="addRule" class="px-4 py-2 bg-blue-500 text-white rounded-md">Add</button>
+          <button
+            @click="addRule"
+            class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline"
+          >
+            Add
+          </button>
           <button
             @click="showAddRuleDialog = false"
-            class="ml-2 px-4 py-2 bg-gray-500 text-white rounded-md"
+            class="ml-2 px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 focus:outline-none focus:shadow-outline"
           >
             Cancel
           </button>
