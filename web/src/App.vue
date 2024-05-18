@@ -3,7 +3,7 @@
     <Sidebar v-if="$route.meta.requireAuth" />
     <main class="flex-1 p-4 bg-gray-100">
       <div class="flex justify-between items-center">
-        <Breadcrumbs v-if="$route.meta.requireAuth"/>
+        <Breadcrumbs v-if="$route.meta.requireAuth" />
         <UserInfo v-if="$route.meta.requireAuth" />
       </div>
       <div class="mt-4">

@@ -64,3 +64,8 @@ export interface LoginResponse {
   token: string
   user: User
 }
+
+export interface DataSource {
+  name: string
+  status: string
+}

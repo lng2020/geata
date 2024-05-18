@@ -1,4 +1,3 @@
-
 <template>
   <div class="container mx-auto p-6">
     <h1 class="text-3xl font-bold mb-6">System Settings</h1>
@@ -89,12 +88,12 @@
         <div>
           <div class="flex justify-between">
             <h3 class="text-lg font-bold">MQTT Connection Parameters</h3>
-          <button
-            @click="testMqttConnection"
-            class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline"
-          >
-            Test Connection
-          </button>
+            <button
+              @click="testMqttConnection"
+              class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline"
+            >
+              Test Connection
+            </button>
           </div>
           <div class="grid grid-cols-2 gap-4">
             <div>
@@ -130,20 +129,19 @@
               />
             </div>
           </div>
-
         </div>
       </section>
 
       <section class="bg-white shadow rounded-lg p-6">
         <div class="mb-6">
           <div class="flex justify-between">
-          <h2 class="text-2xl font-bold mb-4">Alarm Rules</h2>
+            <h2 class="text-2xl font-bold mb-4">Alarm Rules</h2>
             <button
-            @click="showAddRuleDialog = true"
-            class="mb-4 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:shadow-outline"
-          >
-            Add Rule
-          </button>
+              @click="showAddRuleDialog = true"
+              class="mb-4 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:shadow-outline"
+            >
+              Add Rule
+            </button>
           </div>
           <ul class="space-y-2">
             <li
@@ -172,26 +170,25 @@
               </div>
             </li>
           </ul>
-
         </div>
 
         <div>
-          <div class="flex justify-between mb-4"> 
-          <h2 class="text-2xl font-bold">System Logs</h2>
+          <div class="flex justify-between mb-4">
+            <h2 class="text-2xl font-bold">System Logs</h2>
             <div class="flex">
-            <button
-              @click="refreshLogs"
-              class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline"
-            >
-              Refresh
-            </button>
-            <button
-              @click="exportLogs"
-              class="ml-2 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:shadow-outline"
-            >
-              Export
-            </button>
-          </div>
+              <button
+                @click="refreshLogs"
+                class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline"
+              >
+                Refresh
+              </button>
+              <button
+                @click="exportLogs"
+                class="ml-2 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:shadow-outline"
+              >
+                Export
+              </button>
+            </div>
           </div>
           <div class="flex items-center mb-4">
             <label class="block text-gray-700 font-bold mr-4">Log Level:</label>

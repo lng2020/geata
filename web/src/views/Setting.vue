@@ -1,10 +1,10 @@
 <template>
   <div class="container mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-4">Settings</h1>
+    <h1 class="text-2xl font-bold mb-4">Power Station Configuration</h1>
     <div v-if="editedStation" class="flex">
       <div class="w-1/2 pr-4">
         <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-          <h2 class="text-xl font-bold mb-4">Configuration</h2>
+          <h2 class="text-xl font-bold mb-4">Basic Information</h2>
           <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="name"> Name </label>
             <input
@@ -12,17 +12,19 @@
               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="name"
               type="text"
-              placeholder="Station Name"
+              placeholder="Power Station Name"
             />
           </div>
           <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="host"> Host </label>
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="address">
+              Address
+            </label>
             <input
               v-model="editedStation.host"
               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="host"
+              id="address"
               type="text"
-              placeholder="Host"
+              placeholder="Power Station Address"
             />
           </div>
           <div class="mb-4">
@@ -53,23 +55,101 @@
           </div>
         </div>
       </div>
-      <div v-if="station" class="w-1/2 pl-4">
+      <div class="w-1/2 pl-4">
         <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-          <h2 class="text-xl font-bold mb-4">Status</h2>
+          <h2 class="text-xl font-bold mb-4">Data Source Configuration</h2>
+          <ul class="space-y-4">
+            <li
+              v-for="(dataSource, index) in dataSources"
+              :key="index"
+              class="flex items-center justify-between"
+            >
+              <div class="flex items-center">
+                <span class="text-gray-700 font-semibold">{{ dataSource.name }}</span>
+                <span class="ml-2">
+                  <div v-if="dataSource.status === 'connected'" class="flex items-center">
+                    <svg
+                      class="w-5 h-5 text-green-500 mr-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      ></path>
+                    </svg>
+                    <span class="text-green-500 font-semibold">Connected</span>
+                  </div>
+                  <div v-else-if="dataSource.status === 'disconnected'" class="flex items-center">
+                    <svg
+                      class="w-5 h-5 text-red-500 mr-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      ></path>
+                    </svg>
+                    <span class="text-red-500 font-semibold">Disconnected</span>
+                  </div>
+                </span>
+              </div>
+              <button
+                @click="testDataSource(dataSource)"
+                class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                type="button"
+              >
+                Test Connection
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8">
+          <h2 class="text-xl font-bold mb-4">ICD File Upload</h2>
           <div class="mb-4">
-            <div class="flex items-center">
-              <div
-                class="w-4 h-4 rounded-full"
-                :class="{ 'bg-green-500': station.isOnline, 'bg-red-500': !station.isOnline }"
-              ></div>
-              <span class="ml-2 text-gray-700">{{ station.isOnline ? 'Online' : 'Offline' }}</span>
+            <label for="icdFile" class="block text-gray-700 font-semibold mb-2">
+              Select ICD File
+            </label>
+            <div class="relative">
+              <input
+                @change="handleFileUpload"
+                class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+                id="icdFile"
+                type="file"
+                accept=".icd"
+              />
             </div>
+          </div>
+          <div v-if="uploadProgress > 0" class="mb-4">
+            <label class="block text-gray-700 font-semibold mb-2">Upload Progress</label>
+            <div class="relative pt-1">
+              <div class="overflow-hidden h-2 text-xs flex rounded bg-blue-200">
+                <div
+                  :style="{ width: uploadProgress + '%' }"
+                  class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500 transition-all duration-500"
+                ></div>
+              </div>
+            </div>
+          </div>
+          <div v-if="parsedIcdData" class="mt-4">
+            <label class="block text-gray-700 font-semibold mb-2">Parsed ICD Data</label>
+            <pre class="bg-gray-100 rounded p-4 text-sm overflow-auto">{{ parsedIcdData }}</pre>
           </div>
         </div>
       </div>
     </div>
     <div v-else>
-      <p>Loading station...</p>
+      <p>Loading power station...</p>
     </div>
   </div>
 </template>
@@ -78,7 +158,7 @@
 import { userGlobalStore } from '@/store'
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import type { Station } from '@/types/types'
+import type { Station, DataSource } from '@/types/types'
 
 const store = userGlobalStore()
 const route = useRoute()
@@ -86,6 +166,13 @@ const router = useRouter()
 const ID = ref<number | null>(null)
 let station = ref<Station | undefined>()
 let editedStation = ref<Station | undefined>()
+const dataSources = ref<DataSource[]>([
+  { name: 'IEC61850', status: 'disconnected' },
+  { name: 'Modbus', status: 'disconnected' },
+  { name: 'MQTT', status: 'disconnected' }
+])
+const uploadProgress = ref(0)
+const parsedIcdData = ref<string | null>(null)
 
 onMounted(() => {
   const id = route.params.id
@@ -94,7 +181,7 @@ onMounted(() => {
     station.value = store.getStationByID(ID.value)
     editedStation.value = station.value
   } else {
-    console.error('Invalid station ID')
+    console.error('Invalid power station ID')
     router.push('/error')
   }
 })
@@ -109,6 +196,24 @@ const saveChanges = () => {
 const discardChanges = () => {
   if (station.value) {
     editedStation.value = station.value
+  }
+}
+
+const testDataSource = (dataSource: DataSource) => {
+  // TODO: Implement data source connectivity test
+  // Update dataSource.status based on the test result
+}
+const handleFileUpload = (event: Event) => {
+  const file = (event.target as HTMLInputElement).files?.[0]
+  if (file) {
+    const formData = new FormData()
+    formData.append('icdFile', file)
+
+    // TODO: Implement file upload logic
+    // You can use axios or fetch to send the formData to the backend API
+    // Update uploadProgress during the upload process
+    // Once the upload is complete, trigger the parsing of the ICD file
+    // Update parsedIcdData with the parsed result
   }
 }
 </script>
