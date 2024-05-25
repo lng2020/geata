@@ -13,8 +13,12 @@
           @click="searchStations"
           class="ml-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
-          search
+          Search Stations
         </button>
+        <button
+          @click="createStation"
+          class="ml-4 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
+        >Create Station</button>
       </div>
     </div>
 
@@ -86,6 +90,7 @@ import {
   PointElement,
   LineElement
 } from 'chart.js'
+import router from '@/router';
 ChartJS.register(
   Title,
   Tooltip,
@@ -134,5 +139,8 @@ const onlineStationsData = computed(() => ({
 const chartOptions = { responsive: true, maintainAspectRatio: false }
 function searchStations() {
   console.log('Search stations with query:', searchQuery.value)
+}
+const createStation = () => {
+  router.push('/station/create')
 }
 </script>
