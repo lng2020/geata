@@ -12,13 +12,13 @@
       <div v-for="(station, index) in stations" :key="index" class="mt-4">
         <button
           @click="toggleOptions(index)"
-          class="flex items-center justify-between w-full px-5 py-3 text-white hover:bg-gray-700" 
+          class="flex items-center justify-between w-full px-5 py-3 text-white hover:bg-gray-700"
         >
           <div class="flex items-center">
             <font-awesome-icon
               icon="fa-solid fa-charging-station"
               class="text-lg mr-3"
-            ></font-awesome-icon> 
+            ></font-awesome-icon>
             <span>{{ station.name }}</span>
           </div>
           <font-awesome-icon
@@ -26,7 +26,10 @@
             class="text-sm"
           ></font-awesome-icon>
         </button>
-        <div v-show="station.showOptions" class="mt-2 pt-2 pb-2 bg-gray-700 flex flex-col items-center justify-center space-y-2">
+        <div
+          v-show="station.showOptions"
+          class="mt-2 pt-2 pb-2 bg-gray-700 flex flex-col items-center justify-center space-y-2"
+        >
           <router-link
             :to="{ path: '/station/' + station.id }"
             class="block text-sm text-gray-400 hover:text-white"

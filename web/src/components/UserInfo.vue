@@ -34,7 +34,9 @@
       <a href="#" class="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100" v-if="isAdmin"
         >Admin</a
       >
-      <a href="#" class="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100" @click="logout">Logout</a>
+      <a href="#" class="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100" @click="logout"
+        >Logout</a
+      >
     </div>
   </div>
 </template>

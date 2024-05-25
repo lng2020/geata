@@ -196,7 +196,7 @@ async function createStation() {
   try {
     const formData = new FormData()
     formData.append('name', stationName.value)
-    formData .append('host', host.value)
+    formData.append('host', host.value)
     formData.append('port', port.value.toString())
     if (icdFile.value) {
       formData.append('icdFile', icdFile.value)
