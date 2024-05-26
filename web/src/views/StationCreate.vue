@@ -125,17 +125,26 @@
       <div class="flex justify-center items-center mt-8">
         <div class="flex items-center">
           <span
-            :class="['w-4 h-4 rounded-full cursor-pointer', step === 1 ? 'bg-blue-500' : 'bg-gray-300']"
+            :class="[
+              'w-4 h-4 rounded-full cursor-pointer',
+              step === 1 ? 'bg-blue-500' : 'bg-gray-300'
+            ]"
             @click="step = 1"
           ></span>
           <div class="w-20 h-1 bg-gray-300"></div>
           <span
-            :class="['w-4 h-4 rounded-full cursor-pointer', step === 2 ? 'bg-blue-500' : 'bg-gray-300']"
+            :class="[
+              'w-4 h-4 rounded-full cursor-pointer',
+              step === 2 ? 'bg-blue-500' : 'bg-gray-300'
+            ]"
             @click="step = 2"
           ></span>
           <div class="w-20 h-1 bg-gray-300"></div>
           <span
-            :class="['w-4 h-4 rounded-full cursor-pointer', step === 3 ? 'bg-blue-500' : 'bg-gray-300']"
+            :class="[
+              'w-4 h-4 rounded-full cursor-pointer',
+              step === 3 ? 'bg-blue-500' : 'bg-gray-300'
+            ]"
             @click="step = 3"
           ></span>
         </div>
@@ -154,17 +163,25 @@ const host = ref('')
 const port = ref(0)
 const icdFile = ref<File | null>(null)
 const progress = ref(0)
-const icdData = ref(null)
-const icdStats = ref(null)
+const fileHashName = ref('')
+const IEC61850Model = ref('')
 
 function handleFileUpload(event: Event) {
-  const file = (event.target as HTMLInputElement).files?.[0] || null
-  icdFile.value = file
+  const target = event.target as HTMLInputElement
+  const file = target.files?.[0]
+  if (file) {
+    icdFile.value = file
+    uploadICDFile(file)
+  }
 }
 
 function handleFileDrop(event: DragEvent) {
-  const file = event.dataTransfer?.files[0] || null
-  icdFile.value = file
+  event.preventDefault()
+  const file = event.dataTransfer?.files[0]
+  if (file) {
+    icdFile.value = file
+    uploadICDFile(file)
+  }
 }
 
 function formatFileSize(size: number) {
@@ -177,37 +194,37 @@ function formatFileSize(size: number) {
   return `${size.toFixed(2)} ${units[index]}`
 }
 
-function prevStep() {
-  if (step.value > 1) {
-    step.value--
-  }
-}
-
 async function nextStep() {
-  if (step.value === 2) {
-    await analyzeICD()
-  }
   if (step.value < 3) {
     step.value++
   }
 }
 
-async function analyzeICD() {
-  // 模拟 ICD 解析进度
-  progress.value = 0
-  const interval = setInterval(() => {
-    progress.value += 10
-    if (progress.value >= 100) {
-      clearInterval(interval)
-      // 模拟解析完成后的数据和统计信息
-      icdData.value = {
-        /* ... */
-      }
-      icdStats.value = {
-        /* ... */
-      }
+async function uploadICDFile(file: File) {
+  const formData = new FormData()
+  formData.append('file', file)
+
+  try {
+    const response = await fetch('/api/upload', {
+      method: 'POST',
+      body: formData
+    })
+    if (response.ok) {
+      const data = await response.json()
+      console.log('File uploaded:', data)
+      fileHashName.value = data.fileHashName
+      IEC61850Model.value = data.IEC61850Model
+      await displayIEC61850Model(data.IEC61850Model)
+    } else {
+      const errData = await response.json()
+      console.error('Failed to upload file:', errData)
     }
-  }, 500)
+  } catch (error) {
+    console.error('Error uploading file:', error)
+  }
+}
+
+async function displayIEC61850Model(model = '') {
 }
 
 async function createStation() {
@@ -216,17 +233,18 @@ async function createStation() {
     formData.append('name', stationName.value)
     formData.append('host', host.value)
     formData.append('port', port.value.toString())
-    if (icdFile.value) {
-      formData.append('icdFile', icdFile.value)
-    }
-    const response = await fetch('/api/stations', { method: 'POST', body: formData })
+    formData.append('icdFile', fileHashName.value)
+    const response = await fetch('/api/stations', {
+      method: 'POST',
+      body: formData
+    })
     if (response.ok) {
-      const data = await response.json()
-      console.log('Station created:', data)
-      router.push('/')
+      const resp = await response.json()
+      const stationId = resp.id
+      router.push(`/stations/${stationId}`)
     } else {
-      const errData = await response.json()
-      console.error('Failed to create station:', errData)
+      const data = await response.json()
+      console.error('Failed to create station:', data)
     }
   } catch (error) {
     console.error('Error creating station:', error)

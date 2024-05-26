@@ -18,7 +18,9 @@
         <button
           @click="createStation"
           class="ml-4 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
-        >Create Station</button>
+        >
+          Create Station
+        </button>
       </div>
     </div>
 
@@ -90,7 +92,7 @@ import {
   PointElement,
   LineElement
 } from 'chart.js'
-import router from '@/router';
+import router from '@/router'
 ChartJS.register(
   Title,
   Tooltip,
