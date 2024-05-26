@@ -68,16 +68,6 @@
               </label>
             </div>
           </div>
-          <div class="mb-4">
-            <label class="block text-gray-700 font-bold mb-2">Analysis Progress</label>
-            <div class="bg-gray-200 rounded-full h-6">
-              <div
-                class="bg-blue-500 h-6 rounded-full transition-all duration-500 ease-in-out"
-                :style="{ width: `${progress}%` }"
-              ></div>
-            </div>
-            <div class="text-right mt-2">{{ progress }}%</div>
-          </div>
           <div class="flex justify-end">
             <button
               type="button"
@@ -90,36 +80,38 @@
         </div>
 
         <div v-show="step === 3" class="mb-8">
-          <div v-if="icdData" class="mb-4">
-            <h3 class="text-xl font-bold mb-2">ICD Structure Preview</h3>
-            <pre>{{ JSON.stringify(icdData, null, 2) }}</pre>
-          </div>
-          <div v-if="icdStats" class="mb-4">
-            <h3 class="text-xl font-bold mb-2">ICD Statistics</h3>
-            <table class="table-auto w-full">
-              <thead>
-                <tr>
-                  <th class="px-4 py-2">Item</th>
-                  <th class="px-4 py-2">Count</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(value, key) in icdStats" :key="key">
-                  <td class="border px-4 py-2">{{ key }}</td>
-                  <td class="border px-4 py-2">{{ value }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="flex justify-end">
-            <button
-              type="submit"
-              class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
-            >
-              Create
-            </button>
-          </div>
-        </div>
+  <div v-if="model" class="mb-4">
+    <h2 class="text-xl font-bold mb-2">IEC 61850 Model</h2>
+    <div class="border border-gray-300 rounded-md p-4 bg-white shadow-sm">
+      <table class="w-full border-collapse">
+        <thead>
+          <tr class="bg-gray-200 text-gray-700">
+            <th class="px-4 py-2 font-medium text-left">LD</th>
+            <th class="px-4 py-2 font-medium text-left">LN</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template v-for="(device, deviceIndex) in model.logicalDevice" :key="deviceIndex">
+            <tr v-for="(node, nodeIndex) in device.logicalNode" :key="nodeIndex" class="border-t">
+              <td v-if="nodeIndex === 0" :rowspan="device.logicalNode.length" class="px-4 py-2 align-top">
+                {{ device.name }}
+              </td>
+              <td class="px-4 py-2">{{ node.name }}</td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="flex justify-end">
+    <button
+      type="submit"
+      class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
+    >
+      Create
+    </button>
+  </div>
+</div>
       </div>
 
       <div class="flex justify-center items-center mt-8">
@@ -155,6 +147,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { type IEC61850Model } from '@/types/types'
 
 const router = useRouter()
 const step = ref(1)
@@ -162,9 +155,8 @@ const stationName = ref('')
 const host = ref('')
 const port = ref(0)
 const icdFile = ref<File | null>(null)
-const progress = ref(0)
-const fileHashName = ref('')
-const IEC61850Model = ref('')
+const hashName = ref('')
+const model = ref<IEC61850Model | null>(null)
 
 function handleFileUpload(event: Event) {
   const target = event.target as HTMLInputElement
@@ -205,16 +197,14 @@ async function uploadICDFile(file: File) {
   formData.append('file', file)
 
   try {
-    const response = await fetch('/api/upload', {
+    const response = await fetch('/api/iec61850/upload', {
       method: 'POST',
       body: formData
     })
     if (response.ok) {
       const data = await response.json()
-      console.log('File uploaded:', data)
-      fileHashName.value = data.fileHashName
-      IEC61850Model.value = data.IEC61850Model
-      await displayIEC61850Model(data.IEC61850Model)
+      model.value = data.IEC61850Model
+      hashName.value = data.fileHashName
     } else {
       const errData = await response.json()
       console.error('Failed to upload file:', errData)
@@ -224,24 +214,22 @@ async function uploadICDFile(file: File) {
   }
 }
 
-async function displayIEC61850Model(model = '') {
-}
-
 async function createStation() {
   try {
-    const formData = new FormData()
-    formData.append('name', stationName.value)
-    formData.append('host', host.value)
-    formData.append('port', port.value.toString())
-    formData.append('icdFile', fileHashName.value)
     const response = await fetch('/api/stations', {
       method: 'POST',
-      body: formData
+      body: JSON.stringify({
+        name: stationName.value,
+        host: host.value,
+        port: port.value,
+        hashName: hashName.value
+      }
+    )
     })
     if (response.ok) {
       const resp = await response.json()
       const stationId = resp.id
-      router.push(`/stations/${stationId}`)
+      router.push(`/station/${stationId}`)
     } else {
       const data = await response.json()
       console.error('Failed to create station:', data)

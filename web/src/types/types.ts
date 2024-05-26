@@ -28,22 +28,25 @@ export interface DataAttribute {
 
 export interface DataObject {
   name: string
+  description: string
   dataAttributes: DataAttribute[]
 }
 
 export interface LogicalNode {
   name: string
-  dataObjects: DataObject[]
+  description: string
 }
 
 export interface LogicalDevice {
   name: string
-  logicalNodes: { name: string }[]
+  description: string
+  logicalNode: LogicalNode[]
 }
 
-export interface IEDModel {
+export interface IEC61850Model {
   name: string
-  logicalDevices: LogicalDevice[]
+  description: string
+  logicalDevice: LogicalDevice[]
 }
 
 export interface AuditLog {

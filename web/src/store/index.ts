@@ -1,6 +1,13 @@
 import { defineStore } from 'pinia'
 import { useLocalStorage } from '@vueuse/core'
-import type { Station, Mapping, IEDModel, LogicalNode, User, LoginResponse } from '@/types/types'
+import type {
+  Station,
+  Mapping,
+  IEC61850Model,
+  LogicalNode,
+  User,
+  LoginResponse
+} from '@/types/types'
 import i18n from '@/i18n/index'
 
 export const useAuthStore = defineStore({
@@ -156,7 +163,7 @@ export const userGlobalStore = defineStore({
           }
         ]
       }
-    ] as IEDModel[],
+    ] as IEC61850Model[],
     logicalNodes: [
       {
         name: 'LN1',

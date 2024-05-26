@@ -1,43 +1,48 @@
 package service
 
 import (
+	"crypto/sha256"
+	"fmt"
 	"geata/internal/app/model"
+	"geata/internal/app/parser"
+	"io"
+	"mime/multipart"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
 
 type IEC61850Model struct {
-	ID            int64
-	Name          string
-	Description   string
-	LogicalDevice []LogicalDevice
+	Name          string          `json:"name"`
+	Description   string          `json:"description"`
+	LogicalDevice []LogicalDevice `json:"logicalDevice"`
 }
 
 type LogicalDevice struct {
-	ID          int64
-	ModelID     int64
-	Name        string
-	Description string
-	LogicalNode []LogicalNode
+	Name        string        `json:"name"`
+	Description string        `json:"description"`
+	LogicalNode []LogicalNode `json:"logicalNode"`
 }
 
 type LogicalNode struct {
-	ID              int64
-	LogicalDeviceID int64
-	Name            string
+	Name        string `json:"name"`
+	Description string `json:"description"`
 }
 
 type DataObject struct {
-	ID            int64
-	LogicalNodeID int64
-	Name          string
-	Description   string
-	DataAttribute []DataAttribute
+	Name          string          `json:"name"`
+	Description   string          `json:"description"`
+	DataAttribute []DataAttribute `json:"dataAttribute"`
 }
 
 type DataAttribute model.Node
+
+type IEC61850ModelFileParsedResult struct {
+	IEC61850Model IEC61850Model `json:"IEC61850Model"`
+	FileHashName  string        `json:"fileHashName"`
+}
 
 // @summary Get IEC61850 model by ID
 // @tags IEC61850
@@ -172,4 +177,214 @@ func UpdateNodeDataSource(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, "OK")
+}
+
+// @summary upload IEC61850 Model file
+// @tags IEC61850
+// @accept multipart/form-data
+// @produce json
+// @param file formData file true "ICD file"
+// @success 200 IE61850ModelFileParsedResult
+
+// @router /api/v1/iec61850/upload [post]
+func UploadIEC61850ModleFile(c *gin.Context) {
+	file, err := c.FormFile("file")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	fileHashName, err := hashFile(file)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	tempFile := fmt.Sprintf("tmp/%s", fileHashName)
+	err = c.SaveUploadedFile(file, tempFile)
+	defer os.Remove(tempFile)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	scl, err := parser.ParseIEC61850Model(tempFile)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	parsedIEC61850Model, parsedDataObjects := pruneResult(scl)
+	// using transaction to insert to db first
+	session := Engine.NewSession()
+	defer session.Close()
+	err = session.Begin()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	// insert IEC61850Model
+	iec61850Model := &model.IEC61850Model{
+		Name:         parsedIEC61850Model.Name,
+		Description:  parsedIEC61850Model.Description,
+		FileHashName: fileHashName,
+	}
+	_, err = session.Insert(iec61850Model)
+	if err != nil {
+		session.Rollback()
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	// insert LogicalDevice
+	for _, logicalDevice := range parsedIEC61850Model.LogicalDevice {
+		ld := &model.LogicalDevice{
+			ModelID:     iec61850Model.ID,
+			Name:        logicalDevice.Name,
+			Description: logicalDevice.Description,
+		}
+		_, err = session.Insert(ld)
+		if err != nil {
+			session.Rollback()
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		// insert LogicalNode
+		for _, logicalNode := range logicalDevice.LogicalNode {
+			ln := &model.LogicalNode{
+				LogicalDeviceID: ld.ID,
+				Name:            logicalNode.Name,
+			}
+			_, err = session.Insert(ln)
+			if err != nil {
+				session.Rollback()
+				c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+				return
+			}
+
+			for _, dataObject := range parsedDataObjects {
+				do := &model.DataObject{
+					LogicalNodeID: ln.ID,
+					Name:          dataObject.Name,
+					Description:   dataObject.Description,
+				}
+				_, err = session.Insert(do)
+				if err != nil {
+					session.Rollback()
+					c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+					return
+				}
+				for _, dataAttribute := range dataObject.DataAttribute {
+					node := &model.Node{
+						DataObjectID: do.ID,
+						Name:         dataAttribute.Name,
+						Value:        dataAttribute.Value,
+						IEC61850Ref:  dataAttribute.IEC61850Ref,
+						DataSource:   dataAttribute.DataSource,
+					}
+					_, err = session.Insert(node)
+					if err != nil {
+						session.Rollback()
+						c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+						return
+					}
+				}
+			}
+		}
+	}
+	err = session.Commit()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, IEC61850ModelFileParsedResult{
+		IEC61850Model: *parsedIEC61850Model,
+		FileHashName:  fileHashName,
+	})
+}
+
+func pruneResult(scl *parser.SCL) (*IEC61850Model, []DataObject) {
+	model := &IEC61850Model{
+		Name:          scl.Header.ID,
+		Description:   scl.Header.NameStructure,
+		LogicalDevice: make([]LogicalDevice, 0),
+	}
+
+	var dataObjects []DataObject
+
+	for _, ied := range scl.IED {
+		for _, accessPoint := range ied.AccessPoint {
+			for _, lDevice := range accessPoint.Server.LDevice {
+				logicalDevice := LogicalDevice{
+					Name:        lDevice.Inst,
+					LogicalNode: make([]LogicalNode, 0),
+				}
+
+				ln0 := LogicalNode{
+					Name: lDevice.LN0.LnClass + lDevice.LN0.Inst,
+				}
+
+				for _, doi := range lDevice.LN0.DOI {
+					dataObject := DataObject{
+						Name:          doi.Name,
+						Description:   "",
+						DataAttribute: make([]DataAttribute, 0),
+					}
+
+					for _, dai := range doi.DAI {
+						dataAttribute := DataAttribute{
+							Name:  dai.Name,
+							Value: dai.Val,
+						}
+						dataObject.DataAttribute = append(dataObject.DataAttribute, dataAttribute)
+					}
+
+					dataObjects = append(dataObjects, dataObject)
+				}
+
+				logicalDevice.LogicalNode = append(logicalDevice.LogicalNode, ln0)
+
+				for _, ln := range lDevice.LN {
+					logicalNode := LogicalNode{
+						Name: ln.LnClass + ln.Inst,
+					}
+
+					for _, doi := range ln.DOI {
+						dataObject := DataObject{
+							Name:          doi.Name,
+							Description:   "",
+							DataAttribute: make([]DataAttribute, 0),
+						}
+
+						for _, dai := range doi.DAI {
+							dataAttribute := DataAttribute{
+								Name:  dai.Name,
+								Value: dai.Val,
+							}
+							dataObject.DataAttribute = append(dataObject.DataAttribute, dataAttribute)
+						}
+
+						dataObjects = append(dataObjects, dataObject)
+					}
+
+					logicalDevice.LogicalNode = append(logicalDevice.LogicalNode, logicalNode)
+				}
+
+				model.LogicalDevice = append(model.LogicalDevice, logicalDevice)
+			}
+		}
+	}
+	return model, dataObjects
+}
+
+func hashFile(file *multipart.FileHeader) (string, error) {
+	f, err := file.Open()
+	if err != nil {
+		return "", err
+	}
+	defer f.Close()
+
+	h := sha256.New()
+	if _, err := io.Copy(h, f); err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf("%x", h.Sum(nil)), nil
 }

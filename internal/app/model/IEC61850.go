@@ -5,9 +5,10 @@ import (
 )
 
 type IEC61850Model struct {
-	ID          int64  `xorm:"pk autoincr 'id'" json:"id"`
-	Name        string `xorm:"'name'" json:"name"`
-	Description string `xorm:"'description'" json:"description"`
+	ID           int64  `xorm:"pk autoincr 'id'" json:"id"`
+	Name         string `xorm:"'name'" json:"name"`
+	Description  string `xorm:"'description'" json:"description"`
+	FileHashName string `xorm:"'file_hash_name'" json:"file_hash_name"`
 }
 
 type LogicalDevice struct {

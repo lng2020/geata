@@ -5,10 +5,7 @@ import (
 	"os"
 )
 
-type Parser struct {
-}
-
-func parseXML(filename string) (*SCL, error) {
+func ParseIEC61850Model(filename string) (*SCL, error) {
 	var scl SCL
 	file, err := os.Open(filename)
 	if err != nil {

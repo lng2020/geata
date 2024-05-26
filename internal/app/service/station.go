@@ -10,12 +10,13 @@ import (
 )
 
 type Station struct {
-	ID       int64
-	Name     string
-	Host     string
-	Port     int64
-	Handlers map[handler.HandlerType]handler.Handler
-	Configs  map[handler.HandlerType]handler.HandlerConfig
+	ID        int64  `json:"id"`
+	Name      string `json:"name"`
+	Host      string `json:"host"`
+	Port      int64  `json:"port"`
+	ModelHash string `json:"modelHash"`
+	Handlers  map[handler.HandlerType]handler.Handler
+	Configs   map[handler.HandlerType]handler.HandlerConfig
 }
 
 func (s *Station) InitFromDB(stationFromDB *model.Station) error {
@@ -75,10 +76,12 @@ func CreateStation(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
 	err = model.CreateStation(Engine, &model.Station{
-		Name: station.Name,
-		Host: station.Host,
-		Port: station.Port,
+		Name:      station.Name,
+		Host:      station.Host,
+		Port:      station.Port,
+		ModelHash: station.ModelHash,
 	})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
