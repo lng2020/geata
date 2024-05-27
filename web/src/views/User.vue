@@ -3,137 +3,127 @@
     <h1 class="text-3xl font-bold mb-6">System Settings</h1>
 
     <div class="grid grid-cols-2 gap-8">
-      <section class="bg-white shadow rounded-lg p-6">
-        <h2 class="text-2xl font-bold mb-6">General Settings</h2>
-        <div class="mb-6">
-          <label class="block text-gray-700 font-bold mb-2">Language</label>
-          <div class="relative">
-            <select
-              @change="editLang"
-              v-model="language"
-              class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
-            >
-              <option value="en-US">English</option>
-              <option value="zh-CN">中文</option>
-            </select>
-            <div
-              class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"
-            >
-              <svg
-                class="fill-current h-4 w-4"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
+      <div>
+        <section class="bg-white shadow rounded-lg p-6">
+          <h2 class="text-2xl font-bold mb-6">Theme and Language</h2>
+          <div class="mb-6">
+            <label class="block text-gray-700 font-bold mb-2">Language</label>
+            <div class="relative">
+              <select
+                @change="editLang"
+                v-model="language"
+                class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
               >
-                <path
-                  d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
-                />
-              </svg>
+                <option value="en-US">English</option>
+                <option value="zh-CN">中文</option>
+              </select>
+              <div
+                class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"
+              >
+                <svg
+                  class="fill-current h-4 w-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
+                  />
+                </svg>
+              </div>
             </div>
           </div>
-        </div>
-
-        <div class="mb-6">
-          <label class="block text-gray-700 font-bold mb-2">Theme</label>
-          <div class="relative">
-            <select
-              v-model="theme"
-              class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
-            >
-              <option value="light">Light</option>
-              <option value="dark">Dark</option>
-              <option value="auto">Auto</option>
-            </select>
-            <div
-              class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"
-            >
-              <svg
-                class="fill-current h-4 w-4"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
+          <div class="mb-6">
+            <label class="block text-gray-700 font-bold mb-2">Theme</label>
+            <div class="relative">
+              <select
+                v-model="theme"
+                class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
               >
-                <path
-                  d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
-                />
-              </svg>
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+                <option value="auto">Auto</option>
+              </select>
+              <div
+                class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"
+              >
+                <svg
+                  class="fill-current h-4 w-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
+                  />
+                </svg>
+              </div>
             </div>
           </div>
-        </div>
+          <button
+            class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline"
+          >
+            Save Changes
+          </button>
+        </section>
+      </div>
 
-        <div class="mb-6">
-          <h3 class="text-lg font-bold mb-2">Data Retention Policy</h3>
-          <div class="flex items-center mb-2">
-            <label class="block text-gray-700 font-bold mr-4">Real-time Data:</label>
-            <input
-              type="number"
-              v-model="realTimeDataRetention"
-              class="border border-gray-400 hover:border-gray-500 px-2 py-1 rounded shadow focus:outline-none focus:shadow-outline"
-              min="1"
-              max="365"
-            />
-            <span class="ml-2">days</span>
-          </div>
-          <div class="flex items-center">
-            <label class="block text-gray-700 font-bold mr-4">Historical Data:</label>
-            <input
-              type="number"
-              v-model="historicalDataRetention"
-              class="border border-gray-400 hover:border-gray-500 px-2 py-1 rounded shadow focus:outline-none focus:shadow-outline"
-              min="1"
-              max="365"
-            />
-            <span class="ml-2">days</span>
-          </div>
-        </div>
-
-        <div>
+      <div>
+        <section class="bg-white shadow rounded-lg p-6">
           <div class="flex justify-between">
-            <h3 class="text-lg font-bold">MQTT Connection Parameters</h3>
+            <h2 class="text-2xl font-bold mb-4">MQTT Connection Parameters</h2>
             <button
               @click="testMqttConnection"
-              class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline"
+              class="mb-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline"
             >
               Test Connection
             </button>
           </div>
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label class="block text-gray-700 font-bold mb-2">Server Address:</label>
-              <input
-                type="text"
-                v-model="mqttServerAddress"
-                class="w-full border border-gray-400 hover:border-gray-500 px-2 py-1 rounded shadow focus:outline-none focus:shadow-outline"
-              />
-            </div>
-            <div>
-              <label class="block text-gray-700 font-bold mb-2">Port:</label>
-              <input
-                type="number"
-                v-model="mqttServerPort"
-                class="w-full border border-gray-400 hover:border-gray-500 px-2 py-1 rounded shadow focus:outline-none focus:shadow-outline"
-              />
-            </div>
-            <div>
-              <label class="block text-gray-700 font-bold mb-2">Username:</label>
-              <input
-                type="text"
-                v-model="mqttUsername"
-                class="w-full border border-gray-400 hover:border-gray-500 px-2 py-1 rounded shadow focus:outline-none focus:shadow-outline"
-              />
-            </div>
-            <div>
-              <label class="block text-gray-700 font-bold mb-2">Password:</label>
-              <input
-                type="password"
-                v-model="mqttPassword"
-                class="w-full border border-gray-400 hover:border-gray-500 px-2 py-1 rounded shadow focus:outline-none focus:shadow-outline"
-              />
+
+          <div>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="mb-4">
+                <label class="block text-gray-700 font-bold mb-2">Server Address:</label>
+                <input
+                  type="text"
+                  v-model="mqttServerAddress"
+                  class="w-full border border-gray-400 hover:border-gray-500 px-2 py-1 rounded shadow focus:outline-none focus:shadow-outline"
+                />
+              </div>
+              <div>
+                <label class="block text-gray-700 font-bold mb-2">Port:</label>
+                <input
+                  type="number"
+                  v-model="mqttServerPort"
+                  class="w-full border border-gray-400 hover:border-gray-500 px-2 py-1 rounded shadow focus:outline-none focus:shadow-outline"
+                />
+              </div>
+              <div>
+                <label class="block text-gray-700 font-bold mb-2">Username:</label>
+                <input
+                  type="text"
+                  v-model="mqttUsername"
+                  class="w-full border border-gray-400 hover:border-gray-500 px-2 py-1 rounded shadow focus:outline-none focus:shadow-outline"
+                />
+              </div>
+              <div>
+                <label class="block text-gray-700 font-bold mb-2">Password:</label>
+                <input
+                  type="password"
+                  v-model="mqttPassword"
+                  class="w-full border border-gray-400 hover:border-gray-500 px-2 py-1 rounded shadow focus:outline-none focus:shadow-outline"
+                />
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+          <button
+            class="mt-6 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline"
+          >
+            Save Changes
+          </button>
+        </section>
+      </div>
 
-      <section class="bg-white shadow rounded-lg p-6">
-        <div class="mb-6">
+      <div>
+        <section class="bg-white shadow rounded-lg p-6">
           <div class="flex justify-between">
             <h2 class="text-2xl font-bold mb-4">Alarm Rules</h2>
             <button
@@ -170,9 +160,11 @@
               </div>
             </li>
           </ul>
-        </div>
+        </section>
+      </div>
 
-        <div>
+      <div>
+        <section class="bg-white shadow rounded-lg p-6">
           <div class="flex justify-between mb-4">
             <h2 class="text-2xl font-bold">System Logs</h2>
             <div class="flex">
@@ -252,8 +244,8 @@
               </tr>
             </tbody>
           </table>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
 
     <div
@@ -316,8 +308,6 @@ interface Rule {
 const authStore = useAuthStore()
 const language = ref<string>('en')
 const theme = ref<string>('light')
-const realTimeDataRetention = ref<number>(7)
-const historicalDataRetention = ref<number>(30)
 const mqttServerAddress = ref<string>('mqtt://localhost')
 const mqttServerPort = ref<number>(1883)
 const mqttUsername = ref<string>('')
