@@ -64,22 +64,24 @@ export const useAuthStore = defineStore({
       localStorage.setItem('token', this.token)
       localStorage.setItem('user', JSON.stringify(this.user))
     },
-    async setLang(lang: string) {
-      if (this.user) {
-        this.user.lang = lang
-      }
-
-      const response = await fetch('/api/user', {
+    async changeLang(lang: string) {
+      const response = await fetch('/api/user/lang', {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${this.token}`
         },
-        body: JSON.stringify({ lang })
+        body: JSON.stringify({
+          lang: lang, 
+        })
       })
       if (response.ok) {
         i18n.global.locale.value = lang
+        this.user = { ...this.user, lang }
       }
+    },
+    async changeTheme(theme: string) {
+      console.log("theme", theme)
     }
   }
 })

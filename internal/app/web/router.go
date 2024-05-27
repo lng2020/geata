@@ -7,6 +7,8 @@ import (
 	_ "geata/internal/docs"
 	"log/slog"
 	"net/http"
+	"strings"
+	"time"
 
 	"geata/internal/app/logger"
 	"geata/internal/app/model"
@@ -44,7 +46,7 @@ func RoleMiddleware(rt model.RoleType) gin.HandlerFunc {
 }
 
 func TokenAuthMiddleware(c *gin.Context) {
-	tokenString := c.GetHeader("Authorization")
+	tokenString := strings.TrimPrefix(c.GetHeader("Authorization"), "Bearer ")
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		return []byte("your_secret_key"), nil
 	})
@@ -54,10 +56,20 @@ func TokenAuthMiddleware(c *gin.Context) {
 		return
 	}
 
-	if _, ok := token.Claims.(jwt.MapClaims); !ok || !token.Valid {
+	mapClaims, ok := token.Claims.(jwt.MapClaims)
+	if !ok || !token.Valid {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		return
 	}
+
+	exp := mapClaims["exp"].(float64)
+	if exp < float64(time.Now().Unix()) {
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Token expired"})
+		return
+	}
+
+	user_id := mapClaims["user_id"].(float64)
+	c.Set("user_id", int64(user_id))
 	c.Next()
 }
 
@@ -78,6 +90,11 @@ func SetupRouter() *gin.Engine {
 	{
 		v1.POST("/login", service.Login)
 		v1.POST("/register", service.Register)
+		user := v1.Group("/user")
+		user.Use(TokenAuthMiddleware)
+		{
+			user.PATCH("/lang", service.UpdateUserLang)
+		}
 
 		v1.GET("/stations", service.ListStations)
 		{

@@ -19,6 +19,7 @@ type User struct {
 	ID       int64  `json:"id"`
 	Username string `json:"username"`
 	Role     string `json:"role"`
+	Lang     string `json:"lang"`
 }
 
 func generateToken(user *model.User) (string, error) {
@@ -51,6 +52,12 @@ func checkPasswordHash(password, hash string) bool {
 	return err == nil
 }
 
+// @summary Login
+// @description Login
+// @produce json
+// @param credential body Credential true "Credential"
+// @success 200 {object} gin.H
+// @router /login [post]
 func Login(c *gin.Context) {
 	var credential Credential
 	if err := c.ShouldBindJSON(&credential); err != nil {
@@ -88,6 +95,12 @@ func Login(c *gin.Context) {
 	c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 }
 
+// @summary Register
+// @description Register
+// @produce json
+// @param credential body Credential true "Credential"
+// @success 200 {object} gin.H
+// @router /register [post]
 func Register(c *gin.Context) {
 	var credential Credential
 	if err := c.ShouldBindJSON(&credential); err != nil {
@@ -149,4 +162,29 @@ func Register(c *gin.Context) {
 			Role:     roleTypeToRole(model.RoleType(user.RoleID)),
 		},
 	})
+}
+
+// @summary update user lang
+// @description update user lang
+// @produce json
+// @param lang json string true "Lang"
+// @success 200 {object} gin.H
+// @router /user/lang [put]
+func UpdateUserLang(c *gin.Context) {
+	lang := c.PostForm("lang")
+	userId := c.GetInt("user_id")
+	user, err := model.GetUserByID(Engine, int64(userId))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	user.Lang = lang
+	err = model.UpdateUser(Engine, user)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"lang": lang})
 }

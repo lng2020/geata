@@ -10,7 +10,6 @@
             <label class="block text-gray-700 font-bold mb-2">Language</label>
             <div class="relative">
               <select
-                @change="editLang"
                 v-model="language"
                 class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
               >
@@ -59,6 +58,7 @@
             </div>
           </div>
           <button
+            @click="editLangAndTheme"
             class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline"
           >
             Save Changes
@@ -306,7 +306,7 @@ interface Rule {
 }
 
 const authStore = useAuthStore()
-const language = ref<string>('en')
+const language = ref<string>('en-US')
 const theme = ref<string>('light')
 const mqttServerAddress = ref<string>('mqtt://localhost')
 const mqttServerPort = ref<number>(1883)
@@ -367,7 +367,17 @@ function exportLogs(): void {
   console.log('Exporting logs')
 }
 
-function editLang(): void {
-  authStore.setLang(language.value)
+async function editLangAndTheme() {
+  try {
+    await authStore.changeLang(language.value)
+  } catch (error) {
+    console.error(error)
+  }
+
+  try {
+    await authStore.changeTheme(theme.value)
+  } catch (error) {
+    console.error(error)
+  }
 }
 </script>

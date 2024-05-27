@@ -14,10 +14,11 @@ const (
 const hasUser = false
 
 type User struct {
-	ID           int64  `xorm:"pk autoincr 'id'" json:"ID"`
-	Username     string `xorm:"'username'" json:"username"`
-	PasswordHash string `xorm:"'password_hash'" json:"-"`
-	RoleID       int64  `xorm:"'role_id'" json:"roleID"`
+	ID           int64  `xorm:"pk autoincr 'id'" `
+	Username     string `xorm:"'username'"`
+	PasswordHash string `xorm:"'password_hash'"`
+	Lang         string `xorm:"'lang'"`
+	RoleID       int64  `xorm:"'role_id'"`
 }
 
 func (u *User) TableName() string {
@@ -44,4 +45,18 @@ func IfUsernameExist(engine *xorm.Engine, username string) (bool, error) {
 
 func HasUser(engine *xorm.Engine) (bool, error) {
 	return hasUser, nil
+}
+
+func UpdateUser(engine *xorm.Engine, user *User) error {
+	_, err := engine.ID(user.ID).Update(user)
+	return err
+}
+
+func GetUserByID(engine *xorm.Engine, id int64) (*User, error) {
+	user := &User{ID: id}
+	has, err := engine.Get(user)
+	if !has {
+		return nil, nil
+	}
+	return user, err
 }
