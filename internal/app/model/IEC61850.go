@@ -8,12 +8,12 @@ type IEC61850Model struct {
 	ID           int64  `xorm:"pk autoincr 'id'" json:"id"`
 	Name         string `xorm:"'name'" json:"name"`
 	Description  string `xorm:"'description'" json:"description"`
-	FileHashName string `xorm:"'file_hash_name'" json:"file_hash_name"`
+	FileHashName string `xorm:"'file_hash_name'" json:"fileHashName"`
 }
 
 type LogicalDevice struct {
 	ID          int64  `xorm:"pk autoincr 'id'" json:"id"`
-	ModelID     int64  `xorm:"'model_id' index" json:"model_id"`
+	ModelID     int64  `xorm:"'model_id' index" json:"modelID"`
 	Name        string `xorm:"'name'" json:"name"`
 	Description string `xorm:"'description'" json:"description"`
 }
@@ -27,8 +27,8 @@ func (ld *LogicalDevice) TableName() string {
 }
 
 type LogicalNode struct {
-	ID              int64  `xorm:"pk autoincr 'id'" json:"id"`
-	LogicalDeviceID int64  `xorm:"'logical_device_id' index" json:"logical_device_id"`
+	ID              int64  `xorm:"pk autoincr 'id'" json:"ID"`
+	LogicalDeviceID int64  `xorm:"'logical_device_id' index" json:"logicalDeviceID"`
 	Name            string `xorm:"'name'" json:"name"`
 	Description     string `xorm:"'description'" json:"description"`
 }
@@ -39,7 +39,7 @@ func (ln *LogicalNode) TableName() string {
 
 type DataObject struct {
 	ID            int64  `xorm:"pk autoincr 'id'" json:"id"`
-	LogicalNodeID int64  `xorm:"'logical_node_id' index" json:"logical_node_id"`
+	LogicalNodeID int64  `xorm:"'logical_node_id' index" json:"logicalNodeID"`
 	Name          string `xorm:"'name'" json:"name"`
 	Description   string `xorm:"'description'" json:"description"`
 }

@@ -7,9 +7,9 @@ import (
 )
 
 type AuditLog struct {
-	ID         int64     `xorm:"pk autoincr 'id'" json:"id"`
+	ID         int64     `xorm:"pk autoincr 'id'" json:"ID"`
 	Message    string    `xorm:"'message'" json:"message"`
-	CreateTime time.Time `xorm:"'create_time' created" json:"create_time"`
+	CreateTime time.Time `xorm:"'create_time' created" json:"createTime"`
 }
 
 func (a *AuditLog) TableName() string {

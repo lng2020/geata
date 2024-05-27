@@ -7,14 +7,14 @@ import (
 )
 
 type Node struct {
-	ID           int64     `xorm:"pk autoincr 'id'" json:"id"`
-	DataObjectID int64     `xorm:"'data_object_id' index" json:"data_object_id"`
+	ID           int64     `xorm:"pk autoincr 'id'" json:"ID"`
+	DataObjectID int64     `xorm:"'data_object_id' index" json:"dataObjectID"`
 	Name         string    `xorm:"'name'" json:"name"`
 	Value        string    `xorm:"'value'" json:"value"`
-	IEC61850Ref  string    `xorm:"'iec61850_ref'" json:"iec61850_ref"`
-	DataSource   string    `xorm:"'data_source'" json:"data_source"`
-	CreatedAt    time.Time `xorm:"'created_at' created" json:"created_at"`
-	UpdatedAt    time.Time `xorm:"'updated_at' updated" json:"updated_at"`
+	IEC61850Ref  string    `xorm:"'iec61850_ref'" json:"iec61850Ref"`
+	DataSource   string    `xorm:"'data_source'" json:"dataSource"`
+	CreatedAt    time.Time `xorm:"'created_at' created" json:"createdAt"`
+	UpdatedAt    time.Time `xorm:"'updated_at' updated" json:"updatedAt"`
 }
 
 func (n *Node) TableName() string {

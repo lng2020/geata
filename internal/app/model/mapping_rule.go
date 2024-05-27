@@ -10,12 +10,12 @@ import (
 )
 
 type MappingRule struct {
-	ID          int64     `xorm:"pk autoincr 'id'" json:"id"`
-	StationID   int64     `xorm:"'station_id' index" json:"station_id"`
-	IEC61850Ref string    `xorm:"'iec61850_ref'" json:"iec61850_ref"`
+	ID          int64     `xorm:"pk autoincr 'id'" json:"ID"`
+	StationID   int64     `xorm:"'station_id' index" json:"stationID"`
+	IEC61850Ref string    `xorm:"'iec61850_ref'" json:"iec61850Ref"`
 	Type        string    `xorm:"'type'" json:"type"`
-	CreateTime  time.Time `xorm:"'create_time' created" json:"create_time"`
-	UpdateTime  time.Time `xorm:"'update_time' updated" json:"update_time"`
+	CreateTime  time.Time `xorm:"'create_time' created" json:"createTime"`
+	UpdateTime  time.Time `xorm:"'update_time' updated" json:"updateTime"`
 }
 
 func (r *MappingRule) TableName() string {

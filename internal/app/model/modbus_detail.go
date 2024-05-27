@@ -6,8 +6,8 @@ package model
 import "xorm.io/xorm"
 
 type ModbusDetail struct {
-	ID     int64 `xorm:"pk autoincr 'id'" json:"id"`
-	RuleID int64 `xorm:"'rule_id' index" json:"rule_id"`
+	ID     int64 `xorm:"pk autoincr 'id'" json:"ID"`
+	RuleID int64 `xorm:"'rule_id' index" json:"ruleID"`
 	// other fields specific to ModbusDetail as needed.
 }
 

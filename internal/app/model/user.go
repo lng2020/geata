@@ -14,10 +14,10 @@ const (
 const hasUser = false
 
 type User struct {
-	ID           int64  `xorm:"pk autoincr 'id'" json:"id"`
+	ID           int64  `xorm:"pk autoincr 'id'" json:"ID"`
 	Username     string `xorm:"'username'" json:"username"`
 	PasswordHash string `xorm:"'password_hash'" json:"-"`
-	RoleID       int64  `xorm:"'role_id'" json:"role_id"`
+	RoleID       int64  `xorm:"'role_id'" json:"roleID"`
 }
 
 func (u *User) TableName() string {
