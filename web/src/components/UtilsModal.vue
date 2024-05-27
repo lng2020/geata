@@ -85,8 +85,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 
-const emit = defineEmits(['close'])
-
 const modbusStartAddress = ref('')
 const modbusCalculatedAddress = ref('')
 const mqttTestTopic = ref('')

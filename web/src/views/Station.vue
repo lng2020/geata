@@ -1,7 +1,5 @@
 <template>
-  <div class="p-4">
     <IEC61850Tree />
-  </div>
 </template>
 
 <script lang="ts" setup>

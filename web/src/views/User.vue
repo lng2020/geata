@@ -1,6 +1,6 @@
 <template>
   <div class="container mx-auto p-6">
-    <h1 class="text-3xl font-bold mb-6">System Settings</h1>
+    <h1 class="text-3xl font-bold mb-6">User Settings</h1>
 
     <div class="grid grid-cols-2 gap-8">
       <div>

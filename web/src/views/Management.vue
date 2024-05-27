@@ -158,28 +158,21 @@ const ssoEnabled = ref(false)
 const logs = ref<Log[]>([])
 const startDate = ref('')
 const endDate = ref('')
-const currentPage = ref(1)
-const totalPages = ref(1)
 
-// Simulated data
 users.value = [
   { id: 1, username: 'john_doe', email: 'john@example.com', role: 'Admin', status: 'Active' },
   { id: 2, username: 'jane_smith', email: 'jane@example.com', role: 'User', status: 'Active' }
-  // Add more user data...
 ]
 
 logs.value = [
   { id: 1, date: '2021-10-01', user: 'john_doe', action: 'Login' },
   { id: 2, date: '2021-10-02', user: 'jane_smith', action: 'Logout' }
-  // Add more log data...
 ]
 
 const searchUsers = () => {
-  // Implement user search logic
 }
 
 const openCreateUserDialog = () => {
-  // Open create user dialog
 }
 
 const toggleSSO = () => {
@@ -187,11 +180,11 @@ const toggleSSO = () => {
 }
 
 const openEditUserDialog = (user: User) => {
-  // Open edit user dialog with selected user data
+  console.log('Editing user:', user)
 }
 
 const deleteUser = (user: User) => {
-  // Implement user deletion logic
+  console.log('Deleting user:', user)
 }
 
 const toggleUserStatus = (user: User) => {
@@ -199,18 +192,6 @@ const toggleUserStatus = (user: User) => {
 }
 
 const filterLogs = () => {
-  // Implement login log filtering logic based on start and end dates
 }
 
-const previousPage = () => {
-  if (currentPage.value > 1) {
-    currentPage.value--
-  }
-}
-
-const nextPage = () => {
-  if (currentPage.value < totalPages.value) {
-    currentPage.value++
-  }
-}
 </script>

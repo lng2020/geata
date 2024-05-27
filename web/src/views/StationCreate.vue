@@ -80,38 +80,46 @@
         </div>
 
         <div v-show="step === 3" class="mb-8">
-  <div v-if="model" class="mb-4">
-    <h2 class="text-xl font-bold mb-2">IEC 61850 Model</h2>
-    <div class="border border-gray-300 rounded-md p-4 bg-white shadow-sm">
-      <table class="w-full border-collapse">
-        <thead>
-          <tr class="bg-gray-200 text-gray-700">
-            <th class="px-4 py-2 font-medium text-left">LD</th>
-            <th class="px-4 py-2 font-medium text-left">LN</th>
-          </tr>
-        </thead>
-        <tbody>
-          <template v-for="(device, deviceIndex) in model.logicalDevice" :key="deviceIndex">
-            <tr v-for="(node, nodeIndex) in device.logicalNode" :key="nodeIndex" class="border-t">
-              <td v-if="nodeIndex === 0" :rowspan="device.logicalNode.length" class="px-4 py-2 align-top">
-                {{ device.name }}
-              </td>
-              <td class="px-4 py-2">{{ node.name }}</td>
-            </tr>
-          </template>
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <div class="flex justify-end">
-    <button
-      type="submit"
-      class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
-    >
-      Create
-    </button>
-  </div>
-</div>
+          <div v-if="model" class="mb-4">
+            <h2 class="text-xl font-bold mb-2">IEC 61850 Model</h2>
+            <div class="border border-gray-300 rounded-md p-4 bg-white shadow-sm">
+              <table class="w-full border-collapse">
+                <thead>
+                  <tr class="bg-gray-200 text-gray-700">
+                    <th class="px-4 py-2 font-medium text-left">LD</th>
+                    <th class="px-4 py-2 font-medium text-left">LN</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <template v-for="(device, deviceIndex) in model.logicalDevice" :key="deviceIndex">
+                    <tr
+                      v-for="(node, nodeIndex) in device.logicalNode"
+                      :key="nodeIndex"
+                      class="border-t"
+                    >
+                      <td
+                        v-if="nodeIndex === 0"
+                        :rowspan="device.logicalNode.length"
+                        class="px-4 py-2 align-top"
+                      >
+                        {{ device.name }}
+                      </td>
+                      <td class="px-4 py-2">{{ node.name }}</td>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="flex justify-end">
+            <button
+              type="submit"
+              class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
+            >
+              Create
+            </button>
+          </div>
+        </div>
       </div>
 
       <div class="flex justify-center items-center mt-8">
@@ -223,8 +231,7 @@ async function createStation() {
         host: host.value,
         port: port.value,
         hashName: hashName.value
-      }
-    )
+      })
     })
     if (response.ok) {
       const resp = await response.json()

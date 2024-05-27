@@ -7,7 +7,7 @@
     <nav class="mt-6">
       <router-link to="/" class="flex items-center px-5 py-3 text-white hover:bg-gray-700">
         <font-awesome-icon icon="fa-solid fa-home" class="text-lg mr-3"></font-awesome-icon>
-        <span>Dashboard</span>
+        <span>{{ $t('dashboard') }}</span>
       </router-link>
       <div v-for="(station, index) in stations" :key="index" class="mt-4">
         <button
@@ -34,25 +34,26 @@
             :to="{ path: '/station/' + station.id }"
             class="block text-sm text-gray-400 hover:text-white"
           >
-            Overview
+            {{ $t('overview') }}
           </router-link>
           <router-link
             :to="{ path: '/mapping/' + station.id }"
             class="block text-sm text-gray-400 hover:text-white"
           >
-            Mapping
+            {{ $t('mapping') }}
           </router-link>
           <router-link
             :to="{ path: '/setting/' + station.id }"
             class="block text-sm text-gray-400 hover:text-white"
           >
-            Setting
+            {{ $t('settings') }}
           </router-link>
         </div>
       </div>
     </nav>
   </div>
 </template>
+
 <script lang="ts" setup>
 import { userGlobalStore } from '@/store'
 import { reactive } from 'vue'

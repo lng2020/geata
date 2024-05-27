@@ -1,6 +1,6 @@
 <template>
-  <div class="container mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-4">Power Station Configuration</h1>
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6">Settings</h1>
     <div v-if="editedStation" class="flex">
       <div class="w-1/2 pr-4">
         <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
