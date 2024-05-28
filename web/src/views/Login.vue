@@ -6,7 +6,9 @@
       </h2>
       <form @submit.prevent="handleSubmit">
         <div class="mb-4">
-          <label for="username" class="block text-gray-700 font-bold mb-2">{{ $t('username') }}</label>
+          <label for="username" class="block text-gray-700 font-bold mb-2">{{
+            $t('username')
+          }}</label>
           <input
             type="text"
             id="username"
@@ -18,7 +20,9 @@
           <p v-if="usernameError" class="text-red-500 text-sm mt-1">{{ $t('usernameRequired') }}</p>
         </div>
         <div class="mb-6">
-          <label for="password" class="block text-gray-700 font-bold mb-2">{{ $t('password') }}</label>
+          <label for="password" class="block text-gray-700 font-bold mb-2">{{
+            $t('password')
+          }}</label>
           <input
             type="password"
             id="password"
@@ -53,11 +57,11 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useI18n } from 'vue-i18n' 
+import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/store'
 import { useRouter } from 'vue-router'
 
-const { t } = useI18n();
+const { t } = useI18n()
 
 const authStore = useAuthStore()
 const router = useRouter()

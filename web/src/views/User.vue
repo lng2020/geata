@@ -1,20 +1,20 @@
 <template>
   <div class="container mx-auto p-6">
-    <h1 class="text-3xl font-bold mb-6">User Settings</h1>
+    <h1 class="text-3xl font-bold mb-6"> {{ $t('userSettings') }}</h1>
 
     <div class="grid grid-cols-2 gap-8">
       <div>
         <section class="bg-white shadow rounded-lg p-6">
-          <h2 class="text-2xl font-bold mb-6">Theme and Language</h2>
+          <h2 class="text-2xl font-bold mb-6">{{ $t('themeAndLanguage') }}</h2>
           <div class="mb-6">
-            <label class="block text-gray-700 font-bold mb-2">Language</label>
+            <label class="block text-gray-700 font-bold mb-2">{{ $t('language') }}</label>
             <div class="relative">
               <select
                 v-model="language"
                 class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
               >
-                <option value="en-US">English</option>
-                <option value="zh-CN">中文</option>
+                <option value="en-US">{{ $t('english') }}</option>
+                <option value="zh-CN">{{ $t('chinese') }}</option>
               </select>
               <div
                 class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"
@@ -32,15 +32,15 @@
             </div>
           </div>
           <div class="mb-6">
-            <label class="block text-gray-700 font-bold mb-2">Theme</label>
+            <label class="block text-gray-700 font-bold mb-2">{{ $t('theme') }}</label>
             <div class="relative">
               <select
                 v-model="theme"
                 class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
               >
-                <option value="light">Light</option>
-                <option value="dark">Dark</option>
-                <option value="auto">Auto</option>
+                <option value="light">{{ $t('light') }}</option>
+                <option value="dark">{{ $t('dark') }}</option>
+                <option value="auto">{{ $t('auto') }}</option>
               </select>
               <div
                 class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"
@@ -61,7 +61,7 @@
             @click="editLangAndTheme"
             class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline"
           >
-            Save Changes
+          {{  $t('save') }}
           </button>
         </section>
       </div>
@@ -69,19 +69,19 @@
       <div>
         <section class="bg-white shadow rounded-lg p-6">
           <div class="flex justify-between">
-            <h2 class="text-2xl font-bold mb-4">MQTT Connection Parameters</h2>
+            <h2 class="text-2xl font-bold mb-4">{{ $t('MQTTConnectionParameters') }}</h2>
             <button
               @click="testMqttConnection"
               class="mb-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline"
             >
-              Test Connection
+              {{ $t('testConnection') }}
             </button>
           </div>
 
           <div>
             <div class="grid grid-cols-2 gap-4">
               <div class="mb-4">
-                <label class="block text-gray-700 font-bold mb-2">Server Address:</label>
+                <label class="block text-gray-700 font-bold mb-2">{{ $t('address') }}</label>
                 <input
                   type="text"
                   v-model="mqttServerAddress"
@@ -89,7 +89,7 @@
                 />
               </div>
               <div>
-                <label class="block text-gray-700 font-bold mb-2">Port:</label>
+                <label class="block text-gray-700 font-bold mb-2">{{ $t('port') }}</label>
                 <input
                   type="number"
                   v-model="mqttServerPort"
@@ -97,7 +97,7 @@
                 />
               </div>
               <div>
-                <label class="block text-gray-700 font-bold mb-2">Username:</label>
+                <label class="block text-gray-700 font-bold mb-2">{{ $t('username') }}</label>
                 <input
                   type="text"
                   v-model="mqttUsername"
@@ -105,7 +105,7 @@
                 />
               </div>
               <div>
-                <label class="block text-gray-700 font-bold mb-2">Password:</label>
+                <label class="block text-gray-700 font-bold mb-2">{{ $t('password') }}</label>
                 <input
                   type="password"
                   v-model="mqttPassword"
@@ -117,7 +117,7 @@
           <button
             class="mt-6 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline"
           >
-            Save Changes
+          {{ $t('save') }}
           </button>
         </section>
       </div>
@@ -125,12 +125,12 @@
       <div>
         <section class="bg-white shadow rounded-lg p-6">
           <div class="flex justify-between">
-            <h2 class="text-2xl font-bold mb-4">Alarm Rules</h2>
+            <h2 class="text-2xl font-bold mb-4">{{ $t('alarmRules') }}</h2>
             <button
               @click="showAddRuleDialog = true"
               class="mb-4 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:shadow-outline"
             >
-              Add Rule
+              {{ $t('addRule') }}
             </button>
           </div>
           <ul class="space-y-2">
@@ -149,13 +149,13 @@
                   @click="editRule(index)"
                   class="px-4 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline"
                 >
-                  Edit
+                {{ $t('edit') }}
                 </button>
                 <button
                   @click="deleteRule(index)"
                   class="ml-2 px-4 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:shadow-outline"
                 >
-                  Delete
+                {{ $t('delete') }}
                 </button>
               </div>
             </li>
@@ -166,33 +166,33 @@
       <div>
         <section class="bg-white shadow rounded-lg p-6">
           <div class="flex justify-between mb-4">
-            <h2 class="text-2xl font-bold">System Logs</h2>
+            <h2 class="text-2xl font-bold">{{ $t('systemLogs') }}</h2>
             <div class="flex">
               <button
                 @click="refreshLogs"
                 class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline"
               >
-                Refresh
+                {{ $t('refresh') }}
               </button>
               <button
                 @click="exportLogs"
                 class="ml-2 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:shadow-outline"
               >
-                Export
+              {{ $t('export') }}
               </button>
             </div>
           </div>
           <div class="flex items-center mb-4">
-            <label class="block text-gray-700 font-bold mr-4">Log Level:</label>
+            <label class="block text-gray-700 font-bold mr-4">{{ $t('logLevel') }}</label>
             <div class="relative">
               <select
                 v-model="logLevel"
                 class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
               >
-                <option value="debug">Debug</option>
-                <option value="info">Info</option>
-                <option value="warning">Warning</option>
-                <option value="error">Error</option>
+                <option value="debug">{{ $t('debug') }}</option>
+                <option value="info">{{ $t('info') }}</option>
+                <option value="warning">{{ $t('warning') }}</option>
+                <option value="error">{{ $t('error') }}</option>
               </select>
               <div
                 class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"
@@ -210,13 +210,13 @@
             </div>
           </div>
           <div class="flex items-center mb-4">
-            <label class="block text-gray-700 font-bold mr-4">Time Range:</label>
+            <label class="block text-gray-700 font-bold mr-4">{{ $t('timeRange') }}</label>
             <input
               type="date"
               v-model="logStartDate"
               class="border border-gray-400 hover:border-gray-500 px-2 py-1 rounded shadow focus:outline-none focus:shadow-outline"
             />
-            <span class="mx-2">to</span>
+            <span class="mx-2">{{ $t('to') }}</span>
             <input
               type="date"
               v-model="logEndDate"
@@ -227,9 +227,9 @@
           <table class="table-auto w-full">
             <thead>
               <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                <th class="py-3 px-6 text-left">Timestamp</th>
-                <th class="py-3 px-6 text-left">Level</th>
-                <th class="py-3 px-6 text-left">Message</th>
+                <th class="py-3 px-6 text-left">{{ $t('timeStamp') }}</th>
+                <th class="py-3 px-6 text-left">{{ $t('level') }}</th>
+                <th class="py-3 px-6 text-left">{{ $t('message') }}</th>
               </tr>
             </thead>
             <tbody class="text-gray-600 text-sm">
@@ -253,9 +253,9 @@
       class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50"
     >
       <div class="bg-white p-6 rounded-lg shadow-xl">
-        <h3 class="text-xl font-bold mb-4">Add Alarm Rule</h3>
+        <h3 class="text-xl font-bold mb-4">{{ $t('addAlarmRule') }}</h3>
         <div class="mb-4">
-          <label class="block text-gray-700 font-bold mb-2">Condition:</label>
+          <label class="block text-gray-700 font-bold mb-2">{{ $t('condition') }}</label>
           <input
             type="text"
             v-model="newRule.condition"
@@ -263,7 +263,7 @@
           />
         </div>
         <div class="mb-4">
-          <label class="block text-gray-700 font-bold mb-2">Notification:</label>
+          <label class="block text-gray-700 font-bold mb-2">{{ $t('notification') }}</label>
           <input
             type="text"
             v-model="newRule.notification"
@@ -275,13 +275,13 @@
             @click="addRule"
             class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline"
           >
-            Add
+          {{ $t('add')}}
           </button>
           <button
             @click="showAddRuleDialog = false"
             class="ml-2 px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 focus:outline-none focus:shadow-outline"
           >
-            Cancel
+          {{ $t('cancel') }}
           </button>
         </div>
       </div>

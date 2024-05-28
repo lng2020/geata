@@ -72,7 +72,7 @@ export const useAuthStore = defineStore({
           Authorization: `Bearer ${this.token}`
         },
         body: JSON.stringify({
-          lang: lang, 
+          lang: lang
         })
       })
       if (response.ok) {
@@ -81,7 +81,7 @@ export const useAuthStore = defineStore({
       }
     },
     async changeTheme(theme: string) {
-      console.log("theme", theme)
+      console.log('theme', theme)
     }
   }
 })

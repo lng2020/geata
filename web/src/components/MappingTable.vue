@@ -9,7 +9,10 @@
         <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2">
           {{ $t('importExport') }}
         </button>
-        <button @click="showUtilsModal" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">
+        <button
+          @click="showUtilsModal"
+          class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
+        >
           {{ $t('utils') }}
         </button>
       </div>
@@ -17,13 +20,19 @@
     <table class="container border rounded-lg shadow-md">
       <thead>
         <tr>
-          <th class="px-4 py-2 border-b border-gray-300 text-left text-xl font-semibold text-gray-600 uppercase tracking-wider">
+          <th
+            class="px-4 py-2 border-b border-gray-300 text-left text-xl font-semibold text-gray-600 uppercase tracking-wider"
+          >
             {{ $t('logicalNode') }}
           </th>
-          <th class="px-4 py-2 border-b border-gray-300 text-left text-xl font-semibold text-gray-600 uppercase tracking-wider">
+          <th
+            class="px-4 py-2 border-b border-gray-300 text-left text-xl font-semibold text-gray-600 uppercase tracking-wider"
+          >
             {{ $t('dataSourceType') }}
           </th>
-          <th class="px-4 py-2 border-b border-gray-300 text-left text-xl font-semibold text-gray-600 uppercase tracking-wider">
+          <th
+            class="px-4 py-2 border-b border-gray-300 text-left text-xl font-semibold text-gray-600 uppercase tracking-wider"
+          >
             {{ $t('configuration') }}
           </th>
         </tr>
@@ -34,7 +43,11 @@
             {{ mapping.iec61850Reference }}
           </td>
           <td class="px-4 py-2 border-b border-gray-300 text-sm text-gray-700">
-            <select v-model="mapping.type" @change="handleTypeChange(mapping)" class="bg-white border border-gray-300 text-gray-700 py-1 px-2 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+            <select
+              v-model="mapping.type"
+              @change="handleTypeChange(mapping)"
+              class="bg-white border border-gray-300 text-gray-700 py-1 px-2 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+            >
               <option value="IEC61850">{{ $t('iec61850') }}</option>
               <option value="Modbus">{{ $t('modbus') }}</option>
               <option value="MQTT">{{ $t('mqtt') }}</option>
@@ -42,7 +55,10 @@
           </td>
           <td class="px-4 py-2 border-b border-gray-300 text-sm text-gray-700">
             <template v-if="mapping.type !== 'IEC61850'">
-              <button @click="editMapping(mapping)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline">
+              <button
+                @click="editMapping(mapping)"
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+              >
                 {{ $t('edit') }}
               </button>
             </template>
@@ -55,9 +71,19 @@
     </table>
 
     <UtilsModal v-if="showUtils" @close="closeUtilsModal" />
-    <ConfirmationModal :show="showModal" :title="$t('confirmation')" :message="$t('areYouSure')" @confirm="confirmAction" @cancel="closeModal" />
+    <ConfirmationModal
+      :show="showModal"
+      :title="$t('confirmation')"
+      :message="$t('areYouSure')"
+      @confirm="confirmAction"
+      @cancel="closeModal"
+    />
     <MQTTConfigModal v-if="showMQTTConfig" @save="saveMQTTConfig" @cancel="closeMQTTConfig" />
-    <ModbusConfigModal v-if="showModbusConfig" @save="saveModbusConfig" @cancel="closeModbusConfig" />
+    <ModbusConfigModal
+      v-if="showModbusConfig"
+      @save="saveModbusConfig"
+      @cancel="closeModbusConfig"
+    />
   </div>
 </template>
 

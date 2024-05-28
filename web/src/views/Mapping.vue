@@ -1,5 +1,5 @@
 <template>
-    <MappingTable />
+  <MappingTable />
 </template>
 
 <script lang="ts" setup>

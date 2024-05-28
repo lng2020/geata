@@ -1,19 +1,19 @@
 <template>
   <div class="container mx-auto p-6 bg-white shadow rounded-lg">
-    <h1 class="text-3xl font-bold mb-6">User Management</h1>
+    <h1 class="text-3xl font-bold mb-6">{{ $t('userManagement') }}</h1>
     <div class="flex justify-between items-center mb-6">
       <div class="flex space-x-2">
         <input
           type="text"
           v-model="searchQuery"
-          placeholder="Search users..."
+          :placeholder="$t('searchUsers')"
           class="border border-gray-300 rounded-l-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <button
           @click="searchUsers"
           class="bg-blue-500 text-white rounded-r-md px-4 py-2 hover:bg-blue-600"
         >
-          Search
+          {{ $t('search') }}
         </button>
       </div>
       <div class="flex space-x-2">
@@ -21,7 +21,7 @@
           @click="openCreateUserDialog"
           class="bg-green-500 text-white rounded-md px-4 py-2 hover:bg-green-600"
         >
-          New User
+          {{ $t('newUser') }}
         </button>
         <button
           @click="toggleSSO"
@@ -32,7 +32,7 @@
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           ]"
         >
-          {{ ssoEnabled ? 'SSO Enabled' : 'SSO Disabled' }}
+          {{ ssoEnabled ? $t('ssoEnabled') : $t('ssoDisabled') }}
         </button>
       </div>
     </div>
@@ -83,11 +83,11 @@
       </table>
     </div>
     <div class="mt-6">
-      <h2 class="text-2xl font-bold mb-4">Login Logs</h2>
+      <h2 class="text-2xl font-bold mb-4">{{ $t('loginLogs') }}</h2>
       <div class="flex justify-between items-center mb-4">
         <div class="flex space-x-4">
           <label for="startDate" class="flex items-center">
-            <span class="mr-2">Start Date:</span>
+            <span class="mr-2">{{ $t('startDate') }}:</span>
             <input
               type="date"
               id="startDate"
@@ -96,7 +96,7 @@
             />
           </label>
           <label for="endDate" class="flex items-center">
-            <span class="mr-2">End Date:</span>
+            <span class="mr-2">{{ $t('endDate') }}:</span>
             <input
               type="date"
               id="endDate"
@@ -109,16 +109,16 @@
           @click="filterLogs"
           class="bg-blue-500 text-white rounded-md px-4 py-2 hover:bg-blue-600"
         >
-          Filter
+          {{ $t('filter') }}
         </button>
       </div>
       <div class="overflow-x-auto">
         <table class="w-full text-left">
           <thead class="bg-gray-100">
             <tr>
-              <th class="px-4 py-3">Date</th>
-              <th class="px-4 py-3">User</th>
-              <th class="px-4 py-3">Action</th>
+              <th class="px-4 py-3">{{ $t('date') }}</th>
+              <th class="px-4 py-3">{{ $t('user') }}</th>
+              <th class="px-4 py-3">{{ $t('action') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -169,11 +169,9 @@ logs.value = [
   { id: 2, date: '2021-10-02', user: 'jane_smith', action: 'Logout' }
 ]
 
-const searchUsers = () => {
-}
+const searchUsers = () => {}
 
-const openCreateUserDialog = () => {
-}
+const openCreateUserDialog = () => {}
 
 const toggleSSO = () => {
   ssoEnabled.value = !ssoEnabled.value
@@ -191,7 +189,5 @@ const toggleUserStatus = (user: User) => {
   user.status = user.status === 'Active' ? 'Inactive' : 'Active'
 }
 
-const filterLogs = () => {
-}
-
+const filterLogs = () => {}
 </script>

@@ -29,7 +29,7 @@
         <table class="w-full">
           <thead>
             <tr class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
-              <th class="py-3 px-6 text-left">{{ $t('name') }}</th>
+              <th class="py-3 px-6 text-left">{{ $t('nameLabel') }}</th>
               <th class="py-3 px-6 text-left">{{ $t('isOnline') }}</th>
               <th class="py-3 px-6 text-left">{{ $t('lastOnlineTime') }}</th>
               <th class="py-3 px-6 text-left">{{ $t('host') }}</th>
@@ -106,7 +106,7 @@ ChartJS.register(
   PointElement,
   LineElement
 )
-const {t: _t } = useI18n()
+const { t: _t } = useI18n()
 const store = userGlobalStore()
 const stations = reactive(store.stations)
 const searchQuery = ref('')

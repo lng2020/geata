@@ -1,40 +1,44 @@
 <template>
   <div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-6">Settings</h1>
+    <h1 class="text-3xl font-bold mb-6">{{ $t('settings') }}</h1>
     <div v-if="editedStation" class="flex">
       <div class="w-1/2 pr-4">
         <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-          <h2 class="text-xl font-bold mb-4">Basic Information</h2>
+          <h2 class="text-xl font-bold mb-4">{{ $t('basicInformation') }}</h2>
           <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="name"> Name </label>
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="name">{{
+              $t('name')
+            }}</label>
             <input
               v-model="editedStation.name"
               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="name"
               type="text"
-              placeholder="Power Station Name"
+              :placeholder="$t('powerStationName')"
             />
           </div>
           <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="address">
-              Address
-            </label>
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="address">{{
+              $t('address')
+            }}</label>
             <input
               v-model="editedStation.host"
               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="address"
               type="text"
-              placeholder="Power Station Address"
+              :placeholder="$t('powerStationAddress')"
             />
           </div>
           <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="port"> Port </label>
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="port">{{
+              $t('port')
+            }}</label>
             <input
               v-model.number="editedStation.port"
               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="port"
               type="number"
-              placeholder="Port"
+              :placeholder="$t('port')"
             />
           </div>
           <div class="flex items-center justify-between">
@@ -43,21 +47,21 @@
               class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="button"
             >
-              Save Changes
+              {{ $t('save') }}
             </button>
             <button
-              @click="discardChanges"
+              @click="cancel"
               class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="button"
             >
-              Discard Changes
+              {{ $t('cancel') }}
             </button>
           </div>
         </div>
       </div>
       <div class="w-1/2 pl-4">
         <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-          <h2 class="text-xl font-bold mb-4">Data Source Configuration</h2>
+          <h2 class="text-xl font-bold mb-4">{{ $t('dataSourceConfiguration') }}</h2>
           <ul class="space-y-4">
             <li
               v-for="(dataSource, index) in dataSources"
@@ -82,7 +86,7 @@
                         d="M5 13l4 4L19 7"
                       ></path>
                     </svg>
-                    <span class="text-green-500 font-semibold">Connected</span>
+                    <span class="text-green-500 font-semibold">{{ $t('connected') }}</span>
                   </div>
                   <div v-else-if="dataSource.status === 'disconnected'" class="flex items-center">
                     <svg
@@ -99,7 +103,7 @@
                         d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                       ></path>
                     </svg>
-                    <span class="text-red-500 font-semibold">Disconnected</span>
+                    <span class="text-red-500 font-semibold">{{ $t('disconnected') }}</span>
                   </div>
                 </span>
               </div>
@@ -108,17 +112,17 @@
                 class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 type="button"
               >
-                Test Connection
+                {{ $t('testConnection') }}
               </button>
             </li>
           </ul>
         </div>
 
         <div class="bg-white shadow-md rounded px-8 pt-6 pb-8">
-          <h2 class="text-xl font-bold mb-4">ICD File Upload</h2>
+          <h2 class="text-xl font-bold mb-4">{{ $t('icdFileUpload') }}</h2>
           <div class="mb-4">
             <label for="icdFile" class="block text-gray-700 font-semibold mb-2">
-              Select ICD File
+              {{ $t('selectIcdFile') }}
             </label>
             <div class="relative">
               <input
@@ -131,7 +135,7 @@
             </div>
           </div>
           <div v-if="uploadProgress > 0" class="mb-4">
-            <label class="block text-gray-700 font-semibold mb-2">Upload Progress</label>
+            <label class="block text-gray-700 font-semibold mb-2">{{ $t('uploadProgress') }}</label>
             <div class="relative pt-1">
               <div class="overflow-hidden h-2 text-xs flex rounded bg-blue-200">
                 <div
@@ -142,14 +146,14 @@
             </div>
           </div>
           <div v-if="parsedIcdData" class="mt-4">
-            <label class="block text-gray-700 font-semibold mb-2">Parsed ICD Data</label>
+            <label class="block text-gray-700 font-semibold mb-2">{{ $t('parsedIcdData') }}</label>
             <pre class="bg-gray-100 rounded p-4 text-sm overflow-auto">{{ parsedIcdData }}</pre>
           </div>
         </div>
       </div>
     </div>
     <div v-else>
-      <p>Loading power station...</p>
+      <p>{{ $t('loadingPowerStation') }}</p>
     </div>
   </div>
 </template>
@@ -193,7 +197,7 @@ const saveChanges = () => {
   }
 }
 
-const discardChanges = () => {
+const cancel = () => {
   if (station.value) {
     editedStation.value = station.value
   }

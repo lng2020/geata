@@ -5,7 +5,9 @@
       <h2 class="text-xl font-bold mb-4">{{ $t('modbusConfig') }}</h2>
       <form @submit.prevent="saveConfig">
         <div class="mb-4">
-          <label for="address" class="block text-gray-700 font-bold mb-2">{{ $t('addressLabel') }}</label>
+          <label for="address" class="block text-gray-700 font-bold mb-2">{{
+            $t('addressLabel')
+          }}</label>
           <input
             type="number"
             id="address"
@@ -15,7 +17,9 @@
           />
         </div>
         <div class="mb-4">
-          <label for="dataType" class="block text-gray-700 font-bold mb-2">{{ $t('dataTypeLabel') }}</label>
+          <label for="dataType" class="block text-gray-700 font-bold mb-2">{{
+            $t('dataTypeLabel')
+          }}</label>
           <select
             id="dataType"
             v-model="dataType"

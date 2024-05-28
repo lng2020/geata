@@ -1,5 +1,5 @@
 <template>
-    <IEC61850Tree />
+  <IEC61850Tree />
 </template>
 
 <script lang="ts" setup>

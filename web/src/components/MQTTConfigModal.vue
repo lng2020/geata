@@ -6,7 +6,9 @@
       <h2 class="text-xl font-bold mb-4">{{ $t('mqttConfigTitle') }}</h2>
       <form @submit.prevent="saveConfig">
         <div class="mb-4">
-          <label for="topic" class="block text-gray-700 font-bold mb-2">{{ $t('topicLabel') }}</label>
+          <label for="topic" class="block text-gray-700 font-bold mb-2">{{
+            $t('topicLabel')
+          }}</label>
           <input
             type="text"
             id="topic"
