@@ -138,9 +138,11 @@ const enUS = {
   addAlarmRule: 'Add Alarm Rule',
   condition: 'Condition',
   notification: 'Notification',
+  station: 'Station',
 }
 
 const zhCN = {
+  station: '站点',
   dashboard: '仪表盘',
   overview: '总览',
   settings: '设置',
@@ -277,7 +279,7 @@ const zhCN = {
   message: '消息',
   addAlarmRule: '添加报警规则',
   condition: '条件',
-  notification: '通知',
+  notification: '通知'
 }
 
 type MessageSchema = typeof enUS

@@ -90,13 +90,13 @@
 <script lang="ts" setup>
 import { ref, reactive } from 'vue'
 import type { Mapping } from '@/types/types'
-import { userGlobalStore } from '@/store'
+import { useGlobalStore } from '@/store'
 import ConfirmationModal from './ConfirmationModal.vue'
 import MQTTConfigModal from './MQTTConfigModal.vue'
 import ModbusConfigModal from './ModbusConfigModal.vue'
 import UtilsModal from './UtilsModal.vue'
 
-const store = userGlobalStore()
+const store = useGlobalStore()
 const mappings = reactive(store.mappings)
 
 const showModal = ref(false)

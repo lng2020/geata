@@ -159,12 +159,12 @@
 </template>
 
 <script setup lang="ts">
-import { userGlobalStore } from '@/store'
+import { useGlobalStore } from '@/store'
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import type { Station, DataSource } from '@/types/types'
 
-const store = userGlobalStore()
+const store = useGlobalStore()
 const route = useRoute()
 const router = useRouter()
 const ID = ref<number | null>(null)

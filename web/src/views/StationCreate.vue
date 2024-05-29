@@ -156,6 +156,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { type IEC61850Model } from '@/types/types'
+import { useGlobalStore } from '@/store';
 
 const router = useRouter()
 const step = ref(1)
@@ -236,6 +237,7 @@ async function createStation() {
     if (response.ok) {
       const resp = await response.json()
       const stationId = resp.id
+      useGlobalStore().fetchStations()
       router.push(`/station/${stationId}`)
     } else {
       const data = await response.json()

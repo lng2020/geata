@@ -5,8 +5,6 @@ export interface Station {
   port: number
   isOnline: boolean
   lastOnlineTime: string
-  createdAt: string
-  updatedAt: string
   showOptions: boolean
 }
 

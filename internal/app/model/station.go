@@ -60,3 +60,15 @@ func DeleteStation(engine *xorm.Engine, station *Station) error {
 	_, err := engine.ID(station.ID).Delete(station)
 	return err
 }
+
+func GetStationIDByModelHash(engine *xorm.Engine, modelHash string) int64 {
+	station := new(Station)
+	has, err := engine.Where("model_hash = ?", modelHash).Get(station)
+	if err != nil {
+		return 0
+	}
+	if !has {
+		return 0
+	}
+	return station.ID
+}

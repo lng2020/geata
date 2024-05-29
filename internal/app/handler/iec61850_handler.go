@@ -13,6 +13,17 @@ type IEC61850HandlerConfig struct {
 	Port string
 }
 
+func (c IEC61850HandlerConfig) Type() HandlerType {
+	return IEC61850HandlerType
+}
+
+func NewIEC61850HandlerConfig(ip, port string) HandlerConfig {
+	return IEC61850HandlerConfig{
+		IP:   ip,
+		Port: port,
+	}
+}
+
 func NewIEC61850Handler(hc HandlerConfig) Handler {
 	config := hc.(IEC61850HandlerConfig)
 	client := client.NewIEC61850Client(config.IP, config.Port)

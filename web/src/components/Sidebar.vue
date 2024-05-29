@@ -55,11 +55,13 @@
 </template>
 
 <script lang="ts" setup>
-import { userGlobalStore } from '@/store'
-import { reactive } from 'vue'
-const store = userGlobalStore()
-const stations = reactive(store.stations)
+import { useGlobalStore } from '@/store';
+import { storeToRefs } from 'pinia';
+
+const globalStore = useGlobalStore();
+const { stations } = storeToRefs(globalStore);
+
 const toggleOptions = (index: number) => {
-  stations[index].showOptions = !stations[index].showOptions
-}
+  stations.value[index].showOptions = !stations.value[index].showOptions;
+};
 </script>

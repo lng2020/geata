@@ -80,8 +80,8 @@
 </template>
 
 <script setup lang="ts">
-import { userGlobalStore } from '@/store'
-import { computed, reactive, ref } from 'vue'
+import { useGlobalStore } from '@/store'
+import { computed, ref } from 'vue'
 import { Pie, Line } from 'vue-chartjs'
 import {
   Chart as ChartJS,
@@ -96,6 +96,8 @@ import {
 } from 'chart.js'
 import router from '@/router'
 import { useI18n } from 'vue-i18n'
+import { storeToRefs } from 'pinia'
+import type { Station } from '@/types/types'
 ChartJS.register(
   Title,
   Tooltip,
@@ -107,16 +109,15 @@ ChartJS.register(
   LineElement
 )
 const { t: _t } = useI18n()
-const store = userGlobalStore()
-const stations = reactive(store.stations)
+const { stations } = storeToRefs(useGlobalStore())
 const searchQuery = ref('')
-const filteredStations = computed(() => {
+const filteredStations = computed(() : Station[] => {
   if (searchQuery.value.trim() === '') {
-    return stations
+    return stations.value
   } else {
     const query = searchQuery.value.toLowerCase()
-    return stations.filter(
-      (station) =>
+    return stations.value.filter(
+      (station: Station) =>
         station.name.toLowerCase().includes(query) || station.host.toLowerCase().includes(query)
     )
   }
@@ -128,8 +129,8 @@ const stationStatusData = computed(() => {
     datasets: [
       {
         data: [
-          stations.filter((s) => s.isOnline).length,
-          stations.filter((s) => !s.isOnline).length
+          stations.value.filter((s) => s.isOnline).length,
+          stations.value.filter((s) => !s.isOnline).length
         ],
         backgroundColor: ['rgb(75, 192, 192)', 'rgb(255, 99, 132)']
       }

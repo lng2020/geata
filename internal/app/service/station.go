@@ -10,22 +10,49 @@ import (
 )
 
 type Station struct {
-	ID        int64  `json:"id"`
-	Name      string `json:"name"`
-	Host      string `json:"host"`
-	Port      int64  `json:"port"`
-	ModelHash string `json:"modelHash"`
-	Handlers  map[handler.HandlerType]handler.Handler
-	Configs   map[handler.HandlerType]handler.HandlerConfig
+	ID             int64  `json:"id"`
+	Name           string `json:"name"`
+	Host           string `json:"host"`
+	Port           int64  `json:"port"`
+	ModelHash      string `json:"modelHash"`
+	IsOnline       bool   `json:"isOnline"`
+	LastOnlineTime string `json:"lastOnlineTime"`
+	Handlers       map[handler.HandlerType]handler.Handler
+	Configs        map[handler.HandlerType]handler.HandlerConfig
 }
 
-func (s *Station) InitFromDB(stationFromDB *model.Station) error {
-	s.ID = stationFromDB.ID
-	s.Name = stationFromDB.Name
-	s.Host = stationFromDB.Host
-	s.Port = stationFromDB.Port
+func StationFromDB(stationFromDB *model.Station) *Station {
+	stationConfigs, err := model.GetStationConfigByStationID(Engine, stationFromDB.ID)
+	if err != nil {
+		return nil
+	}
+	ic := handler.NewIEC61850HandlerConfig(stationConfigs.IEC61850Host, strconv.Itoa(int(stationConfigs.IEC61850Port)))
+	mc := handler.NewModbusHandlerConfig(stationConfigs.ModbusURL)
+	mqc := handler.NewMQTTHandlerConfig(stationConfigs.MQTTBroker, stationConfigs.MQTTClientID, stationConfigs.MQTTUsername, stationConfigs.MQTTPassword, stationConfigs.MQTTTopic)
+	ih := handler.NewIEC61850Handler(ic)
+	mh := handler.NewModbusHandler(mc)
+	mqh := handler.NewMQTTHandler(mqc)
 
-	return nil
+	configs := make(map[handler.HandlerType]handler.HandlerConfig)
+	handlers := make(map[handler.HandlerType]handler.Handler)
+	for _, h := range []handler.Handler{ih, mh, mqh} {
+		handlers[h.Type()] = h
+	}
+	for _, hc := range []handler.HandlerConfig{ic, mc, mqc} {
+		configs[hc.Type()] = hc
+	}
+
+	return &Station{
+		ID:             stationFromDB.ID,
+		Name:           stationFromDB.Name,
+		Host:           stationFromDB.Host,
+		Port:           stationFromDB.Port,
+		ModelHash:      stationFromDB.ModelHash,
+		IsOnline:       stationFromDB.IsOnline,
+		LastOnlineTime: stationFromDB.LastOnlineTime.Format("2006-01-02 15:04:05"),
+		Handlers:       make(map[handler.HandlerType]handler.Handler),
+		Configs:        make(map[handler.HandlerType]handler.HandlerConfig),
+	}
 }
 
 // @Summary List all stations
@@ -35,11 +62,15 @@ func (s *Station) InitFromDB(stationFromDB *model.Station) error {
 // @Router /api/v1/stations [get]
 func ListStations(c *gin.Context) {
 	stations, err := model.GetAllStations(Engine)
+	resp := make([]Station, 0)
+	for _, station := range stations {
+		resp = append(resp, *StationFromDB(station))
+	}
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, stations)
+	c.JSON(http.StatusOK, resp)
 }
 
 // @Summary Get station by ID
@@ -56,11 +87,12 @@ func GetStation(c *gin.Context) {
 		return
 	}
 	station, err := model.GetStationByID(Engine, int64(statoinID))
+	resp := StationFromDB(station)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, station)
+	c.JSON(http.StatusOK, *resp)
 }
 
 // @Summary Create station
@@ -77,12 +109,35 @@ func CreateStation(c *gin.Context) {
 		return
 	}
 
+	// create station and station config
+	session := Engine.NewSession()
+	defer session.Close()
+	err = session.Begin()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 	err = model.CreateStation(Engine, &model.Station{
 		Name:      station.Name,
 		Host:      station.Host,
 		Port:      station.Port,
 		ModelHash: station.ModelHash,
+		IsOnline:  false,
 	})
+	if err != nil {
+		session.Rollback()
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	stationId := model.GetStationIDByModelHash(Engine, station.ModelHash)
+	stationConfig := CreateDefaultStationConfig(stationId)
+	err = model.CreateStationConfig(Engine, stationConfig)
+	if err != nil {
+		session.Rollback()
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	err = session.Commit()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

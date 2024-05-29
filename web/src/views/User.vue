@@ -1,6 +1,6 @@
 <template>
   <div class="container mx-auto p-6">
-    <h1 class="text-3xl font-bold mb-6"> {{ $t('userSettings') }}</h1>
+    <h1 class="text-3xl font-bold mb-6">{{ $t('userSettings') }}</h1>
 
     <div class="grid grid-cols-2 gap-8">
       <div>
@@ -61,7 +61,7 @@
             @click="editLangAndTheme"
             class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline"
           >
-          {{  $t('save') }}
+            {{ $t('save') }}
           </button>
         </section>
       </div>
@@ -117,7 +117,7 @@
           <button
             class="mt-6 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline"
           >
-          {{ $t('save') }}
+            {{ $t('save') }}
           </button>
         </section>
       </div>
@@ -149,13 +149,13 @@
                   @click="editRule(index)"
                   class="px-4 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline"
                 >
-                {{ $t('edit') }}
+                  {{ $t('edit') }}
                 </button>
                 <button
                   @click="deleteRule(index)"
                   class="ml-2 px-4 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:shadow-outline"
                 >
-                {{ $t('delete') }}
+                  {{ $t('delete') }}
                 </button>
               </div>
             </li>
@@ -178,7 +178,7 @@
                 @click="exportLogs"
                 class="ml-2 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:shadow-outline"
               >
-              {{ $t('export') }}
+                {{ $t('export') }}
               </button>
             </div>
           </div>
@@ -275,13 +275,13 @@
             @click="addRule"
             class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline"
           >
-          {{ $t('add')}}
+            {{ $t('add') }}
           </button>
           <button
             @click="showAddRuleDialog = false"
             class="ml-2 px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 focus:outline-none focus:shadow-outline"
           >
-          {{ $t('cancel') }}
+            {{ $t('cancel') }}
           </button>
         </div>
       </div>

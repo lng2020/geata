@@ -39,6 +39,7 @@ var models = []any{
 	new(model.DataObject),
 	new(model.AuditLog),
 	new(model.User),
+	new(model.StationConfig),
 }
 
 func NewApp() *App {
@@ -119,18 +120,13 @@ func (app *App) RegisterHandlers() error {
 }
 
 func (app *App) InitStations() error {
-	stationsFromDB, err := model.GetAllStations(service.Engine)
+	stationsInDB, err := model.GetAllStations(service.Engine)
 	if err != nil {
 		return err
 	}
 
-	for _, stationFromDB := range stationsFromDB {
-		station := &service.Station{}
-		err := station.InitFromDB(stationFromDB)
-		if err != nil {
-			return err
-		}
-
+	for _, stationInDB := range stationsInDB {
+		station := service.StationFromDB(stationInDB)
 		for _, handlerType := range handler.HandlerTypes {
 			config := station.Configs[handlerType]
 			station.Handlers[handlerType] = handler.SupportedHandler[handlerType](config)

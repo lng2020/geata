@@ -14,7 +14,9 @@ var HandlerTypes = []HandlerType{
 	IEC61850HandlerType,
 }
 
-type HandlerConfig interface{}
+type HandlerConfig interface {
+	Type() HandlerType
+}
 
 type HandlerFactory func(HandlerConfig) Handler
 

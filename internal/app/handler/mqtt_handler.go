@@ -20,6 +20,20 @@ type MQTTHandlerConfig struct {
 	Topic    string
 }
 
+func (c MQTTHandlerConfig) Type() HandlerType {
+	return MQTTHandlerType
+}
+
+func NewMQTTHandlerConfig(broker, clientID, username, password, topic string) HandlerConfig {
+	return MQTTHandlerConfig{
+		Broker:   broker,
+		ClientID: clientID,
+		Username: username,
+		Password: password,
+		Topic:    topic,
+	}
+}
+
 func NewMQTTHandler(hc HandlerConfig) Handler {
 	config := hc.(MQTTHandlerConfig)
 	opts := mqtt.NewClientOptions()

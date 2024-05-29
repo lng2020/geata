@@ -16,6 +16,16 @@ type ModbusHandlerConfig struct {
 	URL string
 }
 
+func (c ModbusHandlerConfig) Type() HandlerType {
+	return ModbusHandlerType
+}
+
+func NewModbusHandlerConfig(url string) HandlerConfig {
+	return ModbusHandlerConfig{
+		URL: url,
+	}
+}
+
 func NewModbusHandler(hc HandlerConfig) Handler {
 	config := hc.(ModbusHandlerConfig)
 	client, err := modbus.NewClient(&modbus.ClientConfiguration{URL: config.URL})
