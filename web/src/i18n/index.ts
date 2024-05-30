@@ -138,7 +138,7 @@ const enUS = {
   addAlarmRule: 'Add Alarm Rule',
   condition: 'Condition',
   notification: 'Notification',
-  station: 'Station',
+  station: 'Station'
 }
 
 const zhCN = {

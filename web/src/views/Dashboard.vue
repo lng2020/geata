@@ -111,7 +111,7 @@ ChartJS.register(
 const { t: _t } = useI18n()
 const { stations } = storeToRefs(useGlobalStore())
 const searchQuery = ref('')
-const filteredStations = computed(() : Station[] => {
+const filteredStations = computed((): Station[] => {
   if (searchQuery.value.trim() === '') {
     return stations.value
   } else {

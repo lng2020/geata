@@ -156,7 +156,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { type IEC61850Model } from '@/types/types'
-import { useGlobalStore } from '@/store';
+import { useGlobalStore } from '@/store'
 
 const router = useRouter()
 const step = ref(1)

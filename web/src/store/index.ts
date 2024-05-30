@@ -106,7 +106,7 @@ export const useGlobalStore = () => {
           port: item.port,
           modelHash: item.modelHash,
           isOnline: item.isOnline,
-          lastOnlineTime: new Date(item.lastOnlineTime),
+          lastOnlineTime: new Date(item.lastOnlineTime)
         }))
         this.stations = respStation
         console.log('stations', this.stations)

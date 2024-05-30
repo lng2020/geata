@@ -55,13 +55,13 @@
 </template>
 
 <script lang="ts" setup>
-import { useGlobalStore } from '@/store';
-import { storeToRefs } from 'pinia';
+import { useGlobalStore } from '@/store'
+import { storeToRefs } from 'pinia'
 
-const globalStore = useGlobalStore();
-const { stations } = storeToRefs(globalStore);
+const globalStore = useGlobalStore()
+const { stations } = storeToRefs(globalStore)
 
 const toggleOptions = (index: number) => {
-  stations.value[index].showOptions = !stations.value[index].showOptions;
-};
+  stations.value[index].showOptions = !stations.value[index].showOptions
+}
 </script>
