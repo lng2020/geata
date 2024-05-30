@@ -5,7 +5,6 @@ package app
 
 import (
 	"fmt"
-	"geata/internal/app/handler"
 	"geata/internal/app/logger"
 	"geata/internal/app/model"
 	"geata/internal/app/service"
@@ -112,13 +111,6 @@ func (app *App) InitDB() error {
 	return nil
 }
 
-func (app *App) RegisterHandlers() error {
-	handler.RegisterHandler(handler.ModbusHandlerType, handler.NewModbusHandler)
-	handler.RegisterHandler(handler.MQTTHandlerType, handler.NewMQTTHandler)
-	handler.RegisterHandler(handler.IEC61850HandlerType, handler.NewIEC61850Handler)
-	return nil
-}
-
 func (app *App) InitStations() error {
 	stationsInDB, err := model.GetAllStations(service.Engine)
 	if err != nil {
@@ -126,12 +118,7 @@ func (app *App) InitStations() error {
 	}
 
 	for _, stationInDB := range stationsInDB {
-		station := service.StationFromDB(stationInDB)
-		for _, handlerType := range handler.HandlerTypes {
-			config := station.Configs[handlerType]
-			station.Handlers[handlerType] = handler.SupportedHandler[handlerType](config)
-		}
-
+		station := service.StationInitFromDB(stationInDB)
 		app.Stations = append(app.Stations, station)
 	}
 	return nil
@@ -148,6 +135,14 @@ func (app *App) InitMQTTBroker() error {
 		return err
 	}
 
+	go func() {
+		err := app.mqttServer.Serve()
+		if err != nil {
+			slog.Error("Failed to start the MQTT server: ", err)
+		}
+		slog.Info("MQTT server started on", "port", strconv.Itoa(app.Config.MQTTBroker.Port))
+	}()
+
 	return nil
 }
 
@@ -162,11 +157,6 @@ func (app *App) Init() error {
 		return err
 	}
 
-	err = app.RegisterHandlers()
-	if err != nil {
-		return err
-	}
-
 	err = app.InitStations()
 	if err != nil {
 		return err
@@ -175,13 +165,11 @@ func (app *App) Init() error {
 }
 
 func (app *App) Start() error {
-	go func() {
-		err := app.mqttServer.Serve()
-		if err != nil {
-			slog.Error("Failed to start the MQTT server: ", err)
+	for _, station := range app.Stations {
+		for _, handler := range station.Handlers {
+			go handler.Handle(station.Datas[handler.Type()])
 		}
-		slog.Info("MQTT server started on", "port", strconv.Itoa(app.Config.MQTTBroker.Port))
-	}()
+	}
 	router := web.SetupRouter()
 	return router.Run(fmt.Sprintf(":%d", app.Config.Server.Port))
 }

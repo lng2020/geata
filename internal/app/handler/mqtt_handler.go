@@ -25,7 +25,7 @@ func (c MQTTHandlerConfig) Type() HandlerType {
 }
 
 func NewMQTTHandlerConfig(broker, clientID, username, password, topic string) HandlerConfig {
-	return MQTTHandlerConfig{
+	return &MQTTHandlerConfig{
 		Broker:   broker,
 		ClientID: clientID,
 		Username: username,
@@ -34,13 +34,12 @@ func NewMQTTHandlerConfig(broker, clientID, username, password, topic string) Ha
 	}
 }
 
-func NewMQTTHandler(hc HandlerConfig) Handler {
-	config := hc.(MQTTHandlerConfig)
+func (hc *MQTTHandlerConfig) NewHandler() Handler {
 	opts := mqtt.NewClientOptions()
-	opts.AddBroker(config.Broker)
-	opts.SetClientID(config.ClientID)
-	opts.SetUsername(config.Username)
-	opts.SetPassword(config.Password)
+	opts.AddBroker(hc.Broker)
+	opts.SetClientID(hc.ClientID)
+	opts.SetUsername(hc.Username)
+	opts.SetPassword(hc.Password)
 
 	client := mqtt.NewClient(opts)
 	if token := client.Connect(); token.Wait() && token.Error() != nil {
@@ -49,7 +48,7 @@ func NewMQTTHandler(hc HandlerConfig) Handler {
 
 	return &MQTTHandler{
 		client: client,
-		topic:  config.Topic,
+		topic:  hc.Topic,
 	}
 }
 

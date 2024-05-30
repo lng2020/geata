@@ -15,15 +15,8 @@ var HandlerTypes = []HandlerType{
 }
 
 type HandlerConfig interface {
+	NewHandler() Handler
 	Type() HandlerType
-}
-
-type HandlerFactory func(HandlerConfig) Handler
-
-var SupportedHandler = map[HandlerType]HandlerFactory{}
-
-func RegisterHandler(ht HandlerType, hf HandlerFactory) {
-	SupportedHandler[ht] = hf
 }
 
 type Handler interface {

@@ -10,36 +10,36 @@ import (
 )
 
 type Station struct {
-	ID             int64  `json:"id"`
-	Name           string `json:"name"`
-	Host           string `json:"host"`
-	Port           int64  `json:"port"`
-	ModelHash      string `json:"modelHash"`
-	IsOnline       bool   `json:"isOnline"`
-	LastOnlineTime string `json:"lastOnlineTime"`
-	Handlers       map[handler.HandlerType]handler.Handler
-	Configs        map[handler.HandlerType]handler.HandlerConfig
+	ID             int64                                         `json:"id"`
+	Name           string                                        `json:"name"`
+	Host           string                                        `json:"host"`
+	Port           int64                                         `json:"port"`
+	ModelHash      string                                        `json:"modelHash"`
+	IsOnline       bool                                          `json:"isOnline"`
+	LastOnlineTime string                                        `json:"lastOnlineTime"`
+	Handlers       map[handler.HandlerType]handler.Handler       `json:"-"`
+	Configs        map[handler.HandlerType]handler.HandlerConfig `json:"-"`
+	Datas          map[handler.HandlerType]chan string           `json:"-"`
 }
 
-func StationFromDB(stationFromDB *model.Station) *Station {
+func StationInitFromDB(stationFromDB *model.Station) *Station {
 	stationConfigs, err := model.GetStationConfigByStationID(Engine, stationFromDB.ID)
 	if err != nil {
 		return nil
 	}
-	ic := handler.NewIEC61850HandlerConfig(stationConfigs.IEC61850Host, strconv.Itoa(int(stationConfigs.IEC61850Port)))
-	mc := handler.NewModbusHandlerConfig(stationConfigs.ModbusURL)
-	mqc := handler.NewMQTTHandlerConfig(stationConfigs.MQTTBroker, stationConfigs.MQTTClientID, stationConfigs.MQTTUsername, stationConfigs.MQTTPassword, stationConfigs.MQTTTopic)
-	ih := handler.NewIEC61850Handler(ic)
-	mh := handler.NewModbusHandler(mc)
-	mqh := handler.NewMQTTHandler(mqc)
-
 	configs := make(map[handler.HandlerType]handler.HandlerConfig)
+	ic := handler.NewIEC61850HandlerConfig(stationConfigs.IEC61850Host, strconv.Itoa(int(stationConfigs.IEC61850Port)))
+	configs[ic.Type()] = ic
+	mc := handler.NewModbusHandlerConfig(stationConfigs.ModbusURL)
+	configs[mc.Type()] = mc
+	mqc := handler.NewMQTTHandlerConfig(stationConfigs.MQTTBroker, stationConfigs.MQTTClientID, stationConfigs.MQTTUsername, stationConfigs.MQTTPassword, stationConfigs.MQTTTopic)
+	configs[mqc.Type()] = mqc
+
 	handlers := make(map[handler.HandlerType]handler.Handler)
-	for _, h := range []handler.Handler{ih, mh, mqh} {
-		handlers[h.Type()] = h
-	}
-	for _, hc := range []handler.HandlerConfig{ic, mc, mqc} {
-		configs[hc.Type()] = hc
+	datas := make(map[handler.HandlerType]chan string)
+	for _, handlerType := range handler.HandlerTypes {
+		config := configs[handlerType]
+		handlers[handlerType] = config.NewHandler()
 	}
 
 	return &Station{
@@ -50,8 +50,21 @@ func StationFromDB(stationFromDB *model.Station) *Station {
 		ModelHash:      stationFromDB.ModelHash,
 		IsOnline:       stationFromDB.IsOnline,
 		LastOnlineTime: stationFromDB.LastOnlineTime.Format("2006-01-02 15:04:05"),
-		Handlers:       make(map[handler.HandlerType]handler.Handler),
-		Configs:        make(map[handler.HandlerType]handler.HandlerConfig),
+		Handlers:       handlers,
+		Configs:        configs,
+		Datas:          datas,
+	}
+}
+
+func StationFromDB(stationFromDB *model.Station) Station {
+	return Station{
+		ID:             stationFromDB.ID,
+		Name:           stationFromDB.Name,
+		Host:           stationFromDB.Host,
+		Port:           stationFromDB.Port,
+		ModelHash:      stationFromDB.ModelHash,
+		IsOnline:       stationFromDB.IsOnline,
+		LastOnlineTime: stationFromDB.LastOnlineTime.Format("2006-01-02 15:04:05"),
 	}
 }
 
@@ -64,7 +77,15 @@ func ListStations(c *gin.Context) {
 	stations, err := model.GetAllStations(Engine)
 	resp := make([]Station, 0)
 	for _, station := range stations {
-		resp = append(resp, *StationFromDB(station))
+		resp = append(resp, Station{
+			ID:             station.ID,
+			Name:           station.Name,
+			Host:           station.Host,
+			Port:           station.Port,
+			ModelHash:      station.ModelHash,
+			IsOnline:       station.IsOnline,
+			LastOnlineTime: station.LastOnlineTime.Format("2006-01-02 15:04:05"),
+		})
 	}
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -92,7 +113,7 @@ func GetStation(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, *resp)
+	c.JSON(http.StatusOK, resp)
 }
 
 // @Summary Create station

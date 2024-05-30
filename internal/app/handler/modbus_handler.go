@@ -21,14 +21,13 @@ func (c ModbusHandlerConfig) Type() HandlerType {
 }
 
 func NewModbusHandlerConfig(url string) HandlerConfig {
-	return ModbusHandlerConfig{
+	return &ModbusHandlerConfig{
 		URL: url,
 	}
 }
 
-func NewModbusHandler(hc HandlerConfig) Handler {
-	config := hc.(ModbusHandlerConfig)
-	client, err := modbus.NewClient(&modbus.ClientConfiguration{URL: config.URL})
+func (hc *ModbusHandlerConfig) NewHandler() Handler {
+	client, err := modbus.NewClient(&modbus.ClientConfiguration{URL: hc.URL})
 	if err != nil {
 		slog.Error("Failed to create modbus client", logger.ErrAttr(err))
 	}
@@ -36,6 +35,7 @@ func NewModbusHandler(hc HandlerConfig) Handler {
 }
 
 func (h *ModbusHandler) Handle(s chan string) {
+	slog.Info("ModbusHandler is not implemented")
 }
 
 func (h *ModbusHandler) ReadHoldingRegister(address uint16) (uint16, error) {

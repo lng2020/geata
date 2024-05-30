@@ -2,6 +2,7 @@ package handler
 
 import (
 	"geata/internal/app/client"
+	"log/slog"
 )
 
 type IEC61850Handler struct {
@@ -18,20 +19,20 @@ func (c IEC61850HandlerConfig) Type() HandlerType {
 }
 
 func NewIEC61850HandlerConfig(ip, port string) HandlerConfig {
-	return IEC61850HandlerConfig{
+	return &IEC61850HandlerConfig{
 		IP:   ip,
 		Port: port,
 	}
 }
 
-func NewIEC61850Handler(hc HandlerConfig) Handler {
-	config := hc.(IEC61850HandlerConfig)
-	client := client.NewIEC61850Client(config.IP, config.Port)
+func (hc *IEC61850HandlerConfig) NewHandler() Handler {
+	client := client.NewIEC61850Client(hc.IP, hc.Port)
 	return &IEC61850Handler{client: client}
 }
 
 func (h *IEC61850Handler) Handle(s chan string) {
-	h.client.Start(s)
+	slog.Info("IEC61850Handler is not implemented")
+	// h.client.Start(s)
 }
 
 func (h *IEC61850Handler) Close() {
