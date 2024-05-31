@@ -6,7 +6,7 @@ package model
 import "xorm.io/xorm"
 
 type MqttDetail struct {
-	ID     int64 `xorm:"pk autoincr 'id'" json:"ID"`
+	ID     int64 `xorm:"pk autoincr 'id'" json:"id"`
 	RuleID int64 `xorm:"'rule_id' index" json:"ruleID"`
 	// other fields specific to MqttDetail as needed.
 }

@@ -7,14 +7,14 @@ import (
 )
 
 type Node struct {
-	ID           int64     `xorm:"pk autoincr 'id'" json:"ID"`
-	DataObjectID int64     `xorm:"'data_object_id' index" json:"dataObjectID"`
+	ID           int64     `xorm:"pk autoincr 'id'" json:"id"`
+	DataObjectID int64     `xorm:"'data_object_id' index" json:"-"`
 	Name         string    `xorm:"'name'" json:"name"`
 	Value        string    `xorm:"'value'" json:"value"`
 	IEC61850Ref  string    `xorm:"'iec61850_ref'" json:"iec61850Ref"`
 	DataSource   string    `xorm:"'data_source'" json:"dataSource"`
-	CreatedAt    time.Time `xorm:"'created_at' created" json:"createdAt"`
-	UpdatedAt    time.Time `xorm:"'updated_at' updated" json:"updatedAt"`
+	CreatedAt    time.Time `xorm:"'created_at' created" json:"-"`
+	UpdatedAt    time.Time `xorm:"'updated_at' updated" json:"-"`
 }
 
 func (n *Node) TableName() string {
@@ -50,7 +50,7 @@ func GetNodeByRef(engine *xorm.Engine, ref string) (*Node, error) {
 	return node, nil
 }
 
-func GetNodesByDataObjectID(engine *xorm.Engine, dataObjectID int64) ([]*Node, error) {
+func GetNodeByDataObjectID(engine *xorm.Engine, dataObjectID int64) ([]*Node, error) {
 	var nodes []*Node
 	err := engine.Where("data_object_id = ?", dataObjectID).Find(&nodes)
 	if err != nil {

@@ -19,7 +19,7 @@ export interface Mapping {
 
 export interface DataAttribute {
   name: string
-  ref: string
+  iec61850Ref: string
   value: string
   dataSource: string
 }
@@ -27,10 +27,11 @@ export interface DataAttribute {
 export interface DataObject {
   name: string
   description: string
-  dataAttributes: DataAttribute[]
+  dataAttribute: DataAttribute[]
 }
 
 export interface LogicalNode {
+  id: number
   name: string
   description: string
 }

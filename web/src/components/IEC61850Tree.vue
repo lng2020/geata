@@ -12,35 +12,30 @@
             class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
-        <ul class="space-y-4">
-          <li v-for="(ied, iedIndex) in filteredModel" :key="iedIndex">
+        <div class="flex items-center space-x-2">
+          <span class="text-gray-800 font-medium">{{ model.name }}</span>
+        </div>
+        <ul v-if="model.logicalDevice && model.logicalDevice.length" class="ml-6 mt-2 space-y-2">
+          <li v-for="(ld, ldIndex) in model.logicalDevice" :key="ldIndex">
             <div class="flex items-center space-x-2">
-              <span class="text-gray-800 font-medium">{{ ied.name }}</span>
+              <span class="text-gray-600">{{ ld.name }}</span>
             </div>
-            <ul v-if="ied.logicalDevice && ied.logicalDevice.length" class="ml-6 mt-2 space-y-2">
-              <li v-for="(ld, ldIndex) in ied.logicalDevice" :key="ldIndex">
-                <div class="flex items-center space-x-2">
-                  <span class="text-gray-600">{{ ld.name }}</span>
-                </div>
-                <ul v-if="ld.logicalNode && ld.logicalNode.length" class="ml-10 mt-2 space-y-1">
-                  <li v-for="(ln, lnIndex) in ld.logicalNode" :key="lnIndex">
-                    <a
-                      href="#"
-                      @click.prevent="selectLogicalNode(ln.name)"
-                      :class="{ 'text-blue-600': selectedLN === ln.name }"
-                      class="hover:text-blue-600 focus:outline-none"
-                    >
-                      {{ ln.name }}
-                    </a>
-                  </li>
-                </ul>
+            <ul v-if="ld.logicalNode && ld.logicalNode.length" class="ml-10 mt-2 space-y-1">
+              <li v-for="(ln, lnIndex) in ld.logicalNode" :key="lnIndex">
+                <a
+                  href="#"
+                  @click.prevent="setlnId(ln.id)"
+                  :class="{ 'text-blue-600': lnId === ln.id }"
+                  class="hover:text-blue-600 focus:outline-none"
+                >
+                  {{ ln.name }}
+                </a>
               </li>
             </ul>
           </li>
         </ul>
       </div>
 
-      <!-- Right Side: Logical Node Details -->
       <div class="w-3/4 p-6">
         <div class="flex justify-between items-center mb-4">
           <h3 class="text-xl font-semibold">{{ $t('logicalNodeDetails') }}</h3>
@@ -59,7 +54,7 @@
             </button>
           </div>
         </div>
-        <template v-if="selectedLogicalNode">
+        <div v-if="dataObjects">
           <table class="w-full border-collapse bg-white rounded-lg shadow-sm">
             <thead>
               <tr class="bg-gray-200 text-gray-700">
@@ -71,31 +66,28 @@
               </tr>
             </thead>
             <tbody>
-              <template
-                v-for="(dObj, dObjIndex) in selectedLogicalNode.dataObjects"
-                :key="dObjIndex"
-              >
+              <template v-for="(dObj, dObjIndex) in dataObjects" :key="dObjIndex">
                 <tr
-                  v-for="(dAttr, dAttrIndex) in dObj.dataAttributes"
+                  v-for="(dAttr, dAttrIndex) in dObj.dataAttribute"
                   :key="dAttrIndex"
                   class="border-t"
                 >
                   <td
                     v-if="dAttrIndex === 0"
-                    :rowspan="dObj.dataAttributes.length"
+                    :rowspan="dObj.dataAttribute.length"
                     class="px-4 py-2 align-top"
                   >
                     {{ dObj.name }}
                   </td>
                   <td class="px-4 py-2">{{ dAttr.name }}</td>
-                  <td class="px-4 py-2">{{ dAttr.ref }}</td>
+                  <td class="px-4 py-2">{{ dAttr.iec61850Ref }}</td>
                   <td class="px-4 py-2">{{ dAttr.value }}</td>
                   <td class="px-4 py-2">{{ dAttr.dataSource }}</td>
                 </tr>
               </template>
             </tbody>
           </table>
-        </template>
+        </div>
         <p v-else class="text-gray-600">{{ $t('selectNode') }}</p>
       </div>
     </div>
@@ -103,41 +95,46 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, reactive } from 'vue'
-import { useGlobalStore } from '@/store'
+import { ref, onMounted } from 'vue'
+import type { IEC61850Model, DataObject } from '@/types/types'
+import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
-const store = useGlobalStore()
-let model = reactive(store.model)
-let logicalNodes = reactive(store.logicalNodes)
+const router = useRouter()
+const searchQuery = useI18n().t('searchPlaceholder')
+let model = ref<IEC61850Model>({} as IEC61850Model)
+const lnId = ref<number>()
+const modelId = router.currentRoute.value.params.id
 
-const selectedLN = ref('')
-const searchQuery = ref('')
-
-const filteredModel = computed(() => {
-  if (searchQuery.value === '') {
-    return model
-  } else {
-    return model.filter((ied) => {
-      return ied.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-    })
-  }
+onMounted(async () => {
+  const id = Number(modelId)
+  model.value = await fetchModelById(id)
 })
 
-const selectedLogicalNode = computed(() => {
-  return logicalNodes.find((ln) => ln.name === selectedLN.value)
-})
+let dataObjects = ref<DataObject[]>([])
 
-function selectLogicalNode(lnName: string) {
-  selectedLN.value = lnName
+async function setlnId(id: number) {
+  lnId.value = id
+  dataObjects.value = await fetchDataObjectsByLogicalNodeId(id)
+}
+
+async function fetchModelById(id: number): Promise<IEC61850Model> {
+  const response = await fetch(`/api/iec61850/model/${id}`)
+  const data = await response.json()
+  return data
+}
+
+async function fetchDataObjectsByLogicalNodeId(id: number): Promise<DataObject[]> {
+  const response = await fetch(`/api/iec61850/logical_node/${id}/data_object`)
+  const data = await response.json()
+  return data
 }
 
 function exportData() {
-  // Implement export functionality here
   console.log('Exporting data...')
 }
 
 function refreshData() {
-  // Implement refresh functionality here
   console.log('Refreshing data...')
 }
 </script>

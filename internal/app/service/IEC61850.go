@@ -27,6 +27,7 @@ type LogicalDevice struct {
 }
 
 type LogicalNode struct {
+	ID          int64  `json:"id"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
 }
@@ -49,20 +50,51 @@ type IEC61850ModelFileParsedResult struct {
 // @produce json
 // @param id path int true "IEC61850 model ID"
 // @success 200 {object} IEC61850Model
-// @router /api/v1/iec61850/model/{id} [get]
+// @router /api/v1/iec61850/model/{model_id} [get]
 func GetIEC61850ModelByID(c *gin.Context) {
-	ID := c.Param("id")
+	ID := c.Param("model_id")
 	modelID, err := strconv.Atoi(ID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	model, err := model.GetIEC61850ModelByID(Engine, int64(modelID))
+	iec61850Model, err := model.GetIEC61850ModelByID(Engine, int64(modelID))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, model)
+	LDs, err := model.GetLogicalDeviceByModelID(Engine, iec61850Model.ID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	resp := IEC61850Model{
+		Name:          iec61850Model.Name,
+		Description:   iec61850Model.Description,
+		LogicalDevice: make([]LogicalDevice, 0),
+	}
+	for _, ld := range LDs {
+		logicalDevice := LogicalDevice{
+			Name:        ld.Name,
+			Description: ld.Description,
+			LogicalNode: make([]LogicalNode, 0),
+		}
+		LNs, err := model.GetLogicalNodeByLogicalDeviceID(Engine, ld.ID)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		for _, ln := range LNs {
+			logicalNode := LogicalNode{
+				ID:          ln.ID,
+				Name:        ln.Name,
+				Description: ln.Description,
+			}
+			logicalDevice.LogicalNode = append(logicalDevice.LogicalNode, logicalNode)
+		}
+		resp.LogicalDevice = append(resp.LogicalDevice, logicalDevice)
+	}
+	c.JSON(http.StatusOK, resp)
 }
 
 // @summary Get DataObject by ID
@@ -84,6 +116,45 @@ func GetDataObjectByID(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, dataObject)
+}
+
+// @summary Get DataObject by LogicalNode ID
+// @tags IEC61850
+// @produce json
+// @param id path int true "LogicalNode ID"
+// @success 200 {array} DataObject
+// @router /api/v1/iec61850/logical_node/{logical_node_id}/data_object [get]
+func GetDataObjectByLogicalNodeID(c *gin.Context) {
+	ID := c.Param("logical_node_id")
+	logicalNodeID, err := strconv.Atoi(ID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	dataObjects, err := model.GetDataObjectByLogicalNodeID(Engine, int64(logicalNodeID))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	resp := make([]DataObject, 0)
+	for _, dataObject := range dataObjects {
+		do := DataObject{
+			Name:          dataObject.Name,
+			Description:   dataObject.Description,
+			DataAttribute: make([]DataAttribute, 0),
+		}
+		DAs, err := model.GetNodeByDataObjectID(Engine, dataObject.ID)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		for _, da := range DAs {
+			dataAttribute := DataAttribute(*da)
+			do.DataAttribute = append(do.DataAttribute, dataAttribute)
+		}
+		resp = append(resp, do)
+	}
+	c.JSON(http.StatusOK, resp)
 }
 
 // @summary Get Node by ID
@@ -129,14 +200,14 @@ func GetNodeByRef(c *gin.Context) {
 // @param object_id path int true "DataObject ID"
 // @success 200 {array} DataAttribute
 // @router /api/v1/iec61850/data_object/{object_id}/node [get]
-func GetNodesByDataObjectID(c *gin.Context) {
+func GetNodeByDataObjectID(c *gin.Context) {
 	ID := c.Param("id")
 	dataObjectID, err := strconv.Atoi(ID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	nodes, err := model.GetNodesByDataObjectID(Engine, int64(dataObjectID))
+	nodes, err := model.GetNodeByDataObjectID(Engine, int64(dataObjectID))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

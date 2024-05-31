@@ -85,43 +85,37 @@ export const useAuthStore = defineStore({
     }
   }
 })
-export const useGlobalStore = () => {
-  const innerStore = defineStore({
-    id: 'global',
-    state: () => ({
-      stations: [] as Station[],
-      mappings: [] as Mapping[],
-      models: [] as IEC61850Model[],
-      logicalNodes: [] as LogicalNode[],
-      auditLogs: [] as AuditLog[]
-    }),
-    actions: {
-      async fetchStations() {
-        const response = await fetch('/api/stations')
-        const data = await response.json()
-        const respStation: Station[] = data.map((item: any) => ({
-          id: item.id,
-          name: item.name,
-          host: item.host,
-          port: item.port,
-          modelHash: item.modelHash,
-          isOnline: item.isOnline,
-          lastOnlineTime: new Date(item.lastOnlineTime)
-        }))
-        this.stations = respStation
-        console.log('stations', this.stations)
-      },
-      getStationByID(ID: number): Station | undefined {
-        return this.stations.find((station) => station.id === ID)
-      },
-      async fetchMappings() {
-        const response = await fetch('/api/mappings')
-        const data = await response.json()
-        this.mappings = data
-      }
+export const useGlobalStore = defineStore({
+  id: 'global',
+  state: () => ({
+    stations: [] as Station[],
+    mappings: [] as Mapping[],
+    models: [] as IEC61850Model[],
+    logicalNodes: [] as LogicalNode[],
+    auditLogs: [] as AuditLog[]
+  }),
+  actions: {
+    async fetchStations() {
+      const response = await fetch('/api/stations')
+      const data = await response.json()
+      const respStation: Station[] = data.map((item: any) => ({
+        id: item.id,
+        name: item.name,
+        host: item.host,
+        port: item.port,
+        modelHash: item.modelHash,
+        isOnline: item.isOnline,
+        lastOnlineTime: new Date(item.lastOnlineTime)
+      }))
+      this.stations = respStation
+    },
+    getStationById(id: number): Station | undefined {
+      return this.stations.find((station) => station.id === id)
+    },
+    async fetchMappings() {
+      const response = await fetch('/api/mappings')
+      const data = await response.json()
+      this.mappings = data
     }
-  })
-  const store = innerStore()
-  store.fetchStations()
-  return store
-}
+  }
+})

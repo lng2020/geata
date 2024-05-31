@@ -182,7 +182,7 @@ onMounted(() => {
   const id = route.params.id
   if (typeof id === 'string') {
     ID.value = parseInt(id, 10)
-    station.value = store.getStationByID(ID.value)
+    station.value = store.getStationById(ID.value)
     editedStation.value = station.value
   } else {
     console.error('Invalid power station ID')

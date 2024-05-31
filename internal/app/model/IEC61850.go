@@ -27,7 +27,7 @@ func (ld *LogicalDevice) TableName() string {
 }
 
 type LogicalNode struct {
-	ID              int64  `xorm:"pk autoincr 'id'" json:"ID"`
+	ID              int64  `xorm:"pk autoincr 'id'" json:"id"`
 	LogicalDeviceID int64  `xorm:"'logical_device_id' index" json:"logicalDeviceID"`
 	Name            string `xorm:"'name'" json:"name"`
 	Description     string `xorm:"'description'" json:"description"`
@@ -102,6 +102,15 @@ func DeleteLogicalDevice(engine *xorm.Engine, logicalDevice *LogicalDevice) erro
 	return err
 }
 
+func GetLogicalDeviceByModelID(engine *xorm.Engine, modelID int64) ([]LogicalDevice, error) {
+	logicalDevices := make([]LogicalDevice, 0)
+	err := engine.Where("model_id = ?", modelID).Find(&logicalDevices)
+	if err != nil {
+		return nil, err
+	}
+	return logicalDevices, nil
+}
+
 func CreateLogicalNode(engine *xorm.Engine, logicalNode *LogicalNode) error {
 	_, err := engine.Insert(logicalNode)
 	return err
@@ -119,6 +128,15 @@ func GetLogicalNodeByID(engine *xorm.Engine, id int64) (*LogicalNode, error) {
 	return logicalNode, nil
 }
 
+func GetLogicalNodeByLogicalDeviceID(engine *xorm.Engine, logicalDeviceID int64) ([]LogicalNode, error) {
+	logicalNodes := make([]LogicalNode, 0)
+	err := engine.Where("logical_device_id = ?", logicalDeviceID).Find(&logicalNodes)
+	if err != nil {
+		return nil, err
+	}
+	return logicalNodes, nil
+}
+
 func UpdateLogicalNode(engine *xorm.Engine, logicalNode *LogicalNode) error {
 	_, err := engine.ID(logicalNode.ID).Update(logicalNode)
 	return err
@@ -132,6 +150,15 @@ func DeleteLogicalNode(engine *xorm.Engine, logicalNode *LogicalNode) error {
 func CreateDataObject(engine *xorm.Engine, dataObject *DataObject) error {
 	_, err := engine.Insert(dataObject)
 	return err
+}
+
+func GetDataObjectByLogicalNodeID(engine *xorm.Engine, logicalNodeID int64) ([]DataObject, error) {
+	dataObjects := make([]DataObject, 0)
+	err := engine.Where("logical_node_id = ?", logicalNodeID).Find(&dataObjects)
+	if err != nil {
+		return nil, err
+	}
+	return dataObjects, nil
 }
 
 func GetDataObjectByID(engine *xorm.Engine, id int64) (*DataObject, error) {

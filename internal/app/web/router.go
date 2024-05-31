@@ -115,8 +115,7 @@ func SetupRouter() *gin.Engine {
 		v1.GET("/modbus_detail/:rule_id", service.GetModbusDetailByRuleID)
 
 		v1.GET("/iec61850/model/:model_id", service.GetIEC61850ModelByID)
-		v1.GET("/iec61850/data_object/:object_id", service.GetDataObjectByID)
-		v1.GET("/iec61850/data_object/:object_id/node", service.GetNodesByDataObjectID)
+		v1.GET("/iec61850/logical_node/:logical_node_id/data_object", service.GetDataObjectByLogicalNodeID)
 		v1.GET("/iec61850/node/:id", service.GetNodeByID)
 		v1.GET("/iec61850/node/ref/:ref", service.GetNodeByRef)
 		v1.PUT("/iec61850/node/:id/data_source", service.UpdateNodeDataSource)

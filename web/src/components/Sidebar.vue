@@ -57,6 +57,11 @@
 <script lang="ts" setup>
 import { useGlobalStore } from '@/store'
 import { storeToRefs } from 'pinia'
+import { onMounted } from 'vue'
+
+onMounted(() => {
+  useGlobalStore().fetchStations()
+})
 
 const globalStore = useGlobalStore()
 const { stations } = storeToRefs(globalStore)

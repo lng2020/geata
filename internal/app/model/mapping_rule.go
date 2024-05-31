@@ -10,7 +10,7 @@ import (
 )
 
 type MappingRule struct {
-	ID          int64     `xorm:"pk autoincr 'id'" json:"ID"`
+	ID          int64     `xorm:"pk autoincr 'id'" json:"id"`
 	StationID   int64     `xorm:"'station_id' index" json:"stationID"`
 	IEC61850Ref string    `xorm:"'iec61850_ref'" json:"iec61850Ref"`
 	Type        string    `xorm:"'type'" json:"type"`
