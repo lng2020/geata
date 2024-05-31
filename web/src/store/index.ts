@@ -96,7 +96,7 @@ export const useGlobalStore = defineStore({
   }),
   actions: {
     async fetchStations() {
-      const response = await fetch('/api/stations')
+      const response = await fetch('/api/station')
       const data = await response.json()
       const respStation: Station[] = data.map((item: any) => ({
         id: item.id,

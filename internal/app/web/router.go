@@ -96,19 +96,19 @@ func SetupRouter() *gin.Engine {
 			user.PATCH("/lang", service.UpdateUserLang)
 		}
 
-		v1.GET("/stations", service.ListStations)
+		v1.GET("/station", service.ListStations)
 		{
-			v1.GET("/stations/:station_id", service.GetStation)
-			v1.POST("/stations", service.CreateStation)
-			v1.PUT("/stations/:station_id", service.UpdateStation)
-			v1.DELETE("/stations/:station_id", service.DeleteStation)
+			v1.GET("/station/:station_id", service.GetStation)
+			v1.POST("/station", service.CreateStation)
+			v1.PUT("/station/:station_id", service.UpdateStation)
+			v1.DELETE("/station/:station_id", service.DeleteStation)
 		}
 
-		v1.GET("/stations/:station_id/mapping_rules", service.ListMappingRulesForStation)
+		v1.GET("/station/:station_id/mapping_rule", service.ListMappingRulesForStation)
 
 		{
-			v1.GET("/mapping_rules/:rule_id", service.GetMappingRuleByID)
-			v1.PUT("/mapping_rules/:rule_id", service.UpdateMappingRule)
+			v1.GET("/mapping_rule/:rule_id", service.GetMappingRuleByID)
+			v1.PUT("/mapping_rule/:rule_id", service.UpdateMappingRule)
 		}
 
 		v1.GET("/mqtt_detail/:rule_id", service.GetMqttDetailByRuleID)
@@ -119,7 +119,6 @@ func SetupRouter() *gin.Engine {
 		v1.GET("/iec61850/node/:id", service.GetNodeByID)
 		v1.GET("/iec61850/node/ref/:ref", service.GetNodeByRef)
 		v1.PUT("/iec61850/node/:id/data_source", service.UpdateNodeDataSource)
-
 		v1.POST("iec61850/upload", service.UploadIEC61850ModleFile)
 
 		v1.GET("/audit_log/:log_id", service.GetAuditLogByID)

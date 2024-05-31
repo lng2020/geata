@@ -278,7 +278,7 @@ paths:
       summary: Get Node by IEC61850 reference
       tags:
       - IEC61850
-  /api/v1/mapping_rules/{id}:
+  /api/v1/mapping_rule/{id}:
     delete:
       parameters:
       - description: MappingRule ID
@@ -360,7 +360,7 @@ paths:
       summary: Get MqttDetail by RuleID
       tags:
       - MqttDetail
-  /api/v1/stations:
+  /api/v1/station:
     get:
       description: List all stations
       produces:
@@ -390,7 +390,7 @@ paths:
           schema:
             $ref: '#/definitions/service.Station'
       summary: Create station
-  /api/v1/stations/{station_id}:
+  /api/v1/station/{station_id}:
     delete:
       description: Delete station by ID
       parameters:
@@ -445,7 +445,7 @@ paths:
           schema:
             $ref: '#/definitions/service.Station'
       summary: Update station by ID
-  /api/v1/stations/{stationID}/mapping_rules:
+  /api/v1/station/{stationID}/mapping_rule:
     get:
       parameters:
       - description: Station ID

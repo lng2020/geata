@@ -72,7 +72,7 @@ func StationFromDB(stationFromDB *model.Station) Station {
 // @Description List all stations
 // @Produce json
 // @Success 200 {object} []Station
-// @Router /api/v1/stations [get]
+// @Router /api/v1/station [get]
 func ListStations(c *gin.Context) {
 	stations, err := model.GetAllStations(Engine)
 	resp := make([]Station, 0)
@@ -99,7 +99,7 @@ func ListStations(c *gin.Context) {
 // @Produce json
 // @Param station_id path int true "Station ID"
 // @Success 200 {object} Station
-// @Router /api/v1/stations/{station_id} [get]
+// @Router /api/v1/station/{station_id} [get]
 func GetStation(c *gin.Context) {
 	ID := c.Param("station_id")
 	statoinID, err := strconv.Atoi(ID)
@@ -121,7 +121,7 @@ func GetStation(c *gin.Context) {
 // @Produce json
 // @Param station body Station true "Station"
 // @Success 200 {object} Station
-// @Router /api/v1/stations [post]
+// @Router /api/v1/station [post]
 func CreateStation(c *gin.Context) {
 	station := &Station{}
 	err := c.BindJSON(station)
@@ -172,7 +172,7 @@ func CreateStation(c *gin.Context) {
 // @Param station_id path int true "Station ID"
 // @Param station body Station true "Station"
 // @Success 200 {object} Station
-// @Router /api/v1/stations/{station_id} [put]
+// @Router /api/v1/station/{station_id} [put]
 func UpdateStation(c *gin.Context) {
 	station := &Station{}
 	err := c.BindJSON(station)
@@ -198,7 +198,7 @@ func UpdateStation(c *gin.Context) {
 // @Produce json
 // @Param station_id path int true "Station ID"
 // @Success 200 {object} Station
-// @Router /api/v1/stations/{station_id} [delete]
+// @Router /api/v1/station/{station_id} [delete]
 func DeleteStation(c *gin.Context) {
 	ID := c.Param("station_id")
 	statoinID, err := strconv.Atoi(ID)

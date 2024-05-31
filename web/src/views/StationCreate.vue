@@ -225,7 +225,7 @@ async function uploadICDFile(file: File) {
 
 async function createStation() {
   try {
-    const response = await fetch('/api/stations', {
+    const response = await fetch('/api/station', {
       method: 'POST',
       body: JSON.stringify({
         name: stationName.value,

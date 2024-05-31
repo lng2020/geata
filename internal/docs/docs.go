@@ -248,7 +248,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/mapping_rules/{id}": {
+        "/api/v1/mapping_rule/{id}": {
             "get": {
                 "tags": [
                     "MappingRule"
@@ -375,7 +375,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/stations": {
+        "/api/v1/station": {
             "get": {
                 "description": "List all stations",
                 "produces": [
@@ -421,7 +421,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/stations/{stationID}/mapping_rules": {
+        "/api/v1/station/{stationID}/mapping_rule": {
             "get": {
                 "tags": [
                     "MappingRule"
@@ -449,7 +449,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/stations/{station_id}": {
+        "/api/v1/station/{station_id}": {
             "get": {
                 "description": "Get station by ID",
                 "produces": [
