@@ -9,7 +9,7 @@
         <font-awesome-icon icon="fa-solid fa-home" class="text-lg mr-3"></font-awesome-icon>
         <span>{{ $t('dashboard') }}</span>
       </router-link>
-      <div v-for="(station, index) in stations" :key="index" class="mt-4">
+      <div v-for="(station, index) in stations" :key="index">
         <button
           @click="toggleOptions(index)"
           class="flex items-center justify-between w-full px-5 py-3 text-white hover:bg-gray-700"
@@ -50,20 +50,34 @@
           </router-link>
         </div>
       </div>
+      <router-link :to="{ path: '/user' }" class="flex items-center px-5 py-3 text-white hover:bg-gray-700">
+        <font-awesome-icon icon="fa-solid fa-user" class="text-lg mr-3"></font-awesome-icon>
+        <span>{{ $t('settings') }}</span>
+      </router-link>
+      <router-link
+        v-if="user?.role === 'admin'"
+        :to="{ path: '/management' }"
+        class="flex items-center px-5 py-3 text-white hover:bg-gray-700"
+      >
+        <font-awesome-icon icon="fa-solid fa-home" class="text-lg mr-3"></font-awesome-icon>
+        <span>{{ $t('management') }}</span>
+      </router-link>
     </nav>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { useGlobalStore } from '@/store'
+import { useAuthStore, useGlobalStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { onMounted } from 'vue'
 
+const globalStore = useGlobalStore()
+const authStore = useAuthStore()
+const user = authStore.user
 onMounted(() => {
-  useGlobalStore().fetchStations()
+  globalStore.fetchStations()
 })
 
-const globalStore = useGlobalStore()
 const { stations } = storeToRefs(globalStore)
 
 const toggleOptions = (index: number) => {

@@ -40,17 +40,15 @@
       <table class="w-full text-left">
         <thead class="bg-gray-100">
           <tr>
-            <th class="px-4 py-3">Username</th>
-            <th class="px-4 py-3">Email</th>
-            <th class="px-4 py-3">Role</th>
-            <th class="px-4 py-3">Status</th>
-            <th class="px-4 py-3">Actions</th>
+            <th class="px-4 py-3">{{ $t('username') }}</th>
+            <th class="px-4 py-3">{{ $t('role') }}</th>
+            <th class="px-4 py-3">{{ $t('status') }}</th>
+            <th class="px-4 py-3">{{ $t('Actions') }}</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="user in users" :key="user.id" class="border-b">
             <td class="px-4 py-2">{{ user.username }}</td>
-            <td class="px-4 py-2">{{ user.email }}</td>
             <td class="px-4 py-2">{{ user.role }}</td>
             <td class="px-4 py-2">{{ user.status }}</td>
             <td class="px-4 py-2 space-x-1">
