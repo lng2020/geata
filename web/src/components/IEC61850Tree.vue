@@ -1,8 +1,8 @@
 <template>
   <div class="container mx-auto px-2 py-2">
     <h2 class="text-3xl font-bold mb-6">{{ $t('iec61850ExplorerTitle') }}</h2>
-    <div class="flex border rounded-lg shadow-md">
-      <div class="w-1/4 bg-gray-100 p-6 border-r">
+    <div class="flex border rounded-lg shadow-md bg-white">
+      <div class="w-1/4 p-6 border-r">
         <h3 class="text-xl font-semibold mb-4">{{ $t('iec61850Model') }}</h3>
         <div class="mb-4">
           <input

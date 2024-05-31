@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto px-2 py-2 bg-white shadow rounded-lg">
+  <div class="container mx-auto px-2 py-2">
     <h1 class="text-3xl font-bold mb-6">{{ $t('userManagement') }}</h1>
     <div class="flex justify-between items-center mb-6">
       <div class="flex space-x-2">
