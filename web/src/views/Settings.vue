@@ -129,7 +129,7 @@
                       }}</label>
                       <input
                         type="text"
-                        v-model="mqttServerAddress"
+                        v-model="mqttConfig.broker"
                         class="w-full border border-gray-400 hover:border-gray-500 px-2 py-1 rounded shadow focus:outline-none focus:shadow-outline"
                       />
                     </div>
@@ -139,7 +139,7 @@
                       }}</label>
                       <input
                         type="number"
-                        v-model="mqttServerPort"
+                        v-model="mqttConfig.clientId"
                         class="w-full border border-gray-400 hover:border-gray-500 px-2 py-1 rounded shadow focus:outline-none focus:shadow-outline"
                       />
                     </div>
@@ -149,7 +149,7 @@
                       }}</label>
                       <input
                         type="text"
-                        v-model="mqttUsername"
+                        v-model="mqttConfig.username"
                         class="w-full border border-gray-400 hover:border-gray-500 px-2 py-1 rounded shadow focus:outline-none focus:shadow-outline"
                       />
                     </div>
@@ -159,7 +159,7 @@
                       }}</label>
                       <input
                         type="password"
-                        v-model="mqttPassword"
+                        v-model="mqttConfig.password"
                         class="w-full border border-gray-400 hover:border-gray-500 px-2 py-1 rounded shadow focus:outline-none focus:shadow-outline"
                       />
                     </div>
@@ -186,7 +186,7 @@
                     }}</label>
                     <input
                       type="text"
-                      v-model="iec61850Host"
+                      v-model="iec61850Config.host"
                       class="w-full border border-gray-400 hover:border-gray-500 px-2 py-1 rounded shadow focus:outline-none focus:shadow-outline"
                     />
                   </div>
@@ -196,7 +196,7 @@
                     }}</label>
                     <input
                       type="number"
-                      v-model="iec61850Port"
+                      v-model="iec61850Config.port"
                       class="w-full border border-gray-400 hover:border-gray-500 px-2 py-1 rounded shadow focus:outline-none focus:shadow-outline"
                     />
                   </div>
@@ -220,7 +220,7 @@
                     <label class="block text-gray-700 font-bold mb-2">{{ $t('url') }}</label>
                     <input
                       type="text"
-                      v-model="modbusUrl"
+                      v-model="modbusConfig.url"
                       class="w-full border border-gray-400 hover:border-gray-500 px-2 py-1 rounded shadow focus:outline-none focus:shadow-outline"
                     />
                   </div>
@@ -275,32 +275,66 @@
 
 <script setup lang="ts">
 import { useGlobalStore } from '@/store'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import type { Station } from '@/types/types'
+import type { Station, MQTTConfig, IEC61850Config, ModbusConfig } from '@/types/types'
 
 interface Rule {
   condition: string
   notification: string
 }
+
 const store = useGlobalStore()
 const router = useRouter()
-const stationId = Number(router.currentRoute.value.params.id)
-const station = store.stations.find((s) => s.id === stationId)
-if (!station) {
-  router.push('/error')
+
+let rawStation = ref<Station>({} as Station)
+let editedStation = ref<Station>({} as Station)
+let mqttConfig = ref<MQTTConfig>({} as MQTTConfig)
+let iec61850Config = ref<IEC61850Config>({} as IEC61850Config)
+let modbusConfig = ref<ModbusConfig>({} as ModbusConfig)
+
+onMounted(async () => {
+  const stationId = Number(router.currentRoute.value.params.id)
+  const station = store.stations.find((s) => s.id === stationId)
+  if (!station) {
+    router.push('/error')
+  }
+  rawStation = ref<Station>(station as Station)
+  editedStation = ref<Station>(station as Station)
+  fetchStationIEC61850Config(stationId)
+  fetchStationModbusConfig(stationId)
+  fetchStationMQTTConfig(stationId)
+})
+
+const fetchStationIEC61850Config = async (stationId: number) => {
+  try {
+    const response = await fetch(`/api/station/${stationId}/config/iec61850`)
+    const data = await response.json()
+    iec61850Config.value = data
+  } catch (error) {
+    console.error('Failed to fetch IEC61850 configuration:', error)
+  }
 }
-let rawStation = ref<Station>(station as Station)
-let editedStation = ref<Station>(station as Station)
-const mqttServerAddress = ref('')
-const mqttServerPort = ref(0)
-const mqttUsername = ref('')
-const mqttPassword = ref('')
 
-const iec61850Host = ref('')
-const iec61850Port = ref(0)
+const fetchStationModbusConfig = async (stationId: number) => {
+  try {
+    const response = await fetch(`/api/station/${stationId}/config/modbus`)
+    const data = await response.json()
+    modbusConfig.value = data
+  } catch (error) {
+    console.error('Failed to fetch Modbus configuration:', error)
+  }
+}
 
-const modbusUrl = ref('')
+const fetchStationMQTTConfig = async (stationId: number) => {
+  try {
+    const response = await fetch(`/api/station/${stationId}/config/mqtt`)
+    const data = await response.json()
+    mqttConfig.value = data
+  } catch (error) {
+    console.error('Failed to fetch MQTT configuration:', error)
+  }
+}
 
 const testMqttConnection = () => {
   // TODO: Implement MQTT connection test

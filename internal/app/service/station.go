@@ -22,6 +22,23 @@ type Station struct {
 	Datas          map[handler.HandlerType]chan string           `json:"-"`
 }
 
+type IEC61750Config struct {
+	Host string `json:"host"`
+	Port int    `json:"port"`
+}
+
+type ModbusConfig struct {
+	URL string `json:"url"`
+}
+
+type MQTTConfig struct {
+	Broker   string `json:"broker"`
+	ClientID string `json:"clientId"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Topic    string `json:"topic"`
+}
+
 func StationInitFromDB(stationFromDB *model.Station) *Station {
 	stationConfigs, err := model.GetStationConfigByStationID(Engine, stationFromDB.ID)
 	if err != nil {
@@ -217,4 +234,81 @@ func DeleteStation(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, station)
+}
+
+// @Summary Get Station IEC61850 Config by ID
+// @Description Get Station IEC61850 Config by ID
+// @Produce json
+// @Param station_id path int true "Station ID"
+// @Success 200 {object} IEC61850HandlerConfig
+// @Router /api/v1/station/{station_id}/config/iec61850 [get]
+func GetIEC61850ConfigForStation(c *gin.Context) {
+	ID := c.Param("station_id")
+	statoinID, err := strconv.Atoi(ID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	stationConfig, err := model.GetStationConfigByStationID(Engine, int64(statoinID))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	resp := IEC61750Config{
+		Host: stationConfig.IEC61850Host,
+		Port: int(stationConfig.IEC61850Port),
+	}
+	c.JSON(http.StatusOK, resp)
+}
+
+// @Summary Get Station Modbus Config by ID
+// @Description Get Station Modbus Config by ID
+// @Produce json
+// @Param station_id path int true "Station ID"
+// @Success 200 {object} ModbusHandlerConfig
+// @Router /api/v1/station/{station_id}/config/modbus [get]
+func GetModbusConfigForStation(c *gin.Context) {
+	ID := c.Param("station_id")
+	statoinID, err := strconv.Atoi(ID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	stationConfig, err := model.GetStationConfigByStationID(Engine, int64(statoinID))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	resp := ModbusConfig{
+		URL: stationConfig.ModbusURL,
+	}
+	c.JSON(http.StatusOK, resp)
+}
+
+// @Summary Get Station MQTT Config by ID
+// @Description Get Station MQTT Config by ID
+// @Produce json
+// @Param station_id path int true "Station ID"
+// @Success 200 {object} MQTTHandlerConfig
+// @Router /api/v1/station/{station_id}/config/mqtt [get]
+func GetMqttConfigForStation(c *gin.Context) {
+	ID := c.Param("station_id")
+	statoinID, err := strconv.Atoi(ID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	stationConfig, err := model.GetStationConfigByStationID(Engine, int64(statoinID))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	resp := MQTTConfig{
+		Broker:   stationConfig.MQTTBroker,
+		ClientID: stationConfig.MQTTClientID,
+		Username: stationConfig.MQTTUsername,
+		Password: stationConfig.MQTTPassword,
+		Topic:    stationConfig.MQTTTopic,
+	}
+	c.JSON(http.StatusOK, resp)
 }

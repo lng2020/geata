@@ -71,3 +71,20 @@ export interface DataSource {
   name: string
   status: string
 }
+
+export interface IEC61850Config {
+  host: string
+  port: number
+}
+
+export interface ModbusConfig {
+  url: string
+}
+
+export interface MQTTConfig {
+  broker: string
+  clientId: string
+  username: string
+  password: string
+  topic: string
+}

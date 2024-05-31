@@ -105,6 +105,9 @@ func SetupRouter() *gin.Engine {
 		}
 
 		v1.GET("/station/:station_id/mapping_rule", service.ListMappingRulesForStation)
+		v1.GET("/station/:station_id/config/iec61850", service.GetIEC61850ConfigForStation)
+		v1.GET("/station/:station_id/config/mqtt", service.GetMqttConfigForStation)
+		v1.GET("/station/:station_id/config/modbus", service.GetModbusConfigForStation)
 
 		{
 			v1.GET("/mapping_rule/:rule_id", service.GetMappingRuleByID)
