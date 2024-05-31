@@ -102,7 +102,6 @@ const enUS = {
   username: 'Username',
   email: 'Email',
   role: 'Role',
-  status: 'Status',
   actions: 'Actions',
   delete: 'Delete',
   disable: 'Disable',
@@ -140,9 +139,11 @@ const enUS = {
   notification: 'Notification',
   station: 'Station',
   management: 'Management',
-  role: "Role",
-  status: "Status",
-  actions: "Actions",
+  status: 'Status',
+  deleteStation: 'Delete Station',
+  url: 'URL',
+  errorTitle: 'Error',
+  errorMessage: 'Oops! Something went wrong'
 }
 
 const zhCN = {
@@ -247,7 +248,6 @@ const zhCN = {
   filter: '筛选',
   email: '邮箱',
   role: '角色',
-  status: '状态',
   actions: '操作',
   edit: '编辑',
   delete: '删除',
@@ -285,9 +285,11 @@ const zhCN = {
   condition: '条件',
   notification: '通知',
   management: '管理',
-  role: "角色",
-  status: "状态",
-  actions: "操作",
+  status: '状态',
+  deleteStation: '删除电站',
+  url: 'URL',
+  errorTitle: '错误',
+  errorMessage: '糟糕！出错了'
 }
 
 type MessageSchema = typeof enUS

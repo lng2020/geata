@@ -109,7 +109,7 @@ export const useGlobalStore = defineStore({
       }))
       this.stations = respStation
     },
-    getStationById(id: number): Station | undefined {
+    getStationById(id: number): Station {
       return this.stations.find((station) => station.id === id)
     },
     async fetchMappings() {

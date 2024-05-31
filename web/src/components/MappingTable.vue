@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto px-4 py-8">
+  <div class="container mx-auto px-2 py-2">
     <div class="flex justify-between">
       <h2 class="text-3xl font-bold mb-6">{{ $t('dataSourceMappingTitle') }}</h2>
       <div class="mb-4">

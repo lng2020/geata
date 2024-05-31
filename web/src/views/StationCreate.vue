@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto py-8 flex justify-center">
+  <div class="container mx-auto px-2 py-2 flex justify-center">
     <form @submit.prevent="createStation" class="max-w-md w-full">
       <h1 class="text-3xl font-bold mb-6 text-center">Create Station</h1>
 

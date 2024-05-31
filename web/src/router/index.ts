@@ -1,12 +1,13 @@
 import Dashboard from '@/views/Dashboard.vue'
 import Station from '@/views/Station.vue'
 import Mapping from '@/views/Mapping.vue'
-import Setting from '@/views/Setting.vue'
+import Settings from '@/views/Settings.vue'
 import StationCreate from '@/views/StationCreate.vue'
 import Login from '@/views/Login.vue'
 import Unauthorized from '@/views/Unauthorized.vue'
 import Management from '@/views/Management.vue'
 import User from '@/views/User.vue'
+import Error from '@/views/Error.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/store'
 
@@ -50,9 +51,9 @@ const router = createRouter({
       }
     },
     {
-      path: '/setting/:id',
-      name: 'setting',
-      component: Setting,
+      path: '/settings/:id',
+      name: 'settings',
+      component: Settings,
       meta: {
         requireAuth: true
       }
@@ -77,6 +78,11 @@ const router = createRouter({
       path: '/unauthorized',
       name: 'unauthorized',
       component: Unauthorized
+    },
+    {
+      path: '/error',
+      name: 'error',
+      component: Error
     }
   ]
 })

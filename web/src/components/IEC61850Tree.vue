@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto px-4 py-8">
+  <div class="container mx-auto px-2 py-2">
     <h2 class="text-3xl font-bold mb-6">{{ $t('iec61850ExplorerTitle') }}</h2>
     <div class="flex border rounded-lg shadow-md">
       <div class="w-1/4 bg-gray-100 p-6 border-r">
@@ -104,11 +104,12 @@ const router = useRouter()
 const searchQuery = useI18n().t('searchPlaceholder')
 let model = ref<IEC61850Model>({} as IEC61850Model)
 const lnId = ref<number>()
-const modelId = router.currentRoute.value.params.id
+let modelId = ref<number>()
 
 onMounted(async () => {
-  const id = Number(modelId)
-  model.value = await fetchModelById(id)
+  const id = router.currentRoute.value.params.id
+  modelId.value = Number(id)
+  model.value = await fetchModelById(modelId.value)
 })
 
 let dataObjects = ref<DataObject[]>([])

@@ -43,14 +43,17 @@
             {{ $t('mapping') }}
           </router-link>
           <router-link
-            :to="{ path: '/setting/' + station.id }"
+            :to="{ path: '/settings/' + station.id }"
             class="block text-sm text-gray-400 hover:text-white"
           >
             {{ $t('settings') }}
           </router-link>
         </div>
       </div>
-      <router-link :to="{ path: '/user' }" class="flex items-center px-5 py-3 text-white hover:bg-gray-700">
+      <router-link
+        :to="{ path: '/user' }"
+        class="flex items-center px-5 py-3 text-white hover:bg-gray-700"
+      >
         <font-awesome-icon icon="fa-solid fa-user" class="text-lg mr-3"></font-awesome-icon>
         <span>{{ $t('settings') }}</span>
       </router-link>
