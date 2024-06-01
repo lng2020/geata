@@ -38,7 +38,7 @@
         </tr>
       </thead>
       <tbody class="bg-white">
-        <tr v-for="m in mapping" :key="m.id" class="hover:bg-gray-100">
+        <tr v-for="m in paginatedData" :key="m.id" class="hover:bg-gray-100">
           <td class="px-4 py-2 border-b border-gray-300 text-sm text-gray-700">
             {{ m.iec61850Ref }}
           </td>
@@ -69,7 +69,12 @@
         </tr>
       </tbody>
     </table>
-
+    <Pagination
+    :current-page="currentPage"
+    :total-items="totalItems"
+    :page-size="pageSize"
+    @update:current-page="currentPage = $event"
+  />
     <UtilsModal v-if="showUtils" @close="closeUtilsModal" />
     <ConfirmationModal
       :show="showModal"
@@ -89,13 +94,14 @@
 
 <script lang="ts" setup>
 import { ref} from 'vue'
-import { onMounted } from 'vue'
+import { onMounted, computed } from 'vue'
 import {useRouter} from 'vue-router'
 import { useGlobalStore } from '@/store'
 import type { Mapping } from '@/types/types'
 import ConfirmationModal from '@/components/ConfirmationModal.vue'
 import MQTTConfigModal from '@/components/MQTTConfigModal.vue'
 import ModbusConfigModal from '@/components/ModbusConfigModal.vue'
+import Pagination from '@/components/Pagination.vue'
 import UtilsModal from '@/components/UtilsModal.vue'
 
 const router = useRouter()
@@ -106,6 +112,15 @@ const selectedMapping = ref<Mapping | null>(null)
 const showMQTTConfig = ref(false)
 const showModbusConfig = ref(false)
 const showUtils = ref(false)
+const currentPage = ref(1)
+const pageSize = ref(12)
+const totalItems = computed(() => mapping.value.length)
+
+const paginatedData = computed(() => {
+  const start = (currentPage.value - 1) * pageSize.value
+  const end = start + pageSize.value
+  return mapping.value.slice(start, end)
+})
 
 onMounted(async () => {
   const stationId = Number(router.currentRoute.value.params.id)
