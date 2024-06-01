@@ -39,9 +39,9 @@ func GetMappingRuleByID(engine *xorm.Engine, id int64) (*MappingRule, error) {
 	return rule, nil
 }
 
-func GetAllMappingRules(engine *xorm.Engine, stationID int64) ([]*MappingRule, error) {
+func GetMappingByModelID(engine *xorm.Engine, stationID int64) ([]*MappingRule, error) {
 	var rules []*MappingRule
-	err := engine.Where("station_id = ?", stationID).Find(&rules)
+	err := engine.Where("model_id = ?", stationID).Find(&rules)
 	if err != nil {
 		return nil, err
 	}

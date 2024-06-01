@@ -113,7 +113,7 @@
             <li>
               <section class="bg-white shadow rounded-lg p-6">
                 <div class="flex justify-between">
-                  <h2 class="font-bold mb-4">{{ $t('MQTT') }}</h2>
+                  <h2 class="font-bold mb-4">MQTT</h2>
                   <button
                     @click="testMqttConnection"
                     class="text-sm mb-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline"
@@ -171,7 +171,7 @@
             <li>
               <section class="bg-white shadow rounded-lg p-6">
                 <div class="flex justify-between">
-                  <h2 class="font-bold mb-4">{{ $t('IEC61850') }}</h2>
+                  <h2 class="font-bold mb-4">IEC61850</h2>
                   <button
                     @click="testIec61850Connection"
                     class="text-sm mb-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline"
@@ -207,7 +207,7 @@
             <li>
               <section class="bg-white shadow rounded-lg p-6">
                 <div class="flex justify-between">
-                  <h2 class="font-bold mb-4">{{ $t('Modbus') }}</h2>
+                  <h2 class="font-bold mb-4">Modbus</h2>
                   <button
                     @click="testModbusConnection"
                     class="text-sm mb-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline"

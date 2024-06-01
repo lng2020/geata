@@ -104,7 +104,6 @@ func SetupRouter() *gin.Engine {
 			v1.DELETE("/station/:station_id", service.DeleteStation)
 		}
 
-		v1.GET("/station/:station_id/mapping_rule", service.ListMappingRulesForStation)
 		v1.GET("/station/:station_id/config/iec61850", service.GetIEC61850ConfigForStation)
 		v1.GET("/station/:station_id/config/mqtt", service.GetMqttConfigForStation)
 		v1.GET("/station/:station_id/config/modbus", service.GetModbusConfigForStation)
@@ -118,11 +117,12 @@ func SetupRouter() *gin.Engine {
 		v1.GET("/modbus_detail/:rule_id", service.GetModbusDetailByRuleID)
 
 		v1.GET("/iec61850/model/:model_id", service.GetIEC61850ModelByID)
+		v1.GET("/iec61850/model/:model_id/mapping_rule", service.ListMappingRulesByModelID)
 		v1.GET("/iec61850/logical_node/:logical_node_id/data_object", service.GetDataObjectByLogicalNodeID)
 		v1.GET("/iec61850/node/:id", service.GetNodeByID)
 		v1.GET("/iec61850/node/ref/:ref", service.GetNodeByRef)
 		v1.PUT("/iec61850/node/:id/data_source", service.UpdateNodeDataSource)
-		v1.POST("iec61850/upload", service.UploadIEC61850ModelFile)
+		v1.POST("/iec61850/upload", service.UploadIEC61850ModelFile)
 
 		v1.GET("/audit_log/:log_id", service.GetAuditLogByID)
 		v1.GET("/audit_log", service.GetAllAuditLogs)

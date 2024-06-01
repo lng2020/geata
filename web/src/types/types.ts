@@ -3,7 +3,7 @@ export interface Station {
   name: string
   host: string
   port: number
-  ModelId: number
+  modelId: number
   isOnline: boolean
   lastOnlineTime: string
   showOptions: boolean
@@ -14,7 +14,7 @@ export type RoleType = 'admin' | 'user'
 
 export interface Mapping {
   id: number
-  iec61850Reference: string
+  iec61850Ref: string
   type: MappingType
 }
 

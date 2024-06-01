@@ -14,14 +14,14 @@ type MappingRule model.MappingRule
 // @tags MappingRule
 // @param stationID path int true "Station ID"
 // @success 200 {array} MappingRule
-// @router /api/v1/station/{stationID}/mapping_rule [get]
-func ListMappingRulesForStation(c *gin.Context) {
-	ID := c.Param("stationID")
-	stationID, err := strconv.Atoi(ID)
+// @router /api/v1/station/{model_id}/mapping_rule [get]
+func ListMappingRulesByModelID(c *gin.Context) {
+	ID := c.Param("model_id")
+	model_id, err := strconv.Atoi(ID)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid station ID"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid Model ID"})
 	}
-	rules, err := model.GetAllMappingRules(Engine, int64(stationID))
+	rules, err := model.GetMappingByModelID(Engine, int64(model_id))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	}
