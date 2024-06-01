@@ -3,7 +3,7 @@
     <div class="flex justify-between mb-6">
       <h1 class="text-3xl font-bold">{{ $t('settings') }}</h1>
       <button
-        @click="deleteStation"
+        @click="showModal = true"
         class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
         type="button"
       >
@@ -271,12 +271,20 @@
       </div>
     </div>
   </div>
+  <ConfirmationModal
+      :show="showModal"
+      :title="$t('confirmation')"
+      :message="$t('areYouSureToDeleteStation')"
+      @confirm="deleteStation"
+      @cancel="closeModal"
+    />
 </template>
 
 <script setup lang="ts">
 import { useGlobalStore } from '@/store'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import ConfirmationModal from '@/components/ConfirmationModal.vue'
 import type { Station, MQTTConfig, IEC61850Config, ModbusConfig } from '@/types/types'
 
 interface Rule {
@@ -292,6 +300,7 @@ let editedStation = ref<Station>({} as Station)
 let mqttConfig = ref<MQTTConfig>({} as MQTTConfig)
 let iec61850Config = ref<IEC61850Config>({} as IEC61850Config)
 let modbusConfig = ref<ModbusConfig>({} as ModbusConfig)
+let showModal = ref<boolean>(false)
 
 onMounted(async () => {
   const stationId = Number(router.currentRoute.value.params.id)
@@ -367,22 +376,35 @@ const alarmRules = ref<Rule[]>([
 const showAddRuleDialog = ref<boolean>(false)
 const newRule = ref<Rule>({ condition: '', notification: '' })
 
-function editRule(index: number): void {
+const editRule = (index: number) => {
   console.log('Editing rule:', index)
 }
 
-function deleteRule(index: number): void {
+const deleteRule = (index: number) => {
   alarmRules.value.splice(index, 1)
 }
 
-function addRule(): void {
+const addRule = () => {
   alarmRules.value.push({ ...newRule.value })
   newRule.value.condition = ''
   newRule.value.notification = ''
   showAddRuleDialog.value = false
 }
 
-function deleteStation() {
-  console.log('Deleting station')
+const deleteStation = async () => {
+  showModal.value = false
+  if (rawStation.value) {
+    try {
+      await fetch(`/api/station/${rawStation.value.id}`, { method: 'DELETE' })
+      store.removeStationById(rawStation.value.id)
+      router.push('/')
+    } catch (error) {
+      console.error('Failed to delete station:', error)
+    }
+  }
+}
+
+const closeModal = () => {
+  showModal.value = false
 }
 </script>

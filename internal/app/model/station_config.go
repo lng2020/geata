@@ -35,3 +35,8 @@ func GetStationConfigByStationID(engine *xorm.Engine, stationID int64) (*Station
 	}
 	return stationConfig, nil
 }
+
+func DeleteStationConfigByStationID(engine *xorm.Engine, stationID int64) error {
+	_, err := engine.Delete(&StationConfig{StationID: stationID})
+	return err
+}

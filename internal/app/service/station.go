@@ -228,7 +228,26 @@ func DeleteStation(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+	sess := Engine.NewSession()
+	defer sess.Close()
+	err = sess.Begin()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	err = model.DeleteStationConfigByStationID(Engine, station.ID)
+	if err != nil {
+		sess.Rollback()
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 	err = model.DeleteStation(Engine, station)
+	if err != nil {
+		sess.Rollback()
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	err = sess.Commit()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

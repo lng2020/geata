@@ -74,7 +74,7 @@
     <ConfirmationModal
       :show="showModal"
       :title="$t('confirmation')"
-      :message="$t('areYouSure')"
+      :message="$t('areYouSureToChangeType')"
       @confirm="confirmAction"
       @cancel="closeModal"
     />

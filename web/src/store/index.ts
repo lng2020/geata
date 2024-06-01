@@ -112,6 +112,9 @@ export const useGlobalStore = defineStore({
     getStationById(id: number): Station {
       return this.stations.find((station) => station.id === id)
     },
+    removeStationById(id: number) {
+      this.stations = this.stations.filter((station) => station.id !== id)
+    },
     async fetchMappings() {
       const response = await fetch('/api/mappings')
       const data = await response.json()
