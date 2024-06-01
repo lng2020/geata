@@ -1,12 +1,8 @@
 package service
 
 import (
-	"crypto/sha256"
-	"fmt"
 	"geata/internal/app/model"
 	"geata/internal/app/parser"
-	"io"
-	"mime/multipart"
 	"net/http"
 	"os"
 	"strconv"
@@ -15,6 +11,7 @@ import (
 )
 
 type IEC61850Model struct {
+	ID            int64           `json:"id"`
 	Name          string          `json:"name"`
 	Description   string          `json:"description"`
 	LogicalDevice []LogicalDevice `json:"logicalDevice"`
@@ -39,11 +36,6 @@ type DataObject struct {
 }
 
 type DataAttribute model.Node
-
-type IEC61850ModelFileParsedResult struct {
-	IEC61850Model IEC61850Model `json:"IEC61850Model"`
-	FileHashName  string        `json:"fileHashName"`
-}
 
 // @summary Get IEC61850 model by ID
 // @tags IEC61850
@@ -255,30 +247,28 @@ func UpdateNodeDataSource(c *gin.Context) {
 // @accept multipart/form-data
 // @produce json
 // @param file formData file true "ICD file"
-// @success 200 IE61850ModelFileParsedResult
+// @success 200 IEC61850Model
 
 // @router /api/v1/iec61850/upload [post]
-func UploadIEC61850ModleFile(c *gin.Context) {
+func UploadIEC61850ModelFile(c *gin.Context) {
 	file, err := c.FormFile("file")
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	fileHashName, err := hashFile(file)
+	tempFile, err := os.CreateTemp("", "tempfile-")
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	tempFile := fmt.Sprintf("tmp/%s", fileHashName)
-	err = c.SaveUploadedFile(file, tempFile)
-	defer os.Remove(tempFile)
+	defer os.Remove(tempFile.Name())
 
+	err = c.SaveUploadedFile(file, tempFile.Name())
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-
-	scl, err := parser.ParseIEC61850Model(tempFile)
+	scl, err := parser.ParseIEC61850Model(tempFile.Name())
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -294,9 +284,8 @@ func UploadIEC61850ModleFile(c *gin.Context) {
 	}
 	// insert IEC61850Model
 	iec61850Model := &model.IEC61850Model{
-		Name:         parsedIEC61850Model.Name,
-		Description:  parsedIEC61850Model.Description,
-		FileHashName: fileHashName,
+		Name:        parsedIEC61850Model.Name,
+		Description: parsedIEC61850Model.Description,
 	}
 	_, err = session.Insert(iec61850Model)
 	if err != nil {
@@ -356,6 +345,17 @@ func UploadIEC61850ModleFile(c *gin.Context) {
 						c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 						return
 					}
+					mappingRule := &model.MappingRule{
+						ModelID:     iec61850Model.ID,
+						IEC61850Ref: dataAttribute.IEC61850Ref,
+						Type:        "IEC61850",
+					}
+					_, err = session.Insert(mappingRule)
+					if err != nil {
+						session.Rollback()
+						c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+						return
+					}
 				}
 			}
 		}
@@ -365,10 +365,8 @@ func UploadIEC61850ModleFile(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, IEC61850ModelFileParsedResult{
-		IEC61850Model: *parsedIEC61850Model,
-		FileHashName:  fileHashName,
-	})
+	parsedIEC61850Model.ID = iec61850Model.ID
+	c.JSON(http.StatusOK, *parsedIEC61850Model)
 }
 
 func pruneResult(scl *parser.SCL) (*IEC61850Model, []DataObject) {
@@ -401,8 +399,10 @@ func pruneResult(scl *parser.SCL) (*IEC61850Model, []DataObject) {
 
 					for _, dai := range doi.DAI {
 						dataAttribute := DataAttribute{
-							Name:  dai.Name,
-							Value: dai.Val,
+							Name:        dai.Name,
+							Value:       dai.Val,
+							IEC61850Ref: logicalDevice.Name + "/" + ln0.Name + "$" + dataObject.Name + "$" + dai.Name,
+							DataSource:  "IEC61850",
 						}
 						dataObject.DataAttribute = append(dataObject.DataAttribute, dataAttribute)
 					}
@@ -426,8 +426,10 @@ func pruneResult(scl *parser.SCL) (*IEC61850Model, []DataObject) {
 
 						for _, dai := range doi.DAI {
 							dataAttribute := DataAttribute{
-								Name:  dai.Name,
-								Value: dai.Val,
+								Name:        dai.Name,
+								Value:       dai.Val,
+								IEC61850Ref: logicalDevice.Name + "/" + logicalNode.Name + "$" + dataObject.Name + "$" + dai.Name,
+								DataSource:  "IEC61850",
 							}
 							dataObject.DataAttribute = append(dataObject.DataAttribute, dataAttribute)
 						}
@@ -443,19 +445,4 @@ func pruneResult(scl *parser.SCL) (*IEC61850Model, []DataObject) {
 		}
 	}
 	return model, dataObjects
-}
-
-func hashFile(file *multipart.FileHeader) (string, error) {
-	f, err := file.Open()
-	if err != nil {
-		return "", err
-	}
-	defer f.Close()
-
-	h := sha256.New()
-	if _, err := io.Copy(h, f); err != nil {
-		return "", err
-	}
-
-	return fmt.Sprintf("%x", h.Sum(nil)), nil
 }

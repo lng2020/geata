@@ -3,6 +3,7 @@ export interface Station {
   name: string
   host: string
   port: number
+  ModelId: number
   isOnline: boolean
   lastOnlineTime: string
   showOptions: boolean
@@ -43,6 +44,7 @@ export interface LogicalDevice {
 }
 
 export interface IEC61850Model {
+  id: number
   name: string
   description: string
   logicalDevice: LogicalDevice[]

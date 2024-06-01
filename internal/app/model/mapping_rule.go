@@ -11,7 +11,7 @@ import (
 
 type MappingRule struct {
 	ID          int64     `xorm:"pk autoincr 'id'" json:"id"`
-	StationID   int64     `xorm:"'station_id' index" json:"stationID"`
+	ModelID     int64     `xorm:"'model_id' index" json:"-"`
 	IEC61850Ref string    `xorm:"'iec61850_ref'" json:"iec61850Ref"`
 	Type        string    `xorm:"'type'" json:"type"`
 	CreateTime  time.Time `xorm:"'create_time' created" json:"createTime"`

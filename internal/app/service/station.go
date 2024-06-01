@@ -14,7 +14,7 @@ type Station struct {
 	Name           string                                        `json:"name"`
 	Host           string                                        `json:"host"`
 	Port           int64                                         `json:"port"`
-	ModelHash      string                                        `json:"modelHash"`
+	ModelID        int64                                         `json:"modelId"`
 	IsOnline       bool                                          `json:"isOnline"`
 	LastOnlineTime string                                        `json:"lastOnlineTime"`
 	Handlers       map[handler.HandlerType]handler.Handler       `json:"-"`
@@ -39,6 +39,7 @@ type MQTTConfig struct {
 	Topic    string `json:"topic"`
 }
 
+// This function is used for initializing stations in whole system.
 func StationInitFromDB(stationFromDB *model.Station) *Station {
 	stationConfigs, err := model.GetStationConfigByStationID(Engine, stationFromDB.ID)
 	if err != nil {
@@ -64,7 +65,7 @@ func StationInitFromDB(stationFromDB *model.Station) *Station {
 		Name:           stationFromDB.Name,
 		Host:           stationFromDB.Host,
 		Port:           stationFromDB.Port,
-		ModelHash:      stationFromDB.ModelHash,
+		ModelID:        stationFromDB.ModelID,
 		IsOnline:       stationFromDB.IsOnline,
 		LastOnlineTime: stationFromDB.LastOnlineTime.Format("2006-01-02 15:04:05"),
 		Handlers:       handlers,
@@ -73,13 +74,14 @@ func StationInitFromDB(stationFromDB *model.Station) *Station {
 	}
 }
 
+// This function is used for converting station from DB to API response.
 func StationFromDB(stationFromDB *model.Station) Station {
 	return Station{
 		ID:             stationFromDB.ID,
 		Name:           stationFromDB.Name,
 		Host:           stationFromDB.Host,
 		Port:           stationFromDB.Port,
-		ModelHash:      stationFromDB.ModelHash,
+		ModelID:        stationFromDB.ModelID,
 		IsOnline:       stationFromDB.IsOnline,
 		LastOnlineTime: stationFromDB.LastOnlineTime.Format("2006-01-02 15:04:05"),
 	}
@@ -94,15 +96,7 @@ func ListStations(c *gin.Context) {
 	stations, err := model.GetAllStations(Engine)
 	resp := make([]Station, 0)
 	for _, station := range stations {
-		resp = append(resp, Station{
-			ID:             station.ID,
-			Name:           station.Name,
-			Host:           station.Host,
-			Port:           station.Port,
-			ModelHash:      station.ModelHash,
-			IsOnline:       station.IsOnline,
-			LastOnlineTime: station.LastOnlineTime.Format("2006-01-02 15:04:05"),
-		})
+		resp = append(resp, StationFromDB(station))
 	}
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -156,18 +150,18 @@ func CreateStation(c *gin.Context) {
 		return
 	}
 	err = model.CreateStation(Engine, &model.Station{
-		Name:      station.Name,
-		Host:      station.Host,
-		Port:      station.Port,
-		ModelHash: station.ModelHash,
-		IsOnline:  false,
+		Name:     station.Name,
+		Host:     station.Host,
+		Port:     station.Port,
+		ModelID:  station.ModelID,
+		IsOnline: false,
 	})
 	if err != nil {
 		session.Rollback()
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	stationId := model.GetStationIDByModelHash(Engine, station.ModelHash)
+	stationId := model.GetStationIDByModelID(Engine, station.ModelID)
 	stationConfig := CreateDefaultStationConfig(stationId)
 	err = model.CreateStationConfig(Engine, stationConfig)
 	if err != nil {

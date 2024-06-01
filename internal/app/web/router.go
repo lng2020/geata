@@ -122,7 +122,7 @@ func SetupRouter() *gin.Engine {
 		v1.GET("/iec61850/node/:id", service.GetNodeByID)
 		v1.GET("/iec61850/node/ref/:ref", service.GetNodeByRef)
 		v1.PUT("/iec61850/node/:id/data_source", service.UpdateNodeDataSource)
-		v1.POST("iec61850/upload", service.UploadIEC61850ModleFile)
+		v1.POST("iec61850/upload", service.UploadIEC61850ModelFile)
 
 		v1.GET("/audit_log/:log_id", service.GetAuditLogByID)
 		v1.GET("/audit_log", service.GetAllAuditLogs)

@@ -103,7 +103,7 @@ export const useGlobalStore = defineStore({
         name: item.name,
         host: item.host,
         port: item.port,
-        modelHash: item.modelHash,
+        modelId: item.modelId,
         isOnline: item.isOnline,
         lastOnlineTime: new Date(item.lastOnlineTime)
       }))

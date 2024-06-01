@@ -272,12 +272,12 @@
     </div>
   </div>
   <ConfirmationModal
-      :show="showModal"
-      :title="$t('confirmation')"
-      :message="$t('areYouSureToDeleteStation')"
-      @confirm="deleteStation"
-      @cancel="closeModal"
-    />
+    :show="showModal"
+    :title="$t('confirmation')"
+    :message="$t('areYouSureToDeleteStation')"
+    @confirm="deleteStation"
+    @cancel="closeModal"
+  />
 </template>
 
 <script setup lang="ts">

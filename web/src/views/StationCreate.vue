@@ -164,7 +164,6 @@ const stationName = ref('')
 const host = ref('')
 const port = ref(0)
 const icdFile = ref<File | null>(null)
-const hashName = ref('')
 const model = ref<IEC61850Model | null>(null)
 
 function handleFileUpload(event: Event) {
@@ -212,8 +211,8 @@ async function uploadICDFile(file: File) {
     })
     if (response.ok) {
       const data = await response.json()
-      model.value = data.IEC61850Model
-      hashName.value = data.fileHashName
+      model.value = data
+      console.log('Uploaded ICD file:', data)
     } else {
       const errData = await response.json()
       console.error('Failed to upload file:', errData)
@@ -231,7 +230,7 @@ async function createStation() {
         name: stationName.value,
         host: host.value,
         port: port.value,
-        hashName: hashName.value
+        modelId: model.value?.id
       })
     })
     if (response.ok) {

@@ -14,7 +14,7 @@ type Station struct {
 	Name           string    `xorm:"'name'"`
 	Host           string    `xorm:"'host'"`
 	Port           int64     `xorm:"'port'"`
-	ModelHash      string    `xorm:"'model_hash'"`
+	ModelID        int64     `xorm:"'model_id'"`
 	IsOnline       bool      `xorm:"'is_online'"`
 	LastOnlineTime time.Time `xorm:"'last_online_time'"`
 	CreatedAt      time.Time `xorm:"'created_at' created"`
@@ -61,9 +61,9 @@ func DeleteStation(engine *xorm.Engine, station *Station) error {
 	return err
 }
 
-func GetStationIDByModelHash(engine *xorm.Engine, modelHash string) int64 {
+func GetStationIDByModelID(engine *xorm.Engine, modelID int64) int64 {
 	station := new(Station)
-	has, err := engine.Where("model_hash = ?", modelHash).Get(station)
+	has, err := engine.Where("model_id = ?", modelID).Get(station)
 	if err != nil {
 		return 0
 	}
