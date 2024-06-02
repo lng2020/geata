@@ -4,6 +4,7 @@
 package app
 
 import (
+	"context"
 	"fmt"
 	"geata/internal/app/logger"
 	"geata/internal/app/model"
@@ -24,6 +25,7 @@ type App struct {
 	Config     *AppConfig
 	Stations   []*service.Station
 	mqttServer *mqtt.Server
+	ctx        context.Context
 }
 
 var models = []any{
@@ -161,13 +163,16 @@ func (app *App) Init() error {
 	if err != nil {
 		return err
 	}
+
+	app.ctx = context.Background()
+
 	return nil
 }
 
 func (app *App) Start() error {
 	for _, station := range app.Stations {
 		for _, handler := range station.Handlers {
-			go handler.Handle(station.Datas[handler.Type()])
+			go handler.Handle(app.ctx, station.Datas[handler.Type()])
 		}
 	}
 	router := web.SetupRouter()

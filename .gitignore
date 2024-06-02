@@ -1,4 +1,4 @@
-*.exe
+geata.exe
 .vscode/
 __*
 web/node_modules

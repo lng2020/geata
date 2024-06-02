@@ -1,5 +1,7 @@
 package handler
 
+import "context"
+
 type HandlerType string
 
 const (
@@ -7,6 +9,11 @@ const (
 	MQTTHandlerType     HandlerType = "MQTT"
 	IEC61850HandlerType HandlerType = "IEC61850"
 )
+
+type Data struct {
+	IEC61850Ref string
+	Value       string
+}
 
 var HandlerTypes = []HandlerType{
 	ModbusHandlerType,
@@ -22,5 +29,5 @@ type HandlerConfig interface {
 type Handler interface {
 	Type() HandlerType
 	IsOnline() bool
-	Handle(s chan string)
+	Handle(ctx context.Context, s chan Data)
 }

@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"fmt"
 	"geata/internal/app/logger"
 	"log/slog"
@@ -34,7 +35,7 @@ func (hc *ModbusHandlerConfig) NewHandler() Handler {
 	return &ModbusHandler{client: client}
 }
 
-func (h *ModbusHandler) Handle(s chan string) {
+func (h *ModbusHandler) Handle(ctx context.Context, s chan Data) {
 	slog.Info("ModbusHandler is not implemented")
 }
 

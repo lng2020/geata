@@ -3,15 +3,18 @@ package client
 import (
 	"bufio"
 	"context"
+	"fmt"
 	"geata/internal/app/logger"
 	"log/slog"
+	"os"
 	"os/exec"
+	"runtime"
 )
 
 type IEC61850Client struct {
 	IP   string
 	Port string
-	ctx  context.Context
+	Ctx  context.Context
 }
 
 func NewIEC61850Client(ip string, port string) *IEC61850Client {
@@ -22,7 +25,13 @@ func NewIEC61850Client(ip string, port string) *IEC61850Client {
 }
 
 func (c *IEC61850Client) Start(s chan string) {
-	cmd := exec.CommandContext(c.ctx, "iec61850_client", c.IP, c.Port)
+	dir, err := os.Getwd()
+	os := runtime.GOOS
+	if err != nil {
+		slog.Error("Failed to get the current working directory", logger.ErrAttr(err))
+	}
+	dir = fmt.Sprintf("%s/internal/app/client/%s/client", dir, os)
+	cmd := exec.CommandContext(c.Ctx, dir, c.IP, c.Port)
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		slog.Error("Failed to pipe stdout", logger.ErrAttr(err))
@@ -35,15 +44,10 @@ func (c *IEC61850Client) Start(s chan string) {
 
 	scanner := bufio.NewScanner(stdout)
 	for scanner.Scan() {
-		s <- parse(scanner.Text())
+		s <- scanner.Text()
 	}
 }
 
 func (c *IEC61850Client) Close() {
-	c.ctx.Done()
-}
-
-func parse(_ string) string {
-	// TODO: Implement the parsing logic here
-	return ""
+	c.Ctx.Done()
 }

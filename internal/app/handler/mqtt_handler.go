@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"geata/internal/app/logger"
 	"log/slog"
 
@@ -17,7 +18,6 @@ type MQTTHandlerConfig struct {
 	ClientID string
 	Username string
 	Password string
-	Topic    string
 }
 
 func (c MQTTHandlerConfig) Type() HandlerType {
@@ -30,7 +30,6 @@ func NewMQTTHandlerConfig(broker, clientID, username, password, topic string) Ha
 		ClientID: clientID,
 		Username: username,
 		Password: password,
-		Topic:    topic,
 	}
 }
 
@@ -48,13 +47,14 @@ func (hc *MQTTHandlerConfig) NewHandler() Handler {
 
 	return &MQTTHandler{
 		client: client,
-		topic:  hc.Topic,
 	}
 }
 
-func (h *MQTTHandler) Handle(s chan string) {
+func (h *MQTTHandler) Handle(ctx context.Context, s chan Data) {
 	token := h.client.Subscribe(h.topic, 0, func(client mqtt.Client, msg mqtt.Message) {
-		s <- string(msg.Payload())
+		ref := msg.Topic()
+		value := string(msg.Payload())
+		s <- Data{IEC61850Ref: ref, Value: value}
 	})
 	token.Wait()
 	if token.Error() != nil {

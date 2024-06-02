@@ -19,7 +19,7 @@ type Station struct {
 	LastOnlineTime string                                        `json:"lastOnlineTime"`
 	Handlers       map[handler.HandlerType]handler.Handler       `json:"-"`
 	Configs        map[handler.HandlerType]handler.HandlerConfig `json:"-"`
-	Datas          map[handler.HandlerType]chan string           `json:"-"`
+	Datas          map[handler.HandlerType]chan handler.Data     `json:"-"`
 }
 
 type IEC61750Config struct {
@@ -54,7 +54,7 @@ func StationInitFromDB(stationFromDB *model.Station) *Station {
 	configs[mqc.Type()] = mqc
 
 	handlers := make(map[handler.HandlerType]handler.Handler)
-	datas := make(map[handler.HandlerType]chan string)
+	datas := make(map[handler.HandlerType]chan handler.Data)
 	for _, handlerType := range handler.HandlerTypes {
 		config := configs[handlerType]
 		handlers[handlerType] = config.NewHandler()

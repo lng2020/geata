@@ -29,3 +29,7 @@ func InitLogger(logLevel string) {
 func ErrAttr(err error) slog.Attr {
 	return slog.Any("error", err)
 }
+
+func StringAttr(key, value string) slog.Attr {
+	return slog.String(key, value)
+}
