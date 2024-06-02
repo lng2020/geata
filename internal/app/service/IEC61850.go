@@ -274,10 +274,12 @@ func UploadIEC61850ModelFile(c *gin.Context) {
 		return
 	}
 
-	// resp is the response that will be returned to the client
-	var resp IEC61850Model
+	// those are the data objects that will be inserted to db
+	iec61850Model := &model.IEC61850Model{
+		Name:        scl.Header.ID,
+		Description: scl.Header.NameStructure,
+	}
 
-	// using transaction to insert to db first
 	session := Engine.NewSession()
 	defer session.Close()
 	err = session.Begin()
@@ -285,24 +287,22 @@ func UploadIEC61850ModelFile(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	// those are the data objects that will be inserted to db
-	iec61850Model := &model.IEC61850Model{
-		Name:        scl.Header.ID,
-		Description: scl.Header.NameStructure,
-	}
-	resp.Name = iec61850Model.Name
-	resp.Description = iec61850Model.Description
-
 	_, err = session.Insert(iec61850Model)
 	if err != nil {
 		session.Rollback()
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+
+	// resp is the response that will be returned to the client
+	var resp IEC61850Model
+	resp.Name = iec61850Model.Name
+	resp.Description = iec61850Model.Description
+	resp.ID = iec61850Model.ID
 	for _, ied := range scl.IED {
 		for _, accessPoint := range ied.AccessPoint {
 			for _, lDevice := range accessPoint.Server.LDevice {
-				logicalDevice := model.LogicalDevice{
+				logicalDevice := &model.LogicalDevice{
 					Name:        lDevice.Inst,
 					ModelID:     iec61850Model.ID,
 					Description: "",
@@ -320,7 +320,7 @@ func UploadIEC61850ModelFile(c *gin.Context) {
 					LogicalNode: make([]LogicalNode, 0),
 				}
 
-				ln0 := model.LogicalNode{
+				ln0 := &model.LogicalNode{
 					Name:            lDevice.LN0.LnClass + lDevice.LN0.Inst,
 					LogicalDeviceID: logicalDevice.ID,
 					Description:     "",
@@ -340,7 +340,7 @@ func UploadIEC61850ModelFile(c *gin.Context) {
 				respLogicalDevice.LogicalNode = append(respLogicalDevice.LogicalNode, respLN0)
 
 				for _, doi := range lDevice.LN0.DOI {
-					dataObject := model.DataObject{
+					dataObject := &model.DataObject{
 						Name:          doi.Name,
 						Description:   "",
 						LogicalNodeID: ln0.ID,
@@ -354,7 +354,7 @@ func UploadIEC61850ModelFile(c *gin.Context) {
 					}
 
 					for _, dai := range doi.DAI {
-						dataAttribute := model.Node{
+						dataAttribute := &model.Node{
 							DataObjectID: dataObject.ID,
 							Name:         dai.Name,
 							Value:        dai.Val,
@@ -367,11 +367,22 @@ func UploadIEC61850ModelFile(c *gin.Context) {
 							c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 							return
 						}
+						mappingRule := &model.MappingRule{
+							ModelID:     iec61850Model.ID,
+							IEC61850Ref: dataAttribute.IEC61850Ref,
+							Type:        "IEC61850",
+						}
+						_, err = session.Insert(mappingRule)
+						if err != nil {
+							session.Rollback()
+							c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+							return
+						}
 					}
 				}
 
 				for _, ln := range lDevice.LN {
-					logicalNode := model.LogicalNode{
+					logicalNode := &model.LogicalNode{
 						Name:            ln.LnClass + ln.Inst,
 						LogicalDeviceID: logicalDevice.ID,
 						Description:     "",
@@ -390,7 +401,7 @@ func UploadIEC61850ModelFile(c *gin.Context) {
 					respLogicalDevice.LogicalNode = append(respLogicalDevice.LogicalNode, respLogicalNode)
 
 					for _, doi := range ln.DOI {
-						dataObject := model.DataObject{
+						dataObject := &model.DataObject{
 							Name:          doi.Name,
 							Description:   "",
 							LogicalNodeID: logicalNode.ID,
@@ -404,7 +415,7 @@ func UploadIEC61850ModelFile(c *gin.Context) {
 						}
 
 						for _, dai := range doi.DAI {
-							dataAttribute := model.Node{
+							dataAttribute := &model.Node{
 								DataObjectID: dataObject.ID,
 								Name:         dai.Name,
 								Value:        dai.Val,
@@ -417,16 +428,25 @@ func UploadIEC61850ModelFile(c *gin.Context) {
 								c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 								return
 							}
+							mappingRule := &model.MappingRule{
+								ModelID:     iec61850Model.ID,
+								IEC61850Ref: dataAttribute.IEC61850Ref,
+								Type:        "IEC61850",
+							}
+							_, err = session.Insert(mappingRule)
+							if err != nil {
+								session.Rollback()
+								c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+								return
+							}
 						}
 					}
 				}
+
+				resp.LogicalDevice = append(resp.LogicalDevice, respLogicalDevice)
 			}
 		}
 	}
-	err = session.Commit()
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	session.Commit()
 	c.JSON(http.StatusOK, resp)
 }
