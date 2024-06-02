@@ -69,12 +69,14 @@
         </tr>
       </tbody>
     </table>
-    <Pagination
-    :current-page="currentPage"
-    :total-items="totalItems"
-    :page-size="pageSize"
-    @update:current-page="currentPage = $event"
-  />
+    <div v-if="totalItems > pageSize">
+      <Pagination
+        :current-page="currentPage"
+        :total-items="totalItems"
+        :page-size="pageSize"
+        @update:current-page="currentPage = $event"
+      />
+    </div>
     <UtilsModal v-if="showUtils" @close="closeUtilsModal" />
     <ConfirmationModal
       :show="showModal"
@@ -93,9 +95,9 @@
 </template>
 
 <script lang="ts" setup>
-import { ref} from 'vue'
+import { ref } from 'vue'
 import { onMounted, computed } from 'vue'
-import {useRouter} from 'vue-router'
+import { useRouter } from 'vue-router'
 import { useGlobalStore } from '@/store'
 import type { Mapping } from '@/types/types'
 import ConfirmationModal from '@/components/ConfirmationModal.vue'

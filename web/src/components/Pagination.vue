@@ -14,9 +14,7 @@
     >
       &lsaquo;
     </button>
-    <span class="text-sm text-gray-700">
-      {{ currentPage }} / {{ totalPages }}
-    </span>
+    <span class="text-sm text-gray-700"> {{ currentPage }} / {{ totalPages }} </span>
     <button
       :disabled="currentPage === totalPages"
       @click="emit('update:currentPage', currentPage + 1)"
