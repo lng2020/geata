@@ -14,7 +14,6 @@ import (
 type IEC61850Client struct {
 	IP   string
 	Port string
-	Ctx  context.Context
 }
 
 func NewIEC61850Client(ip string, port string) *IEC61850Client {
@@ -24,14 +23,14 @@ func NewIEC61850Client(ip string, port string) *IEC61850Client {
 	}
 }
 
-func (c *IEC61850Client) Start(s chan string) {
+func (c *IEC61850Client) Start(ctx context.Context, s chan string) {
 	dir, err := os.Getwd()
 	os := runtime.GOOS
 	if err != nil {
 		slog.Error("Failed to get the current working directory", logger.ErrAttr(err))
 	}
 	dir = fmt.Sprintf("%s/internal/app/client/%s/client", dir, os)
-	cmd := exec.CommandContext(c.Ctx, dir, c.IP, c.Port)
+	cmd := exec.CommandContext(ctx, dir, c.IP, c.Port)
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		slog.Error("Failed to pipe stdout", logger.ErrAttr(err))
@@ -46,8 +45,4 @@ func (c *IEC61850Client) Start(s chan string) {
 	for scanner.Scan() {
 		s <- scanner.Text()
 	}
-}
-
-func (c *IEC61850Client) Close() {
-	c.Ctx.Done()
 }

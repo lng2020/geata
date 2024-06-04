@@ -20,7 +20,7 @@ func NewMockCmd() *cobra.Command {
 	}
 
 	mockCmd.Flags().StringVarP(&server, "server", "s", "tcp://localhost:1883", "MQTT server URL")
-	mockCmd.Flags().StringVarP(&topic, "topic", "t", "geata/mock", "MQTT topic to publish messages")
+	mockCmd.Flags().StringVarP(&topic, "topic", "t", "1", "MQTT topic to publish messages")
 	mockCmd.Flags().DurationVarP(&interval, "interval", "i", 5*time.Second, "Interval between messages")
 
 	return mockCmd

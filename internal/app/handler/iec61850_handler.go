@@ -35,23 +35,14 @@ func (hc *IEC61850HandlerConfig) NewHandler() Handler {
 
 func (h *IEC61850Handler) Handle(ctx context.Context, s chan Data) {
 	stringChan := make(chan string)
-	ctx, cancel := context.WithCancel(ctx)
-	defer cancel()
 	defer close(stringChan)
-	h.client.Ctx = ctx
-	go h.client.Start(stringChan)
+	go h.client.Start(ctx, stringChan)
 	for output := range stringChan {
 		data := Parse(output)
 		slog.Info("Received data", logger.StringAttr("IEC61850Ref", data.IEC61850Ref), logger.StringAttr("Value", data.Value))
 		if data.IEC61850Ref != "" {
 			s <- data
 		}
-	}
-}
-
-func (h *IEC61850Handler) Close() {
-	if h.client != nil {
-		h.client.Close()
 	}
 }
 

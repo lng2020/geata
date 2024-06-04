@@ -18,6 +18,7 @@ type MQTTHandlerConfig struct {
 	ClientID string
 	Username string
 	Password string
+	Topic    string
 }
 
 func (c MQTTHandlerConfig) Type() HandlerType {
@@ -30,6 +31,7 @@ func NewMQTTHandlerConfig(broker, clientID, username, password, topic string) Ha
 		ClientID: clientID,
 		Username: username,
 		Password: password,
+		Topic:    topic,
 	}
 }
 
@@ -43,10 +45,11 @@ func (hc *MQTTHandlerConfig) NewHandler() Handler {
 	client := mqtt.NewClient(opts)
 	if token := client.Connect(); token.Wait() && token.Error() != nil {
 		slog.Error("Failed to connect to MQTT broker", logger.ErrAttr(token.Error()))
+		return nil
 	}
-
 	return &MQTTHandler{
 		client: client,
+		topic:  hc.Topic,
 	}
 }
 
@@ -54,6 +57,7 @@ func (h *MQTTHandler) Handle(ctx context.Context, s chan Data) {
 	token := h.client.Subscribe(h.topic, 0, func(client mqtt.Client, msg mqtt.Message) {
 		ref := msg.Topic()
 		value := string(msg.Payload())
+		slog.Info("Received message", logger.StringAttr("topic", ref), logger.StringAttr("value", value))
 		s <- Data{IEC61850Ref: ref, Value: value}
 	})
 	token.Wait()
@@ -62,10 +66,11 @@ func (h *MQTTHandler) Handle(ctx context.Context, s chan Data) {
 		return
 	}
 
-	select {}
-}
+	<-ctx.Done()
 
-func (h *MQTTHandler) Close() {
+	if token := h.client.Unsubscribe(h.topic); token.Wait() && token.Error() != nil {
+		slog.Error("Failed to unsubscribe from topic", logger.ErrAttr(token.Error()))
+	}
 	h.client.Disconnect(250)
 }
 

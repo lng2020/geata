@@ -4,6 +4,7 @@
 package start
 
 import (
+	"context"
 	"geata/internal/app"
 	"geata/internal/app/logger"
 	"log/slog"
@@ -20,7 +21,10 @@ func NewStartCmd() *cobra.Command {
 		Use:   "start",
 		Short: "Start the application",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			myApp := app.NewApp()
+			ctx, cancel := context.WithCancel(context.Background())
+			defer cancel()
+
+			myApp := app.NewApp(ctx)
 
 			if err := myApp.NewConfig(configFile); err != nil {
 				return err

@@ -43,8 +43,8 @@ var models = []any{
 	new(model.StationConfig),
 }
 
-func NewApp() *App {
-	return &App{}
+func NewApp(ctx context.Context) *App {
+	return &App{ctx: ctx}
 }
 
 func (app *App) NewConfig(configFile string) error {
@@ -163,8 +163,6 @@ func (app *App) Init() error {
 	if err != nil {
 		return err
 	}
-
-	app.ctx = context.Background()
 
 	return nil
 }
