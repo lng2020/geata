@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"geata/internal/app/handler"
 	"geata/internal/app/model"
 	"net/http"
@@ -19,7 +20,11 @@ type Station struct {
 	LastOnlineTime string                                        `json:"lastOnlineTime"`
 	Handlers       map[handler.HandlerType]handler.Handler       `json:"-"`
 	Configs        map[handler.HandlerType]handler.HandlerConfig `json:"-"`
-	Datas          map[handler.HandlerType]chan handler.Data     `json:"-"`
+}
+
+type StationData struct {
+	StationID int
+	Data      handler.Data
 }
 
 type IEC61750Config struct {
@@ -39,6 +44,27 @@ type MQTTConfig struct {
 	Topic    string `json:"topic"`
 }
 
+func (s *Station) Start(ctx context.Context, sd chan StationData) {
+	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
+	handlerDataQueue := make(chan handler.Data)
+	defer close(handlerDataQueue)
+	for _, handler := range s.Handlers {
+		go handler.Handle(ctx, handlerDataQueue)
+	}
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case data := <-handlerDataQueue:
+			sd <- StationData{
+				StationID: int(s.ID),
+				Data:      data,
+			}
+		}
+	}
+}
+
 // This function is used for initializing stations in whole system.
 func StationInitFromDB(stationFromDB *model.Station) *Station {
 	stationConfigs, err := model.GetStationConfigByStationID(Engine, stationFromDB.ID)
@@ -54,7 +80,6 @@ func StationInitFromDB(stationFromDB *model.Station) *Station {
 	configs[mqc.Type()] = mqc
 
 	handlers := make(map[handler.HandlerType]handler.Handler)
-	datas := make(map[handler.HandlerType]chan handler.Data)
 	for _, handlerType := range handler.HandlerTypes {
 		config := configs[handlerType]
 		handlers[handlerType] = config.NewHandler()
@@ -70,7 +95,6 @@ func StationInitFromDB(stationFromDB *model.Station) *Station {
 		LastOnlineTime: stationFromDB.LastOnlineTime.Format("2006-01-02 15:04:05"),
 		Handlers:       handlers,
 		Configs:        configs,
-		Datas:          datas,
 	}
 }
 

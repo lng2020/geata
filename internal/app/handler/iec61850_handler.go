@@ -6,6 +6,7 @@ import (
 	"geata/internal/app/logger"
 	"log/slog"
 	"strings"
+	"time"
 )
 
 type IEC61850Handler struct {
@@ -36,7 +37,7 @@ func (hc *IEC61850HandlerConfig) NewHandler() Handler {
 func (h *IEC61850Handler) Handle(ctx context.Context, s chan Data) {
 	stringChan := make(chan string)
 	defer close(stringChan)
-	go h.client.Start(ctx, stringChan)
+	go h.client.Start(ctx, stringChan, 3*time.Second)
 	for output := range stringChan {
 		data := Parse(output)
 		slog.Info("Received data", logger.StringAttr("IEC61850Ref", data.IEC61850Ref), logger.StringAttr("Value", data.Value))
@@ -99,8 +100,10 @@ func Parse(output string) Data {
 	case "MX":
 		// {{56.000000},0000000000000,19700101000000.000Z}
 		val = strings.Split(val, ",")[0]
+		val = val[1:]
 		val = strings.Split(val, "{")[1]
 		val = strings.Split(val, "}")[0]
+
 		ref = ref + "$mag"
 		return Data{
 			IEC61850Ref: ref,

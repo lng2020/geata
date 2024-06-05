@@ -168,11 +168,23 @@ func (app *App) Init() error {
 }
 
 func (app *App) Start() error {
+	stationDataQueue := make(chan service.StationData, len(app.Stations))
 	for _, station := range app.Stations {
-		for _, handler := range station.Handlers {
-			go handler.Handle(app.ctx, station.Datas[handler.Type()])
-		}
+		go station.Start(app.ctx, stationDataQueue)
 	}
+	go HandleStationData(app.ctx, stationDataQueue)
 	router := web.SetupRouter()
 	return router.Run(fmt.Sprintf(":%d", app.Config.Server.Port))
+}
+
+func HandleStationData(ctx context.Context, stationDataQueue chan service.StationData) {
+	for {
+		select {
+		case stationData := <-stationDataQueue:
+			slog.Info("Station data received", "station", stationData.StationID, "data", stationData.Data)
+		case <-ctx.Done():
+			slog.Info("HandleStationData stopped")
+			return
+		}
+	}
 }
