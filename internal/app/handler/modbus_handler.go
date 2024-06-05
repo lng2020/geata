@@ -4,26 +4,34 @@ import (
 	"context"
 	"fmt"
 	"geata/internal/app/logger"
+	"geata/internal/app/model"
 	"log/slog"
 
 	"github.com/simonvetter/modbus"
+	"xorm.io/xorm"
 )
 
 type ModbusHandler struct {
-	client *modbus.ModbusClient
+	client  *modbus.ModbusClient
+	ModelID int64
+	Engine  *xorm.Engine
 }
 
 type ModbusHandlerConfig struct {
-	URL string
+	URL     string
+	ModelID int64
+	Engine  *xorm.Engine
 }
 
 func (c ModbusHandlerConfig) Type() HandlerType {
 	return ModbusHandlerType
 }
 
-func NewModbusHandlerConfig(url string) HandlerConfig {
+func NewModbusHandlerConfig(url string, id int64, e *xorm.Engine) HandlerConfig {
 	return &ModbusHandlerConfig{
-		URL: url,
+		URL:     url,
+		ModelID: id,
+		Engine:  e,
 	}
 }
 
@@ -32,11 +40,38 @@ func (hc *ModbusHandlerConfig) NewHandler() Handler {
 	if err != nil {
 		slog.Error("Failed to create modbus client", logger.ErrAttr(err))
 	}
-	return &ModbusHandler{client: client}
+	return &ModbusHandler{client: client, ModelID: hc.ModelID, Engine: hc.Engine}
 }
 
 func (h *ModbusHandler) Handle(ctx context.Context, s chan Data) {
-	slog.Info("ModbusHandler is not implemented")
+	for {
+		details := make(map[string]*model.ModbusDetail)
+		res, err := model.GetAllModbusRulesByModelID(h.Engine, h.ModelID)
+		if err != nil {
+			slog.Error("Failed to get modbus rules", logger.ErrAttr(err))
+			return
+		}
+		for _, rule := range res {
+			detail, err := model.GetModbusDetailByRuleID(h.Engine, rule.ID)
+			if err != nil {
+				slog.Error("Failed to get modbus detail", logger.ErrAttr(err))
+				return
+			}
+			details[rule.IEC61850Ref] = detail
+		}
+		for ref, detail := range details {
+			reg, err := h.ReadHoldingRegister(uint16(detail.StartAddress))
+			if err != nil {
+				slog.Error("Failed to read holding register", logger.ErrAttr(err))
+				continue
+			}
+			data := Data{
+				IEC61850Ref: ref,
+				Value:       fmt.Sprintf("%d", reg),
+			}
+			s <- data
+		}
+	}
 }
 
 func (h *ModbusHandler) ReadHoldingRegister(address uint16) (uint16, error) {
@@ -45,20 +80,6 @@ func (h *ModbusHandler) ReadHoldingRegister(address uint16) (uint16, error) {
 		return 0, fmt.Errorf("error reading holding register: %v", err)
 	}
 	return reg, nil
-}
-
-func (h *ModbusHandler) WriteHoldingRegister(address, value uint16) error {
-	err := h.client.WriteRegister(address, value)
-	if err != nil {
-		return fmt.Errorf("error writing holding register: %v", err)
-	}
-	return nil
-}
-
-func (h *ModbusHandler) Close() {
-	if h.client != nil {
-		h.client.Close()
-	}
 }
 
 func (h *ModbusHandler) IsOnline() bool {

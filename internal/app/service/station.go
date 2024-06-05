@@ -74,7 +74,7 @@ func StationInitFromDB(stationFromDB *model.Station) *Station {
 	configs := make(map[handler.HandlerType]handler.HandlerConfig)
 	ic := handler.NewIEC61850HandlerConfig(stationConfigs.IEC61850Host, strconv.Itoa(int(stationConfigs.IEC61850Port)))
 	configs[ic.Type()] = ic
-	mc := handler.NewModbusHandlerConfig(stationConfigs.ModbusURL)
+	mc := handler.NewModbusHandlerConfig(stationConfigs.ModbusURL, stationFromDB.ModelID, Engine)
 	configs[mc.Type()] = mc
 	mqc := handler.NewMQTTHandlerConfig(stationConfigs.MQTTBroker, stationConfigs.MQTTClientID, stationConfigs.MQTTUsername, stationConfigs.MQTTPassword, stationConfigs.MQTTTopic)
 	configs[mqc.Type()] = mqc

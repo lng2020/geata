@@ -10,7 +10,8 @@ import (
 )
 
 type IEC61850Handler struct {
-	client *client.IEC61850Client
+	client  *client.IEC61850Client
+	ModelID int64
 }
 
 type IEC61850HandlerConfig struct {

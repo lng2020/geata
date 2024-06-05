@@ -57,3 +57,21 @@ func DeleteMappingRule(engine *xorm.Engine, rule *MappingRule) error {
 	_, err := engine.ID(rule.ID).Delete(rule)
 	return err
 }
+
+func GetAllModbusRulesByModelID(engine *xorm.Engine, modelID int64) ([]*MappingRule, error) {
+	var rules []*MappingRule
+	err := engine.Where("model_id = ? AND type = ?", modelID, "modbus").Find(&rules)
+	if err != nil {
+		return nil, err
+	}
+	return rules, nil
+}
+
+func GetAllMqttRulesByModelID(engine *xorm.Engine, modelID int64) ([]*MappingRule, error) {
+	var rules []*MappingRule
+	err := engine.Where("model_id = ? AND type = ?", modelID, "mqtt").Find(&rules)
+	if err != nil {
+		return nil, err
+	}
+	return rules, nil
+}

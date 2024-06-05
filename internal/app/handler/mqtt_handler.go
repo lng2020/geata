@@ -9,8 +9,9 @@ import (
 )
 
 type MQTTHandler struct {
-	client mqtt.Client
-	topic  string
+	client  mqtt.Client
+	topic   string
+	ModelID int64
 }
 
 type MQTTHandlerConfig struct {

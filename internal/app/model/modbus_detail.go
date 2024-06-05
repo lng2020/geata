@@ -3,12 +3,21 @@
 
 package model
 
-import "xorm.io/xorm"
+import (
+	"time"
+
+	"xorm.io/xorm"
+)
 
 type ModbusDetail struct {
-	ID     int64 `xorm:"pk autoincr 'id'" json:"id"`
-	RuleID int64 `xorm:"'rule_id' index" json:"ruleID"`
-	// other fields specific to ModbusDetail as needed.
+	ID           int64     `xorm:"pk autoincr 'id'" json:"id"`
+	RuleID       int64     `xorm:"'rule_id' index" json:"ruleID"`
+	FunctionCode int64     `xorm:"'function_code'" json:"function_code"`
+	StartAddress int64     `xorm:"'start_address'" json:"start_address"`
+	Length       int64     `xorm:"'length'" json:"length"`
+	DataType     int64     `xorm:"'data_type'" json:"data_type"`
+	CreateTime   time.Time `xorm:"'create_time' created" json:"createTime"`
+	UpdateTime   time.Time `xorm:"'update_time' updated" json:"updateTime"`
 }
 
 func (m *ModbusDetail) TableName() string {
