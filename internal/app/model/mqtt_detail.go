@@ -49,3 +49,11 @@ func DeleteMqttDetail(engine *xorm.Engine, mqttDetail *MqttDetail) error {
 	_, err := engine.ID(mqttDetail.ID).Delete(mqttDetail)
 	return err
 }
+
+func CreateOrUpdateMQTTDetail(engine *xorm.Engine, mqttDetail *MqttDetail) error {
+	_, err := engine.Insert(mqttDetail)
+	if err != nil {
+		_, err = engine.ID(mqttDetail.ID).Update(mqttDetail)
+	}
+	return err
+}

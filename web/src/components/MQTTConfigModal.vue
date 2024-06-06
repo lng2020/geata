@@ -12,7 +12,7 @@
           <input
             type="text"
             id="topic"
-            v-model="topic"
+            v-model="detail.topic"
             class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
             required
           />
@@ -21,7 +21,7 @@
           <label for="qos" class="block text-gray-700 font-bold mb-2">{{ $t('qosLabel') }}</label>
           <select
             id="qos"
-            v-model="qos"
+            v-model="detail.qos"
             class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
             required
           >
@@ -48,21 +48,25 @@
       </form>
     </div>
   </div>
+
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
+import type { MQTTDetail } from '@/types/types';
 
-const topic = ref('')
-const qos = ref('0')
+const detail = ref<MQTTDetail>({
+  topic: '',
+  qos: '0'
+})
 
 const emit = defineEmits<{
-  (event: 'save', config: { topic: string; qos: string }): void
+  (event: 'save', config: MQTTDetail): void
   (event: 'cancel'): void
 }>()
 
 const saveConfig = () => {
-  emit('save', { topic: topic.value, qos: qos.value })
+  emit('save', detail.value)
 }
 
 const cancel = () => {

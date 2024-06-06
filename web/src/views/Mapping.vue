@@ -99,7 +99,7 @@ import { ref } from 'vue'
 import { onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useGlobalStore } from '@/store'
-import type { Mapping } from '@/types/types'
+import type { Mapping, MQTTDetail, ModbusDetail } from '@/types/types'
 import ConfirmationModal from '@/components/ConfirmationModal.vue'
 import MQTTConfigModal from '@/components/MQTTConfigModal.vue'
 import ModbusConfigModal from '@/components/ModbusConfigModal.vue'
@@ -110,7 +110,7 @@ const router = useRouter()
 const store = useGlobalStore()
 let mapping = ref<Mapping[]>([])
 const showModal = ref(false)
-const selectedMapping = ref<Mapping | null>(null)
+const newMapping = ref<Mapping| null>(null)
 const showMQTTConfig = ref(false)
 const showModbusConfig = ref(false)
 const showUtils = ref(false)
@@ -146,12 +146,13 @@ const fetchMapping = async (modelId: number) => {
   }
 }
 const editMapping = (mapping: Mapping) => {
+  newMapping.value = mapping
   showConfigModal(mapping)
 }
 
 const handleTypeChange = (mapping: Mapping) => {
   if (mapping.type === 'IEC61850') {
-    selectedMapping.value = mapping
+    newMapping.value = mapping
     showModal.value = true
   } else {
     showConfigModal(mapping)
@@ -159,24 +160,50 @@ const handleTypeChange = (mapping: Mapping) => {
 }
 
 const showConfigModal = (mapping: Mapping) => {
-  if (mapping.type === 'MQTT') {
+  newMapping.value = mapping
+  if (newMapping.value.type === 'MQTT') {
     showMQTTConfig.value = true
-  } else if (mapping.type === 'Modbus') {
+  } else if (newMapping.value.type === 'Modbus') {
     showModbusConfig.value = true
   }
 }
 
-const saveMQTTConfig = (config: { topic: string; qos: string }) => {
-  console.log('MQTT Config', config)
+const saveMQTTConfig = async (config: MQTTDetail) => {
+  await changeMappingRule(null as any, config)
   showMQTTConfig.value = false
+}
+
+const changeMappingRule = async (modbusDetail: ModbusDetail, mqttDetail: MQTTDetail) => {
+  if (newMapping.value) {
+    try {
+      await fetch(`/api/mapping_rule/${newMapping.value.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          mappingRule: {
+            id: newMapping.value.id,
+            iec61850Ref: newMapping.value.iec61850Ref,
+            type: newMapping.value.type,
+          },
+          modbusDetail,
+          mqttDetail,
+        }),
+      })
+    } catch (error) {
+      console.error('Error:', error)
+    }
+  }
 }
 
 const closeMQTTConfig = () => {
   showMQTTConfig.value = false
 }
 
-const saveModbusConfig = (config: { address: number; dataType: string }) => {
-  console.log('Modbus Config', config)
+const saveModbusConfig = async (config: ModbusDetail) => {
+  console.log(config)
+  await changeMappingRule(config, null as any)
   showModbusConfig.value = false
 }
 
@@ -184,15 +211,16 @@ const closeModbusConfig = () => {
   showModbusConfig.value = false
 }
 
-const confirmAction = () => {
-  if (selectedMapping.value) {
+const confirmAction = async () => {
+  if (newMapping.value) {
+    await changeMappingRule(null as any, null as any)
     closeModal()
   }
 }
 
 const closeModal = () => {
   showModal.value = false
-  selectedMapping.value = null
+  newMapping.value = null
 }
 
 const showUtilsModal = () => {

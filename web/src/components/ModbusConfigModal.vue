@@ -11,7 +11,7 @@
           <input
             type="number"
             id="address"
-            v-model="address"
+            v-model="detail.startAddress"
             class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
             required
           />
@@ -22,7 +22,7 @@
           }}</label>
           <select
             id="dataType"
-            v-model="dataType"
+            v-model="detail.dataType"
             class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
             required
           >
@@ -53,17 +53,20 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
+import type { ModbusDetail } from '@/types/types'
 
-const address = ref(0)
-const dataType = ref('int16')
+const detail = ref<ModbusDetail>({
+  startAddress: 0,
+  dataType: 'int16'
+})
 
 const emit = defineEmits<{
-  (event: 'save', config: { address: number; dataType: string }): void
+  (event: 'save', config: ModbusDetail): void
   (event: 'cancel'): void
 }>()
 
 const saveConfig = () => {
-  emit('save', { address: address.value, dataType: dataType.value })
+  emit('save', detail.value)
 }
 
 const cancel = () => {

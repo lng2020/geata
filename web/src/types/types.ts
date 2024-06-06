@@ -90,3 +90,13 @@ export interface MQTTConfig {
   password: string
   topic: string
 }
+
+export interface ModbusDetail {
+  startAddress: number
+  dataType: string 
+}
+
+export interface MQTTDetail {
+  topic: string
+  qos: string
+}
