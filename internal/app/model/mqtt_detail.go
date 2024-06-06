@@ -3,12 +3,20 @@
 
 package model
 
-import "xorm.io/xorm"
+import (
+	"time"
+
+	"xorm.io/xorm"
+)
 
 type MqttDetail struct {
-	ID     int64 `xorm:"pk autoincr 'id'" json:"id"`
-	RuleID int64 `xorm:"'rule_id' index" json:"ruleID"`
-	// other fields specific to MqttDetail as needed.
+	ID          int64     `xorm:"pk autoincr 'id'" json:"id"`
+	RuleID      int64     `xorm:"'rule_id' index" json:"ruleID"`
+	Field       string    `xorm:"'field'" json:"field"`
+	DataType    string    `xorm:"'data_type'" json:"dataType"`
+	PayloadType string    `xorm:"'payload_type'" json:"payloadType"`
+	CreatedAt   time.Time `xorm:"created" json:"createdAt"`
+	UpdatedAt   time.Time `xorm:"updated" json:"updatedAt"`
 }
 
 func (m *MqttDetail) TableName() string {

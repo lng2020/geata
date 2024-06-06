@@ -2,11 +2,17 @@ package handler
 
 import (
 	"context"
+	"encoding/json"
 	"geata/internal/app/logger"
 	"log/slog"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 )
+
+type Message struct {
+	Ref   string `json:"ref"`
+	Value string `json:"value"`
+}
 
 type MQTTHandler struct {
 	client  mqtt.Client
@@ -56,8 +62,13 @@ func (hc *MQTTHandlerConfig) NewHandler() Handler {
 
 func (h *MQTTHandler) Handle(ctx context.Context, s chan Data) {
 	token := h.client.Subscribe(h.topic, 0, func(client mqtt.Client, msg mqtt.Message) {
-		ref := msg.Topic()
-		value := string(msg.Payload())
+		jsonMsg := Message{}
+		if err := json.Unmarshal(msg.Payload(), &jsonMsg); err != nil {
+			slog.Error("Failed to unmarshal message", logger.ErrAttr(err))
+			return
+		}
+		ref := jsonMsg.Ref
+		value := jsonMsg.Value
 		slog.Info("Received message", logger.StringAttr("topic", ref), logger.StringAttr("value", value))
 		s <- Data{IEC61850Ref: ref, Value: value}
 	})
