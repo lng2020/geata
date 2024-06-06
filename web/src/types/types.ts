@@ -93,7 +93,7 @@ export interface MQTTConfig {
 
 export interface ModbusDetail {
   startAddress: number
-  dataType: string 
+  dataType: string
 }
 
 export interface MQTTDetail {

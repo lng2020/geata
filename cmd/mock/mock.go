@@ -9,6 +9,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
+type Message struct {
+	Ref   string `json:"ref"`
+	Value string `json:"value"`
+}
+
 var server, topic string
 var interval time.Duration
 

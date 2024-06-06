@@ -110,7 +110,7 @@ const router = useRouter()
 const store = useGlobalStore()
 let mapping = ref<Mapping[]>([])
 const showModal = ref(false)
-const newMapping = ref<Mapping| null>(null)
+const newMapping = ref<Mapping | null>(null)
 const showMQTTConfig = ref(false)
 const showModbusConfig = ref(false)
 const showUtils = ref(false)
@@ -179,17 +179,17 @@ const changeMappingRule = async (modbusDetail: ModbusDetail, mqttDetail: MQTTDet
       await fetch(`/api/mapping_rule/${newMapping.value.id}`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           mappingRule: {
             id: newMapping.value.id,
             iec61850Ref: newMapping.value.iec61850Ref,
-            type: newMapping.value.type,
+            type: newMapping.value.type
           },
           modbusDetail,
-          mqttDetail,
-        }),
+          mqttDetail
+        })
       })
     } catch (error) {
       console.error('Error:', error)

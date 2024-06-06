@@ -48,12 +48,11 @@
       </form>
     </div>
   </div>
-
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import type { MQTTDetail } from '@/types/types';
+import type { MQTTDetail } from '@/types/types'
 
 const detail = ref<MQTTDetail>({
   topic: '',

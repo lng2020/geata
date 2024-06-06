@@ -68,6 +68,7 @@ func (h *ModbusHandler) Handle(ctx context.Context, s chan Data) {
 			data := Data{
 				IEC61850Ref: ref,
 				Value:       fmt.Sprintf("%d", reg),
+				DataSource:  "Modbus",
 			}
 			s <- data
 		}

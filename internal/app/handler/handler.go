@@ -11,6 +11,7 @@ const (
 )
 
 type Data struct {
+	DataSource  string
 	IEC61850Ref string
 	Value       string
 }

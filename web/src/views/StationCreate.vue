@@ -82,7 +82,9 @@
         <div v-show="step === 3" class="mb-8">
           <div v-if="model" class="mb-4">
             <h2 class="text-xl font-bold mb-2">IEC 61850 Model</h2>
-            <div class="border border-gray-300 rounded-md p-4 bg-white shadow-sm overflow-y-auto max-h-[500px]">
+            <div
+              class="border border-gray-300 rounded-md p-4 bg-white shadow-sm overflow-y-auto max-h-[500px]"
+            >
               <table class="w-full border-collapse">
                 <thead>
                   <tr class="bg-gray-200 text-gray-700">

@@ -109,6 +109,7 @@ func Parse(output string) Data {
 		return Data{
 			IEC61850Ref: ref,
 			Value:       val,
+			DataSource:  "IEC61850",
 		}
 	}
 	return Data{}
