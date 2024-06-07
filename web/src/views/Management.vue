@@ -170,7 +170,12 @@ const startDate = ref('')
 const endDate = ref('')
 logs.value = [
   { id: 1, date: '2024-6-7', user: 'admin', action: 'Login' },
-  { id: 2, date: '2024-6-7', user: 'admin', action: 'Logout' }
+  { id: 2, date: '2024-6-7', user: 'admin', action: 'Logout' },
+  { id: 3, date: '2024-6-7', user: 'admin', action: 'Login' },
+  { id: 4, date: '2024-6-7', user: 'test_user_1', action: 'Login'},
+  { id: 5, date: '2024-6-7', user: 'test_user_1', action: 'Logout'},
+  { id: 6, date: '2024-6-7', user: 'test_user_2', action: 'Login'},
+  { id: 7, date: '2024-6-7', user: 'test_user_2', action: 'Logout'},
 ]
 
 const fetchUsers = async () => {

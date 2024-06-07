@@ -171,9 +171,11 @@ const logLevel = ref<string>('info')
 const logStartDate = ref<string>('')
 const logEndDate = ref<string>('')
 const logs = ref<Log[]>([
-  { id: 1, timestamp: '2023-05-15 10:00:00', level: 'info', message: 'System started' },
-  { id: 2, timestamp: '2023-05-15 11:30:00', level: 'warning', message: 'Low disk space' },
-  { id: 3, timestamp: '2023-05-15 13:45:00', level: 'error', message: 'Connection lost' }
+  { id: 1, timestamp: '2023-6-7 15:00:02', level: 'info', message: 'System started' },
+  { id: 2, timestamp: '2023-6-7 15:00:22', level: 'info', message: 'admin logged in' },
+  { id: 3, timestamp: '2023-6-7 15:00:31', level: 'info', message: 'test_station_1 is online' },
+  { id: 4, timestamp: '2023-6-7 15:00:56', level: 'info', message: "test_station_2 is online"},
+  { id: 5, timestamp: '2023-6-7 15:01:09', level: 'info', message: 'test_station_3 is created'},
 ])
 
 const filteredLogs = computed(() => {
