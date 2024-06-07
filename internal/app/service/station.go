@@ -23,8 +23,8 @@ type Station struct {
 }
 
 type StationData struct {
-	StationID int
-	Data      handler.Data
+	ModelID int
+	Data    handler.Data
 }
 
 type IEC61750Config struct {
@@ -58,8 +58,8 @@ func (s *Station) Start(ctx context.Context, sd chan StationData) {
 			return
 		case data := <-handlerDataQueue:
 			sd <- StationData{
-				StationID: int(s.ID),
-				Data:      data,
+				ModelID: int(s.ModelID),
+				Data:    data,
 			}
 		}
 	}
@@ -198,6 +198,7 @@ func CreateStation(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+	station.ID = stationId
 	c.JSON(http.StatusOK, station)
 }
 

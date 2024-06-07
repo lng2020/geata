@@ -105,7 +105,7 @@
 <script lang="ts" setup>
 import { ref, onMounted, computed } from 'vue'
 import type { IEC61850Model, DataObject } from '@/types/types'
-import { useRouter } from 'vue-router'
+import { useRouter, onBeforeRouteUpdate } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import Pagination from '@/components/Pagination.vue'
 
@@ -118,9 +118,19 @@ const currentPage = ref(1)
 const pageSize = ref(8)
 
 onMounted(async () => {
-  const id = router.currentRoute.value.params.id
-  modelId.value = Number(id)
-  model.value = await fetchModelById(modelId.value)
+  const id = Number(router.currentRoute.value.params.id)
+  modelId.value = id
+  model.value = await fetchModelById(id)
+  setlnId(model.value.logicalDevice[0].logicalNode[0].id)
+})
+
+onBeforeRouteUpdate(async (to, from) => {
+  if (to.params.id !== from.params.id) {
+    const id = Number(to.params.id)
+    modelId.value = id
+    model.value = await fetchModelById(id)
+    setlnId(model.value.logicalDevice[0].logicalNode[0].id)
+  }
 })
 
 let dataObjects = ref<DataObject[]>([])

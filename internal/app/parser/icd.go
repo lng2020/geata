@@ -8,14 +8,16 @@ type SCL struct {
 		ID            string `xml:"id,attr"`
 		NameStructure string `xml:"nameStructure,attr"`
 	} `xml:"Header"`
-	IED               []IED             `xml:"IED"`
+	IED               IED               `xml:"IED"`
 	DataTypeTemplates DataTypeTemplates `xml:"DataTypeTemplates"`
 }
 
 type IED struct {
-	Name        string        `xml:"name,attr"`
-	Services    Services      `xml:"Services"`
-	AccessPoint []AccessPoint `xml:"AccessPoint"`
+	Name         string        `xml:"name,attr"`
+	Description  string        `xml:"desc,attr"`
+	Manufacturer string        `xml:"manufacturer,attr"`
+	Services     Services      `xml:"Services"`
+	AccessPoint  []AccessPoint `xml:"AccessPoint"`
 }
 
 type Services struct {

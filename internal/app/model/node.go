@@ -8,6 +8,7 @@ import (
 
 type Node struct {
 	ID           int64     `xorm:"pk autoincr 'id'" json:"id"`
+	ModelID      int64     `xorm:"'model_id' index" json:"modelId"`
 	DataObjectID int64     `xorm:"'data_object_id' index" json:"-"`
 	Name         string    `xorm:"'name'" json:"name"`
 	Value        string    `xorm:"'value'" json:"value"`
@@ -66,5 +67,10 @@ func UpdateNode(engine *xorm.Engine, node *Node) error {
 
 func DeleteNode(engine *xorm.Engine, node *Node) error {
 	_, err := engine.ID(node.ID).Delete(node)
+	return err
+}
+
+func UpdateNodeValueByModelIDAndDataSource(engine *xorm.Engine, modelID int, ref, value, dataSource string) error {
+	_, err := engine.Table(new(Node)).Where("model_id = ? AND iec61850_ref = ? AND data_source = ?", modelID, ref, dataSource).Update(map[string]interface{}{"value": value})
 	return err
 }

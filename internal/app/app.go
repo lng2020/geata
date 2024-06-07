@@ -181,7 +181,10 @@ func HandleStationData(ctx context.Context, stationDataQueue chan service.Statio
 	for {
 		select {
 		case stationData := <-stationDataQueue:
-			slog.Info("Station data received", "station", stationData.StationID, "data", stationData.Data)
+			err := model.UpdateNodeValueByModelIDAndDataSource(service.Engine, stationData.ModelID, stationData.Data.IEC61850Ref, stationData.Data.Value, stationData.Data.DataSource)
+			if err != nil {
+				slog.Error("Failed to update node value", logger.ErrAttr(err))
+			}
 		case <-ctx.Done():
 			slog.Info("HandleStationData stopped")
 			return

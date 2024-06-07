@@ -28,17 +28,15 @@ func TestParseIEC61850Model(t *testing.T) {
 		t.Errorf("Unexpected header nameStructure. Got: %s, Expected: %s", scl.Header.NameStructure, expectedHeader.NameStructure)
 	}
 
-	if len(scl.IED) == 0 {
-		t.Fatal("No IED found in the model")
-	}
-	if scl.IED[0].Name != expectedIEDName {
-		t.Errorf("Unexpected IED name. Got: %s, Expected: %s", scl.IED[0].Name, expectedIEDName)
+	ied := scl.IED
+	if ied.Name != expectedIEDName {
+		t.Errorf("Unexpected IED name. Got: %s, Expected: %s", ied.Name, expectedIEDName)
 	}
 
-	if len(scl.IED[0].AccessPoint) == 0 {
+	if len(ied.AccessPoint) == 0 {
 		t.Fatal("No access point found in the IED")
 	}
-	if scl.IED[0].AccessPoint[0].Name != expectedAccessPointName {
-		t.Errorf("Unexpected access point name. Got: %s, Expected: %s", scl.IED[0].AccessPoint[0].Name, expectedAccessPointName)
+	if ied.AccessPoint[0].Name != expectedAccessPointName {
+		t.Errorf("Unexpected access point name. Got: %s, Expected: %s", ied.AccessPoint[0].Name, expectedAccessPointName)
 	}
 }
