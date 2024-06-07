@@ -30,8 +30,8 @@ func CreateModbusDetail(engine *xorm.Engine, modbusDetail *ModbusDetail) error {
 }
 
 func GetModbusDetailByRuleID(engine *xorm.Engine, ruleID int64) (*ModbusDetail, error) {
-	modbusDetail := new(ModbusDetail)
-	has, err := engine.ID(ruleID).Get(modbusDetail)
+	modbusDetail := &ModbusDetail{RuleID: ruleID}
+	has, err := engine.Get(modbusDetail)
 	if err != nil {
 		return nil, err
 	}

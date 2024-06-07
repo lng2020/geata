@@ -6,7 +6,6 @@ import (
 	"geata/internal/app/logger"
 	"geata/internal/app/model"
 	"log/slog"
-	"time"
 
 	"github.com/simonvetter/modbus"
 	"xorm.io/xorm"
@@ -60,7 +59,7 @@ func (h *ModbusHandler) Handle(ctx context.Context, s chan Data) {
 		}
 		for _, rule := range res {
 			detail, err := model.GetModbusDetailByRuleID(h.Engine, rule.ID)
-			if err != nil {
+			if err != nil || detail == nil {
 				slog.Error("Failed to get modbus detail", logger.ErrAttr(err))
 				return
 			}
@@ -79,7 +78,10 @@ func (h *ModbusHandler) Handle(ctx context.Context, s chan Data) {
 			}
 			s <- data
 		}
-		time.Sleep(3 * time.Second)
+		err = h.client.Close()
+		if err != nil {
+			slog.Error("Failed to close modbus connection", logger.ErrAttr(err))
+		}
 	}
 }
 
