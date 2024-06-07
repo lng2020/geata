@@ -39,7 +39,7 @@
             <button
               type="button"
               class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-              @click="nextStep"
+              @click="validateStationConfig"
             >
               Confirm
             </button>
@@ -72,7 +72,7 @@
             <button
               type="button"
               class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-              @click="nextStep"
+              @click="validateICDFile"
             >
               Confirm
             </button>
@@ -81,7 +81,7 @@
 
         <div v-show="step === 3" class="mb-8">
           <div v-if="model" class="mb-4">
-            <h2 class="text-xl font-bold mb-2">IEC 61850 Model</h2>
+            <h2 class="text-xl font-bold mb-2">IEC61850 Model</h2>
             <div
               class="border border-gray-300 rounded-md p-4 bg-white shadow-sm overflow-y-auto max-h-[500px]"
             >
@@ -196,9 +196,25 @@ function formatFileSize(size: number) {
   return `${size.toFixed(2)} ${units[index]}`
 }
 
-async function nextStep() {
+const nextStep = () => {
   if (step.value < 3) {
     step.value++
+  }
+}
+
+const validateStationConfig = () => {
+  if (stationName.value && host.value && port.value > 0) {
+    nextStep()
+  } else {
+    alert('Please fill in all fields')
+  }
+}
+
+const validateICDFile = () => {
+  if (icdFile.value) {
+    nextStep()
+  } else {
+    alert('Please upload an ICD file')
   }
 }
 

@@ -144,7 +144,10 @@ const enUS = {
   deleteStation: 'Delete Station',
   url: 'URL',
   errorTitle: 'Error',
-  errorMessage: 'Oops! Something went wrong'
+  errorMessage: 'Oops! Something went wrong',
+  loginSuccess: 'Login successful!',
+  registrationFailed: 'Registration failed. Please try again.',
+  loginFailed: 'Login failed. Please check your credentials.'
 }
 
 const zhCN = {
@@ -291,7 +294,10 @@ const zhCN = {
   deleteStation: '删除电站',
   url: 'URL',
   errorTitle: '错误',
-  errorMessage: '糟糕！出错了'
+  errorMessage: '糟糕！出错了',
+  loginSuccess: '登录成功！',
+  registrationFailed: '注册失败。请重试。',
+  loginFailed: '登录失败。请检查您的凭据。'
 }
 
 type MessageSchema = typeof enUS

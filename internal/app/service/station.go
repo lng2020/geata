@@ -6,6 +6,7 @@ import (
 	"geata/internal/app/model"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -164,8 +165,6 @@ func CreateStation(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
-	// create station and station config
 	session := Engine.NewSession()
 	defer session.Close()
 	err = session.Begin()
@@ -173,20 +172,21 @@ func CreateStation(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	err = model.CreateStation(Engine, &model.Station{
-		Name:     station.Name,
-		Host:     station.Host,
-		Port:     station.Port,
-		ModelID:  station.ModelID,
-		IsOnline: false,
-	})
+	stationInDB := &model.Station{
+		Name:           station.Name,
+		Host:           station.Host,
+		Port:           station.Port,
+		ModelID:        station.ModelID,
+		IsOnline:       true,
+		LastOnlineTime: time.Now(),
+	}
+	err = model.CreateStation(Engine, stationInDB)
 	if err != nil {
 		session.Rollback()
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	stationId := model.GetStationIDByModelID(Engine, station.ModelID)
-	stationConfig := CreateDefaultStationConfig(stationId)
+	stationConfig := CreateStationConfigByStation(stationInDB)
 	err = model.CreateStationConfig(Engine, stationConfig)
 	if err != nil {
 		session.Rollback()
@@ -198,7 +198,6 @@ func CreateStation(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	station.ID = stationId
 	c.JSON(http.StatusOK, station)
 }
 

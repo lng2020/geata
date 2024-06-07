@@ -32,13 +32,14 @@ export const useAuthStore = defineStore({
         body: JSON.stringify(credentials)
       })
       if (!response.ok) {
-        return
+        return false
       }
       const data: LoginResponse = await response.json()
       this.token = data.token
       this.user = data.user
       localStorage.setItem('token', this.token)
       localStorage.setItem('user', JSON.stringify(this.user))
+      return true
     },
     logout() {
       this.token = ''
@@ -56,13 +57,14 @@ export const useAuthStore = defineStore({
         body: JSON.stringify(credentials)
       })
       if (!response.ok) {
-        return
+        return false
       }
       const data: LoginResponse = await response.json()
       this.token = data.token
       this.user = data.user
       localStorage.setItem('token', this.token)
       localStorage.setItem('user', JSON.stringify(this.user))
+      return true
     },
     async changeLang(lang: string) {
       const response = await fetch('/api/user/lang', {

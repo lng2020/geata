@@ -49,8 +49,6 @@
           </a>
         </div>
       </form>
-      <p v-if="successMessage" class="text-green-500 text-center mt-4">{{ successMessage }}</p>
-      <p v-if="errorMessage" class="text-red-500 text-center mt-4">{{ errorMessage }}</p>
     </div>
   </div>
 </template>
@@ -71,8 +69,6 @@ const username = ref('')
 const password = ref('')
 const usernameError = ref('')
 const passwordError = ref('')
-const successMessage = ref('')
-const errorMessage = ref('')
 
 const toggleForm = () => {
   isRegistering.value = !isRegistering.value
@@ -84,8 +80,6 @@ const clearForm = () => {
   password.value = ''
   usernameError.value = ''
   passwordError.value = ''
-  successMessage.value = ''
-  errorMessage.value = ''
 }
 
 const validateForm = () => {
@@ -100,14 +94,23 @@ const handleSubmit = async () => {
   try {
     if (isRegistering.value) {
       await authStore.register(username.value, password.value)
-      successMessage.value = t('registrationSuccess')
+      alert(t('registrationSuccess'))
       toggleForm()
     } else {
-      await authStore.login(username.value, password.value)
-      router.push('/')
+      const isSuccess = await authStore.login(username.value, password.value)
+      if (isSuccess) {
+        alert(t('loginSuccess'))
+        router.push('/')
+      } else {
+        alert(t('loginFailed'))
+      }
     }
   } catch (error) {
-    errorMessage.value = t('loginError')
+    if (isRegistering.value) {
+      alert(t('registrationFailed'))
+    } else {
+      alert(t('loginFailed'))
+    }
   }
 }
 </script>

@@ -135,16 +135,6 @@
                     </div>
                     <div>
                       <label class="block text-gray-700 font-bold text-sm mb-2">{{
-                        $t('port')
-                      }}</label>
-                      <input
-                        type="number"
-                        v-model="mqttConfig.clientId"
-                        class="w-full border border-gray-400 hover:border-gray-500 px-2 py-1 rounded shadow focus:outline-none focus:shadow-outline"
-                      />
-                    </div>
-                    <div>
-                      <label class="block text-gray-700 font-bold text-sm mb-2">{{
                         $t('username')
                       }}</label>
                       <input
@@ -283,7 +273,7 @@
 <script setup lang="ts">
 import { useGlobalStore } from '@/store'
 import { onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { onBeforeRouteUpdate, useRouter } from 'vue-router'
 import ConfirmationModal from '@/components/ConfirmationModal.vue'
 import type { Station, MQTTConfig, IEC61850Config, ModbusConfig } from '@/types/types'
 
@@ -304,16 +294,28 @@ let showModal = ref<boolean>(false)
 
 onMounted(async () => {
   const stationId = Number(router.currentRoute.value.params.id)
+  await initStationSettings(stationId)
+})
+
+onBeforeRouteUpdate(async (to, from) => {
+  if (to.params.id !== from.params.id) {
+    const stationId = Number(to.params.id)
+    await initStationSettings(stationId)
+  }
+})
+
+const initStationSettings = async (stationId: number) => {
   const station = store.stations.find((s) => s.id === stationId)
   if (!station) {
     router.push('/error')
+  } else {
+    rawStation.value = station
+    editedStation.value = station
+    await fetchStationIEC61850Config(stationId)
+    await fetchStationModbusConfig(stationId)
+    await fetchStationMQTTConfig(stationId)
   }
-  rawStation = ref<Station>(station as Station)
-  editedStation = ref<Station>(station as Station)
-  fetchStationIEC61850Config(stationId)
-  fetchStationModbusConfig(stationId)
-  fetchStationMQTTConfig(stationId)
-})
+}
 
 const fetchStationIEC61850Config = async (stationId: number) => {
   try {
