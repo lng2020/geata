@@ -63,6 +63,7 @@ export interface User {
   role: RoleType
   lang: string
   avatar: string
+  status: string
 }
 
 export interface LoginResponse {

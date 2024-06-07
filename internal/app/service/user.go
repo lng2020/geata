@@ -20,6 +20,7 @@ type User struct {
 	Username string `json:"username"`
 	Role     string `json:"role"`
 	Lang     string `json:"lang"`
+	Status   string `json:"status"`
 }
 
 func generateToken(user *model.User) (string, error) {
@@ -187,4 +188,28 @@ func UpdateUserLang(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"lang": lang})
+}
+
+// @Summary List users
+// @Description List all users
+// @Produce json
+// @Success 200 {array} User
+// @Router /mangament/users [get]
+func ListUsers(c *gin.Context) {
+	users, err := model.GetAllUsers(Engine)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	var res []User
+	for _, user := range users {
+		res = append(res, User{
+			ID:       user.ID,
+			Username: user.Username,
+			Role:     roleTypeToRole(model.RoleType(user.RoleID)),
+			Lang:     user.Lang,
+			Status:   "Active",
+		})
+	}
+	c.JSON(http.StatusOK, res)
 }

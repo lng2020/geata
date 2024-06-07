@@ -11,8 +11,6 @@ const (
 	RoleUser
 )
 
-const hasUser = false
-
 type User struct {
 	ID           int64  `xorm:"pk autoincr 'id'" `
 	Username     string `xorm:"'username'"`
@@ -44,7 +42,11 @@ func IfUsernameExist(engine *xorm.Engine, username string) (bool, error) {
 }
 
 func HasUser(engine *xorm.Engine) (bool, error) {
-	return hasUser, nil
+	if count, err := engine.Count(&User{}); err != nil {
+		return false, err
+	} else {
+		return count > 0, nil
+	}
 }
 
 func UpdateUser(engine *xorm.Engine, user *User) error {
@@ -59,4 +61,10 @@ func GetUserByID(engine *xorm.Engine, id int64) (*User, error) {
 		return nil, nil
 	}
 	return user, err
+}
+
+func GetAllUsers(engine *xorm.Engine) ([]*User, error) {
+	users := make([]*User, 0)
+	err := engine.Find(&users)
+	return users, err
 }

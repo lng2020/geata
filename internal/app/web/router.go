@@ -22,7 +22,7 @@ import (
 
 func RoleMiddleware(rt model.RoleType) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		tokenString := c.GetHeader("Authorization")
+		tokenString := strings.TrimPrefix(c.GetHeader("Authorization"), "Bearer ")
 		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 			return []byte("your_secret_key"), nil
 		})
@@ -32,13 +32,14 @@ func RoleMiddleware(rt model.RoleType) gin.HandlerFunc {
 			return
 		}
 
-		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-			if claims["role"] == float64(rt) {
-				c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"error": "Forbidden"})
-				return
-			}
-		} else {
+		mapClaims, ok := token.Claims.(jwt.MapClaims)
+		if !ok || !token.Valid {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+			return
+		}
+		role := mapClaims["role"].(float64)
+		if model.RoleType(role) != rt {
+			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"error": "Forbidden"})
 			return
 		}
 		c.Next()
@@ -126,6 +127,13 @@ func SetupRouter() *gin.Engine {
 
 		v1.GET("/audit_log/:log_id", service.GetAuditLogByID)
 		v1.GET("/audit_log", service.GetAllAuditLogs)
+
+		managment := v1.Group("/management")
+		managment.Use(RoleMiddleware(model.RoleAdmin))
+		{
+			managment.GET("/user", service.ListUsers)
+		}
+
 	}
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
