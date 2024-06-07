@@ -24,13 +24,13 @@ type Station struct {
 }
 
 type StationData struct {
-	ModelID int
+	ModelID int64
 	Data    handler.Data
 }
 
 type IEC61750Config struct {
 	Host string `json:"host"`
-	Port int    `json:"port"`
+	Port int64  `json:"port"`
 }
 
 type ModbusConfig struct {
@@ -59,7 +59,7 @@ func (s *Station) Start(ctx context.Context, sd chan StationData) {
 			return
 		case data := <-handlerDataQueue:
 			sd <- StationData{
-				ModelID: int(s.ModelID),
+				ModelID: s.ModelID,
 				Data:    data,
 			}
 		}
@@ -198,6 +198,7 @@ func CreateStation(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+	station.ID = stationInDB.ID
 	c.JSON(http.StatusOK, station)
 }
 
@@ -293,7 +294,7 @@ func GetIEC61850ConfigForStation(c *gin.Context) {
 	}
 	resp := IEC61750Config{
 		Host: stationConfig.IEC61850Host,
-		Port: int(stationConfig.IEC61850Port),
+		Port: stationConfig.IEC61850Port,
 	}
 	c.JSON(http.StatusOK, resp)
 }

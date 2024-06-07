@@ -89,7 +89,7 @@ func UpdateMappingRule(c *gin.Context) {
 			session.Rollback()
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		}
-		err = model.UpdateNodeDataSourceByModelIDAndRef(Engine, int(rule.ModelID), rule.IEC61850Ref, "Modbus")
+		err = model.UpdateNodeDataSourceByModelIDAndRef(Engine, rule.ModelID, rule.IEC61850Ref, "Modbus")
 		if err != nil {
 			session.Rollback()
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -101,13 +101,13 @@ func UpdateMappingRule(c *gin.Context) {
 			session.Rollback()
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		}
-		err = model.UpdateNodeDataSourceByModelIDAndRef(Engine, int(rule.ModelID), rule.IEC61850Ref, "MQTT")
+		err = model.UpdateNodeDataSourceByModelIDAndRef(Engine, rule.ModelID, rule.IEC61850Ref, "MQTT")
 		if err != nil {
 			session.Rollback()
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		}
 	default:
-		err = model.UpdateNodeDataSourceByModelIDAndRef(Engine, int(rule.ModelID), rule.IEC61850Ref, "IEC61850")
+		err = model.UpdateNodeDataSourceByModelIDAndRef(Engine, rule.ModelID, rule.IEC61850Ref, "IEC61850")
 		if err != nil {
 			session.Rollback()
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

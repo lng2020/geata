@@ -147,7 +147,11 @@ const enUS = {
   errorMessage: 'Oops! Something went wrong',
   loginSuccess: 'Login successful!',
   registrationFailed: 'Registration failed. Please try again.',
-  loginFailed: 'Login failed. Please check your credentials.'
+  loginFailed: 'Login failed. Please check your credentials.',
+  stationName: 'Station Name',
+  icdFile: 'ICD File',
+  clickOrDropFile: 'Click or drop file to this area to upload',
+  create: 'Create',
 }
 
 const zhCN = {
@@ -297,7 +301,11 @@ const zhCN = {
   errorMessage: '糟糕！出错了',
   loginSuccess: '登录成功！',
   registrationFailed: '注册失败。请重试。',
-  loginFailed: '登录失败。请检查您的凭据。'
+  loginFailed: '登录失败。请检查您的凭据。',
+  stationName: '电站名称',
+  icdFile: 'ICD文件',
+  clickOrDropFile: '单击或拖动文件到此区域上传',
+  create: '创建',
 }
 
 type MessageSchema = typeof enUS

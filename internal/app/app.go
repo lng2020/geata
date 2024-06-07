@@ -131,7 +131,7 @@ func (app *App) InitMQTTBroker() error {
 
 	_ = app.mqttServer.AddHook(new(auth.AllowHook), nil)
 
-	tcp := listeners.NewTCP("t1", fmt.Sprintf(":%s", strconv.Itoa(app.Config.MQTTBroker.Port)), nil)
+	tcp := listeners.NewTCP("t1", fmt.Sprintf(":%s", strconv.Itoa(int(app.Config.MQTTBroker.Port))), nil)
 	err := app.mqttServer.AddListener(tcp)
 	if err != nil {
 		return err
@@ -142,7 +142,7 @@ func (app *App) InitMQTTBroker() error {
 		if err != nil {
 			slog.Error("Failed to start the MQTT server: ", err)
 		}
-		slog.Info("MQTT server started on", "port", strconv.Itoa(app.Config.MQTTBroker.Port))
+		slog.Info("MQTT server started on", "port", strconv.Itoa(int(app.Config.MQTTBroker.Port)))
 	}()
 
 	return nil
@@ -169,11 +169,14 @@ func (app *App) Init() error {
 
 func (app *App) Start() error {
 	stationDataQueue := make(chan service.StationData, len(app.Stations))
+	stationIDCancelMap := make(map[int64]context.CancelFunc)
 	for _, station := range app.Stations {
-		go station.Start(app.ctx, stationDataQueue)
+		ctx, cancel := context.WithCancel(app.ctx)
+		go station.Start(ctx, stationDataQueue)
+		stationIDCancelMap[station.ID] = cancel
 	}
 	go HandleStationData(app.ctx, stationDataQueue)
-	go HandleAddStation(app.ctx, app.Stations, stationDataQueue)
+	go HandleUpdateStation(app.ctx, stationIDCancelMap, stationDataQueue)
 	router := web.SetupRouter()
 	return router.Run(fmt.Sprintf(":%d", app.Config.Server.Port))
 }
@@ -193,30 +196,39 @@ func HandleStationData(ctx context.Context, stationDataQueue chan service.Statio
 	}
 }
 
-func HandleAddStation(ctx context.Context, stations []*service.Station, stationDataQueue chan service.StationData) {
+func HandleUpdateStation(ctx context.Context, m map[int64]context.CancelFunc, stationDataQueue chan service.StationData) {
 	for {
 		select {
 		case <-ctx.Done():
-			slog.Info("HandleAddStation stopped")
+			slog.Info("HandleUpdateStation stopped")
 			return
 		default:
-			stationsInDB, err := model.GetAllStations(service.Engine)
+			stationInDB, err := model.GetAllStations(service.Engine)
 			if err != nil {
 				slog.Error("Failed to get all stations", logger.ErrAttr(err))
 				continue
 			}
-			for _, stationInDB := range stationsInDB {
-				exist := false
-				for _, station := range stations {
-					if stationInDB.ID == station.ID {
-						exist = true
+			for _, station := range stationInDB {
+				if _, ok := m[station.ID]; !ok {
+					slog.Info("New station found", "station_id", station.ID)
+					newStation := service.StationInitFromDB(station)
+					newCtx, cancel := context.WithCancel(ctx)
+					m[station.ID] = cancel
+					newStation.Start(newCtx, stationDataQueue)
+				}
+			}
+			for id, cancel := range m {
+				found := false
+				for _, station := range stationInDB {
+					if station.ID == id {
+						found = true
 						break
 					}
 				}
-				if !exist {
-					station := service.StationInitFromDB(stationInDB)
-					stations = append(stations, station)
-					go station.Start(ctx, stationDataQueue)
+				if !found {
+					slog.Info("Station removed", "station_id", id)
+					cancel()
+					delete(m, id)
 				}
 			}
 		}

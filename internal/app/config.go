@@ -17,7 +17,7 @@ type AppConfig struct {
 }
 
 type ServerConfig struct {
-	Port int    `yaml:"port"`
+	Port int64  `yaml:"port"`
 	Host string `yaml:"host"`
 }
 
@@ -33,14 +33,14 @@ type IEC61850Config struct {
 type DatabaseConfig struct {
 	Type     string `yaml:"type"`
 	Host     string `yaml:"host"`
-	Port     int    `yaml:"port"`
+	Port     int64  `yaml:"port"`
 	Username string `yaml:"username"`
 	Password string `yaml:"password"`
 	DBName   string `yaml:"dbname"`
 }
 
 type MQTTBrokerConfig struct {
-	Port int `yaml:"port"`
+	Port int64 `yaml:"port"`
 }
 
 func LoadConfig(configFilePath string) (*AppConfig, error) {

@@ -14,7 +14,7 @@ import (
 
 func NewStartCmd() *cobra.Command {
 	var configFile string
-	var serverPort int
+	var serverPort int64
 	var loggerLogLevel string
 
 	var cmd = &cobra.Command{
@@ -54,7 +54,7 @@ func NewStartCmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&configFile, "config", "c", "./internal/app/config.yaml", "Path to the configuration file")
-	cmd.Flags().IntVar(&serverPort, "server.port", 0, "Port on which the server should listen")
+	cmd.Flags().Int64Var(&serverPort, "server.port", 0, "Port on which the server should listen")
 	cmd.Flags().StringVar(&loggerLogLevel, "logger.log_level", "", "Logging level (e.g., info, error, debug)")
 
 	return cmd

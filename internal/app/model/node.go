@@ -70,12 +70,12 @@ func DeleteNode(engine *xorm.Engine, node *Node) error {
 	return err
 }
 
-func UpdateNodeValueByModelIDAndDataSource(engine *xorm.Engine, modelID int, ref, value, dataSource string) error {
+func UpdateNodeValueByModelIDAndDataSource(engine *xorm.Engine, modelID int64, ref, value, dataSource string) error {
 	_, err := engine.Table(new(Node)).Where("model_id = ? AND iec61850_ref = ? AND data_source = ?", modelID, ref, dataSource).Update(map[string]interface{}{"value": value})
 	return err
 }
 
-func UpdateNodeDataSourceByModelIDAndRef(engine *xorm.Engine, modelID int, ref, dataSource string) error {
+func UpdateNodeDataSourceByModelIDAndRef(engine *xorm.Engine, modelID int64, ref, dataSource string) error {
 	_, err := engine.Table(new(Node)).Where("model_id = ? AND iec61850_ref = ?", modelID, ref).Update(map[string]interface{}{"data_source": dataSource})
 	return err
 }

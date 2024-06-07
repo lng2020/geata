@@ -1,12 +1,12 @@
 <template>
   <div class="container mx-auto px-2 py-2 flex justify-center">
     <form @submit.prevent="createStation" class="max-w-md w-full">
-      <h1 class="text-3xl font-bold mb-6 text-center">Create Station</h1>
+      <h1 class="text-3xl font-bold mb-6 text-center">{{ $t('createStation')}}</h1>
 
       <div class="mb-8">
         <div v-show="step === 1" class="mb-8">
           <div class="mb-4">
-            <label for="name" class="block text-gray-700 font-bold mb-2">Station Name</label>
+            <label for="name" class="block text-gray-700 font-bold mb-2">{{ $t('stationName') }}</label>
             <input
               type="text"
               id="name"
@@ -16,7 +16,7 @@
             />
           </div>
           <div class="mb-4">
-            <label for="host" class="block text-gray-700 font-bold mb-2">Host</label>
+            <label for="host" class="block text-gray-700 font-bold mb-2">{{ $t('host')}}</label>
             <input
               type="text"
               id="host"
@@ -26,7 +26,7 @@
             />
           </div>
           <div class="mb-4">
-            <label for="port" class="block text-gray-700 font-bold mb-2">Port</label>
+            <label for="port" class="block text-gray-700 font-bold mb-2">{{ $t('port')}}</label>
             <input
               type="number"
               id="port"
@@ -41,14 +41,14 @@
               class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
               @click="validateStationConfig"
             >
-              Confirm
+              {{  $t('confirm') }}
             </button>
           </div>
         </div>
 
         <div v-show="step === 2" class="mb-8">
           <div class="mb-4">
-            <label for="icdFile" class="block text-gray-700 font-bold mb-2">ICD File</label>
+            <label for="icdFile" class="block text-gray-700 font-bold mb-2">{{ $t('icdFile')}}</label>
             <div
               class="border-2 border-dashed border-gray-300 rounded-md p-4 text-center"
               @dragover.prevent
@@ -63,7 +63,7 @@
                 required
               />
               <label for="icdFile" class="cursor-pointer">
-                <span v-if="!icdFile">Click to select file or drag and drop</span>
+                <span v-if="!icdFile">{{ $t("clickOrDropFile") }}</span>
                 <span v-else>{{ icdFile.name }} ({{ formatFileSize(icdFile.size) }})</span>
               </label>
             </div>
@@ -81,7 +81,7 @@
 
         <div v-show="step === 3" class="mb-8">
           <div v-if="model" class="mb-4">
-            <h2 class="text-xl font-bold mb-2">IEC61850 Model</h2>
+            <h2 class="text-xl font-bold mb-2">{{ $t('iec61850Model')}}</h2>
             <div
               class="border border-gray-300 rounded-md p-4 bg-white shadow-sm overflow-y-auto max-h-[500px]"
             >
@@ -118,7 +118,7 @@
               type="submit"
               class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
             >
-              Create
+            {{ $t('create') }}
             </button>
           </div>
         </div>
