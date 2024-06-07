@@ -37,12 +37,20 @@ func (hc *IEC61850HandlerConfig) NewHandler() Handler {
 
 func (h *IEC61850Handler) Handle(ctx context.Context, s chan Data) {
 	stringChan := make(chan string)
+	newCtx, cancel := context.WithCancel(ctx)
 	defer close(stringChan)
-	go h.client.Start(ctx, stringChan, 3*time.Second)
-	for output := range stringChan {
-		data := Parse(output)
-		if data.IEC61850Ref != "" {
-			s <- data
+	defer cancel()
+	go h.client.Start(newCtx, stringChan, 3*time.Second)
+	for {
+		select {
+		case <-ctx.Done():
+			cancel()
+			return
+		case output := <-stringChan:
+			data := Parse(output)
+			if data.IEC61850Ref != "" {
+				s <- data
+			}
 		}
 	}
 }

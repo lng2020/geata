@@ -52,32 +52,37 @@ func (h *ModbusHandler) Handle(ctx context.Context, s chan Data) {
 	}
 	defer h.client.Close()
 	for {
-		details := make(map[string]*model.ModbusDetail)
-		res, err := model.GetAllModbusRulesByModelID(h.Engine, h.ModelID)
-		if err != nil {
-			slog.Error("Failed to get modbus rules", logger.ErrAttr(err))
+		select {
+		case <-ctx.Done():
 			return
-		}
-		for _, rule := range res {
-			detail, err := model.GetModbusDetailByRuleID(h.Engine, rule.ID)
-			if err != nil || detail == nil {
-				slog.Error("Failed to get modbus detail", logger.ErrAttr(err))
+		default:
+			details := make(map[string]*model.ModbusDetail)
+			res, err := model.GetAllModbusRulesByModelID(h.Engine, h.ModelID)
+			if err != nil {
+				slog.Error("Failed to get modbus rules", logger.ErrAttr(err))
 				return
 			}
-			details[rule.IEC61850Ref] = detail
-		}
-		for ref, detail := range details {
-			reg, err := h.ReadHoldingRegister(uint16(detail.StartAddress))
-			if err != nil {
-				slog.Error("Failed to read holding register", logger.ErrAttr(err))
-				continue
+			for _, rule := range res {
+				detail, err := model.GetModbusDetailByRuleID(h.Engine, rule.ID)
+				if err != nil || detail == nil {
+					slog.Error("Failed to get modbus detail", logger.ErrAttr(err))
+					return
+				}
+				details[rule.IEC61850Ref] = detail
 			}
-			data := Data{
-				IEC61850Ref: ref,
-				Value:       fmt.Sprintf("%d", reg),
-				DataSource:  "Modbus",
+			for ref, detail := range details {
+				reg, err := h.ReadHoldingRegister(uint16(detail.StartAddress))
+				if err != nil {
+					slog.Error("Failed to read holding register", logger.ErrAttr(err))
+					continue
+				}
+				data := Data{
+					IEC61850Ref: ref,
+					Value:       fmt.Sprintf("%d", reg),
+					DataSource:  "Modbus",
+				}
+				s <- data
 			}
-			s <- data
 		}
 	}
 }

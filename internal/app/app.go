@@ -214,7 +214,7 @@ func HandleUpdateStation(ctx context.Context, m map[int64]context.CancelFunc, st
 					newStation := service.StationInitFromDB(station)
 					newCtx, cancel := context.WithCancel(ctx)
 					m[station.ID] = cancel
-					newStation.Start(newCtx, stationDataQueue)
+					go newStation.Start(newCtx, stationDataQueue)
 				}
 			}
 			for id, cancel := range m {
