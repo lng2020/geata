@@ -29,8 +29,8 @@ func CreateMqttDetail(engine *xorm.Engine, mqttDetail *MqttDetail) error {
 }
 
 func GetMqttDetailByRuleID(engine *xorm.Engine, ruleID int64) (*MqttDetail, error) {
-	mqttDetail := new(MqttDetail)
-	has, err := engine.ID(ruleID).Get(mqttDetail)
+	mqttDetail := &MqttDetail{RuleID: ruleID}
+	has, err := engine.Get(mqttDetail)
 	if err != nil {
 		return nil, err
 	}
