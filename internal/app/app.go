@@ -173,6 +173,7 @@ func (app *App) Start() error {
 		go station.Start(app.ctx, stationDataQueue)
 	}
 	go HandleStationData(app.ctx, stationDataQueue)
+	go HandleAddStation(app.ctx, app.Stations, stationDataQueue)
 	router := web.SetupRouter()
 	return router.Run(fmt.Sprintf(":%d", app.Config.Server.Port))
 }
@@ -188,6 +189,36 @@ func HandleStationData(ctx context.Context, stationDataQueue chan service.Statio
 		case <-ctx.Done():
 			slog.Info("HandleStationData stopped")
 			return
+		}
+	}
+}
+
+func HandleAddStation(ctx context.Context, stations []*service.Station, stationDataQueue chan service.StationData) {
+	for {
+		select {
+		case <-ctx.Done():
+			slog.Info("HandleAddStation stopped")
+			return
+		default:
+			stationsInDB, err := model.GetAllStations(service.Engine)
+			if err != nil {
+				slog.Error("Failed to get all stations", logger.ErrAttr(err))
+				continue
+			}
+			for _, stationInDB := range stationsInDB {
+				exist := false
+				for _, station := range stations {
+					if stationInDB.ID == station.ID {
+						exist = true
+						break
+					}
+				}
+				if !exist {
+					station := service.StationInitFromDB(stationInDB)
+					stations = append(stations, station)
+					go station.Start(ctx, stationDataQueue)
+				}
+			}
 		}
 	}
 }
