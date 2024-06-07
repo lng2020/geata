@@ -69,10 +69,10 @@
       </div>
     </div>
     <div class="bg-white shadow-md rounded-lg p-4">
-      <div class="flex flex-col w-full h-full">
+      <div class="flex flex-col">
         <h2 class="text-xl font-semibold mb-4 text-left">{{ $t('onlineStatus') }}</h2>
-        <div class="flex justify-center items-center w-full h-full">
-          <Line :data="onlineStationsData" :options="chartOptions" />
+        <div class="flex justify-center items-center h-[200px]">
+          <Line :data="onlineStationsData" :options="chartOptions"/>
         </div>
       </div>
     </div>
@@ -144,7 +144,7 @@ const onlineStationsData = computed(() => {
     datasets: [
       {
         label: t('onlineStationNumber'),
-        data: [0, 5, 10, 15, 12, 18, 20, 22, 25],
+        data: [0, 0, 0, 0, 2, 1, 2, 2, 3],
         fill: false,
         borderColor: 'rgb(75, 192, 192)',
         tension: 0.1
