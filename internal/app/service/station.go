@@ -46,10 +46,9 @@ type MQTTConfig struct {
 }
 
 func (s *Station) Start(ctx context.Context, sd chan StationData) {
-	newCtx, cancel := context.WithCancel(ctx)
-	defer cancel()
 	handlerDataQueue := make(chan handler.Data)
 	defer close(handlerDataQueue)
+	newCtx, cancel := context.WithCancel(ctx)
 	for _, handler := range s.Handlers {
 		go handler.Handle(newCtx, handlerDataQueue)
 	}
