@@ -30,6 +30,10 @@ func ErrAttr(err error) slog.Attr {
 	return slog.Any("error", err)
 }
 
+func AnyAttr(value interface{}) slog.Attr {
+	return slog.Any("Any", value)
+}
+
 func StringAttr(key, value string) slog.Attr {
 	return slog.String(key, value)
 }

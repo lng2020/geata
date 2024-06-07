@@ -51,6 +51,13 @@ func (h *ModbusHandler) Handle(ctx context.Context, s chan Data) {
 		return
 	}
 	defer h.client.Close()
+	// This is for closed channel panic recovery
+	// we can't prevent the panic from happening
+	defer func() {
+		if e := recover(); e != nil {
+			slog.Error("Recovered from panic", logger.AnyAttr(e))
+		}
+	}()
 	for {
 		select {
 		case <-ctx.Done():
