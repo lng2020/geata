@@ -69,7 +69,6 @@ func (h *MQTTHandler) Handle(ctx context.Context, s chan Data) {
 		}
 		ref := jsonMsg.Ref
 		value := jsonMsg.Value
-		slog.Info("Received message", logger.StringAttr("topic", ref), logger.StringAttr("value", value))
 		s <- Data{IEC61850Ref: ref, Value: value, DataSource: "MQTT"}
 	})
 	token.Wait()

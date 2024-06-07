@@ -357,6 +357,7 @@ func UploadIEC61850ModelFile(c *gin.Context) {
 				for _, dai := range doi.DAI {
 					dataAttribute := &model.Node{
 						DataObjectID: dataObject.ID,
+						ModelID:      iec61850Model.ID,
 						Name:         dai.Name,
 						Value:        dai.Val,
 						IEC61850Ref:  ied.Name + logicalDevice.Name + "/" + ln0.Name + "$" + dataObject.Name + "$" + dai.Name,
@@ -418,6 +419,7 @@ func UploadIEC61850ModelFile(c *gin.Context) {
 					for _, dai := range doi.DAI {
 						dataAttribute := &model.Node{
 							DataObjectID: dataObject.ID,
+							ModelID:      iec61850Model.ID,
 							Name:         dai.Name,
 							Value:        dai.Val,
 							IEC61850Ref:  ied.Name + logicalDevice.Name + "/" + logicalNode.Name + "$" + dataObject.Name + "$" + dai.Name,

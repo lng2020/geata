@@ -41,7 +41,6 @@ func (h *IEC61850Handler) Handle(ctx context.Context, s chan Data) {
 	go h.client.Start(ctx, stringChan, 3*time.Second)
 	for output := range stringChan {
 		data := Parse(output)
-		slog.Info("Received data", logger.StringAttr("IEC61850Ref", data.IEC61850Ref), logger.StringAttr("Value", data.Value))
 		if data.IEC61850Ref != "" {
 			s <- data
 		}
@@ -88,6 +87,7 @@ func Parse(output string) Data {
 		return Data{
 			IEC61850Ref: ref,
 			Value:       val,
+			DataSource:  "IEC61850",
 		}
 	case "SG":
 		// {false}
@@ -97,6 +97,7 @@ func Parse(output string) Data {
 		return Data{
 			IEC61850Ref: ref,
 			Value:       val,
+			DataSource:  "IEC61850",
 		}
 	case "MX":
 		// {{56.000000},0000000000000,19700101000000.000Z}
