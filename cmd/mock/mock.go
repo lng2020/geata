@@ -1,6 +1,7 @@
 package mock
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"time"
@@ -16,6 +17,7 @@ type Message struct {
 
 var server, topic string
 var interval time.Duration
+var msg Message
 
 func NewMockCmd() *cobra.Command {
 	mockCmd := &cobra.Command{
@@ -27,6 +29,8 @@ func NewMockCmd() *cobra.Command {
 	mockCmd.Flags().StringVarP(&server, "server", "s", "tcp://localhost:1883", "MQTT server URL")
 	mockCmd.Flags().StringVarP(&topic, "topic", "t", "1", "MQTT topic to publish messages")
 	mockCmd.Flags().DurationVarP(&interval, "interval", "i", 5*time.Second, "Interval between messages")
+	mockCmd.Flags().StringVarP(&msg.Ref, "ref", "r", "ZTPDFMONT/SFGD1$FireState$stVal", "Reference of the message")
+	mockCmd.Flags().StringVarP(&msg.Value, "value", "v", "1", "Value of the message")
 
 	return mockCmd
 }
@@ -43,7 +47,11 @@ func runMock(cmd *cobra.Command, args []string) {
 	defer ticker.Stop()
 
 	for range ticker.C {
-		message := fmt.Sprintf("Mock message at %s", time.Now().Format(time.RFC3339))
+		message, err := json.Marshal(msg)
+		if err != nil {
+			fmt.Println("Error marshalling message:", err)
+			continue
+		}
 		token := client.Publish(topic, 0, false, message)
 		token.Wait()
 		fmt.Printf("Published message to %s: %s\n", topic, message)

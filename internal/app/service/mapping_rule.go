@@ -89,6 +89,11 @@ func UpdateMappingRule(c *gin.Context) {
 			session.Rollback()
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		}
+		err = model.UpdateNodeDataSourceByModelIDAndRef(Engine, int(rule.ModelID), rule.IEC61850Ref, "Modbus")
+		if err != nil {
+			session.Rollback()
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		}
 	case "MQTT":
 		req.MQTTDetail.RuleID = rule.ID
 		err = model.CreateOrUpdateMQTTDetail(Engine, &req.MQTTDetail)
@@ -96,8 +101,23 @@ func UpdateMappingRule(c *gin.Context) {
 			session.Rollback()
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		}
+		err = model.UpdateNodeDataSourceByModelIDAndRef(Engine, int(rule.ModelID), rule.IEC61850Ref, "MQTT")
+		if err != nil {
+			session.Rollback()
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		}
+	default:
+		err = model.UpdateNodeDataSourceByModelIDAndRef(Engine, int(rule.ModelID), rule.IEC61850Ref, "IEC61850")
+		if err != nil {
+			session.Rollback()
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		}
 	}
 
+	err = session.Commit()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	}
 	c.JSON(http.StatusOK, rule)
 }
 

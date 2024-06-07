@@ -74,3 +74,8 @@ func UpdateNodeValueByModelIDAndDataSource(engine *xorm.Engine, modelID int, ref
 	_, err := engine.Table(new(Node)).Where("model_id = ? AND iec61850_ref = ? AND data_source = ?", modelID, ref, dataSource).Update(map[string]interface{}{"value": value})
 	return err
 }
+
+func UpdateNodeDataSourceByModelIDAndRef(engine *xorm.Engine, modelID int, ref, dataSource string) error {
+	_, err := engine.Table(new(Node)).Where("model_id = ? AND iec61850_ref = ?", modelID, ref).Update(map[string]interface{}{"data_source": dataSource})
+	return err
+}

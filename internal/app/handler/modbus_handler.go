@@ -6,6 +6,7 @@ import (
 	"geata/internal/app/logger"
 	"geata/internal/app/model"
 	"log/slog"
+	"time"
 
 	"github.com/simonvetter/modbus"
 	"xorm.io/xorm"
@@ -39,12 +40,18 @@ func (hc *ModbusHandlerConfig) NewHandler() Handler {
 	client, err := modbus.NewClient(&modbus.ClientConfiguration{URL: hc.URL})
 	if err != nil {
 		slog.Error("Failed to create modbus client", logger.ErrAttr(err))
+		return nil
 	}
 	return &ModbusHandler{client: client, ModelID: hc.ModelID, Engine: hc.Engine}
 }
 
 func (h *ModbusHandler) Handle(ctx context.Context, s chan Data) {
 	for {
+		err := h.client.Open()
+		if err != nil {
+			slog.Error("Failed to open modbus connection", logger.ErrAttr(err))
+			break
+		}
 		details := make(map[string]*model.ModbusDetail)
 		res, err := model.GetAllModbusRulesByModelID(h.Engine, h.ModelID)
 		if err != nil {
@@ -72,6 +79,7 @@ func (h *ModbusHandler) Handle(ctx context.Context, s chan Data) {
 			}
 			s <- data
 		}
+		time.Sleep(3 * time.Second)
 	}
 }
 

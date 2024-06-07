@@ -11,7 +11,7 @@ import (
 
 type MappingRule struct {
 	ID          int64     `xorm:"pk autoincr 'id'" json:"id"`
-	ModelID     int64     `xorm:"'model_id' index" json:"-"`
+	ModelID     int64     `xorm:"'model_id' index" json:"modelId"`
 	IEC61850Ref string    `xorm:"'iec61850_ref'" json:"iec61850Ref"`
 	Type        string    `xorm:"'type'" json:"type"`
 	CreateTime  time.Time `xorm:"'create_time' created" json:"createTime"`
@@ -60,7 +60,7 @@ func DeleteMappingRule(engine *xorm.Engine, rule *MappingRule) error {
 
 func GetAllModbusRulesByModelID(engine *xorm.Engine, modelID int64) ([]*MappingRule, error) {
 	var rules []*MappingRule
-	err := engine.Where("model_id = ? AND type = ?", modelID, "modbus").Find(&rules)
+	err := engine.Where("model_id = ? AND type = ?", modelID, "Modbus").Find(&rules)
 	if err != nil {
 		return nil, err
 	}
@@ -69,7 +69,7 @@ func GetAllModbusRulesByModelID(engine *xorm.Engine, modelID int64) ([]*MappingR
 
 func GetAllMqttRulesByModelID(engine *xorm.Engine, modelID int64) ([]*MappingRule, error) {
 	var rules []*MappingRule
-	err := engine.Where("model_id = ? AND type = ?", modelID, "mqtt").Find(&rules)
+	err := engine.Where("model_id = ? AND type = ?", modelID, "MQTT").Find(&rules)
 	if err != nil {
 		return nil, err
 	}

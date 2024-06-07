@@ -14,6 +14,7 @@ export type RoleType = 'admin' | 'user'
 
 export interface Mapping {
   id: number
+  modelId: number
   iec61850Ref: string
   type: MappingType
 }

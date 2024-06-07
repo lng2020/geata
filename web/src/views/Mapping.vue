@@ -97,7 +97,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { onMounted, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { onBeforeRouteUpdate, useRouter } from 'vue-router'
 import { useGlobalStore } from '@/store'
 import type { Mapping, MQTTDetail, ModbusDetail } from '@/types/types'
 import ConfirmationModal from '@/components/ConfirmationModal.vue'
@@ -126,6 +126,17 @@ const paginatedData = computed(() => {
 
 onMounted(async () => {
   const stationId = Number(router.currentRoute.value.params.id)
+  await initMappingData(stationId)
+})
+
+onBeforeRouteUpdate(async (to, from) => {
+  if (to.params.id !== from.params.id) {
+    const stationId = Number(to.params.id)
+    await initMappingData(stationId)
+  }
+})
+
+const initMappingData = async (stationId: number) => {
   if (!stationId) {
     return
   }
@@ -135,7 +146,7 @@ onMounted(async () => {
   }
   const modelId = station.modelId
   mapping.value = await fetchMapping(modelId)
-})
+}
 
 const fetchMapping = async (modelId: number) => {
   try {
@@ -185,7 +196,8 @@ const changeMappingRule = async (modbusDetail: ModbusDetail, mqttDetail: MQTTDet
           mappingRule: {
             id: newMapping.value.id,
             iec61850Ref: newMapping.value.iec61850Ref,
-            type: newMapping.value.type
+            type: newMapping.value.type,
+            modelId: newMapping.value.modelId
           },
           modbusDetail,
           mqttDetail
