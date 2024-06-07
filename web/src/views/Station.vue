@@ -103,7 +103,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import type { IEC61850Model, DataObject } from '@/types/types'
 import { useRouter, onBeforeRouteUpdate } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -116,12 +116,14 @@ const lnId = ref<number>()
 let modelId = ref<number>()
 const currentPage = ref(1)
 const pageSize = ref(8)
+let refreshInterval: number | undefined
 
 onMounted(async () => {
   const id = Number(router.currentRoute.value.params.id)
   modelId.value = id
   model.value = await fetchModelById(id)
   setlnId(model.value.logicalDevice[0].logicalNode[0].id)
+  startDataRefresh()
 })
 
 onBeforeRouteUpdate(async (to, from) => {
@@ -129,7 +131,43 @@ onBeforeRouteUpdate(async (to, from) => {
     const id = Number(to.params.id)
     modelId.value = id
     model.value = await fetchModelById(id)
-    setlnId(model.value.logicalDevice[0].logicalNode[0].id)
+    if (lnId.value) {
+      setlnId(lnId.value)
+    } else {
+      setlnId(model.value.logicalDevice[0].logicalNode[0].id)
+    }
+  }
+})
+
+onUnmounted(() => {
+  stopDataRefresh()
+})
+
+
+function startDataRefresh() {
+  refreshInterval = setInterval(async () => {
+    if (lnId.value) {
+      dataObjects.value = await fetchDataObjectsByLogicalNodeId(lnId.value)
+    }
+  }, 1000)
+}
+
+function stopDataRefresh() {
+  if (refreshInterval) {
+    clearInterval(refreshInterval)
+  }
+}
+
+onBeforeRouteUpdate(async (to, from) => {
+  if (to.params.id !== from.params.id) {
+    const id = Number(to.params.id)
+    modelId.value = id
+    model.value = await fetchModelById(id)
+    if(lnId.value){
+      setlnId(lnId.value)
+    }else {
+      setlnId(model.value.logicalDevice[0].logicalNode[0].id)
+    }
   }
 })
 

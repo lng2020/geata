@@ -45,12 +45,13 @@ func (hc *ModbusHandlerConfig) NewHandler() Handler {
 }
 
 func (h *ModbusHandler) Handle(ctx context.Context, s chan Data) {
+	err := h.client.Open()
+	if err != nil {
+		slog.Error("Failed to open modbus connection", logger.ErrAttr(err))
+		return
+	}
+	defer h.client.Close()
 	for {
-		err := h.client.Open()
-		if err != nil {
-			slog.Error("Failed to open modbus connection", logger.ErrAttr(err))
-			break
-		}
 		details := make(map[string]*model.ModbusDetail)
 		res, err := model.GetAllModbusRulesByModelID(h.Engine, h.ModelID)
 		if err != nil {
@@ -77,10 +78,6 @@ func (h *ModbusHandler) Handle(ctx context.Context, s chan Data) {
 				DataSource:  "Modbus",
 			}
 			s <- data
-		}
-		err = h.client.Close()
-		if err != nil {
-			slog.Error("Failed to close modbus connection", logger.ErrAttr(err))
 		}
 	}
 }
